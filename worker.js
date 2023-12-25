@@ -9,8 +9,9 @@ let addresses = [
   'cloudflare.cfgo.cc'
 ];
 
-// 设置优选地址api接口，可参考 https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt 内容格式 自行搭建。
 let addressesapi = '';
+// let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt';
+// 设置优选地址api接口，可参考 https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt 内容格式 自行搭建。
 
 async function getAddresses() {
   if (!addressesapi || addressesapi.trim() === '') {
