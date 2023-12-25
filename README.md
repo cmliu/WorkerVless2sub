@@ -38,7 +38,7 @@ let addresses = [
 ## 示例
 ### 请求
 ```lua
-https://workervless2sub.cmliu.workers.dev/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
+https://workervless2sub.ssrc.cf/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
 ```
 
 ### 响应
