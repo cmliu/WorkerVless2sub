@@ -9,7 +9,7 @@ let addresses = [
   'cloudflare.cfgo.cc'
 ];
 
-// 设置优选地址api接口
+// 设置优选地址api接口，可参考 https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt 自行搭建
 let addressesapi = '';
 
 async function getAddresses() {
