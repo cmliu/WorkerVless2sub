@@ -9,9 +9,9 @@ let addresses = [
   'cloudflare.cfgo.cc'
 ];
 
+// 设置优选地址api接口
 let addressesapi = '';
-// let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt';
-// 设置优选地址api接口，可参考 https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt 内容格式 自行搭建。
+// let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt'; //可参考内容格式 自行搭建。
 
 async function getAddresses() {
   if (!addressesapi || addressesapi.trim() === '') {
@@ -28,7 +28,18 @@ async function getAddresses() {
     }
 
     const text = await response.text();
-    return text.split('\n');
+    const lines = text.split('\n');
+
+    // 正则表达式用于匹配IPv4地址和端口号
+    const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?$/;
+
+    // 使用map函数处理每一行，只保留符合正则表达式的部分
+    const addresses = lines.map(line => {
+      const match = line.match(regex);
+      return match ? match[0] : null;
+    }).filter(Boolean);  // 使用filter(Boolean)来移除null值
+
+    return addresses;
   } catch (error) {
     console.error('获取地址时出错:', error);
     return [];
