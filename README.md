@@ -21,9 +21,9 @@
 路径必须包含 "/sub"。例如：
 
 ```lua
-https://[your-worker-url]/sub?host=[your-host]&uuid=[your-uuid]&path=[your-path]
+https://[YOUR-WORKER-URL]/sub?host=[YOUR-HOST]&uuid=[YOUR-UUID]&path=[YOUR-PATH]
 ```
-用您实际的值替换占位符，如 **your-worker-url**、**your-host** 和 **your-uuid**。此外，根据您的具体用例考虑添加更多详细信息或自定义。
+用您实际的值替换占位符，如 **YOUR-WORKER-URL**、**YOUR-HOST** 和 **YOUR-UUID**，**YOUR-PATH**为空可不填。此外，根据您的具体用例考虑添加更多详细信息或自定义。
 
 ### 设置你的专属优选域名
 请自行修改添加 **addresses** 参数即可，若不带端口号默认443，不支持生成非TLS订阅
@@ -44,7 +44,7 @@ let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main
 ## 示例
 ### 请求
 ```lua
-https://workervless2sub.ssrc.cf/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
+https://sub.ssrc.cf/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
 ```
 
 ### 响应
