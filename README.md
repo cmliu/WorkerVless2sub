@@ -44,7 +44,7 @@ let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main
 ## 示例
 ### 请求
 ```lua
-https://sub.ssrc.cf/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
+https://sub.fxxk.dedyn.io/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
 ```
 
 ### 响应
