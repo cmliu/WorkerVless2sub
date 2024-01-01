@@ -31,7 +31,7 @@ async function getAddresses() {
     const lines = text.split('\n');
 
     // 正则表达式用于匹配IPv4地址和端口号
-    const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?$/;
+    const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
 
     // 使用map函数处理每一行，只保留符合正则表达式的部分
     const addresses = lines.map(line => {
@@ -94,25 +94,42 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
     path = encodeURIComponent(path);
   }
 
-  // 获取新的地址
-  const newAddresses = await getAddresses();
-  addresses = addresses.concat(newAddresses);
+// 获取新的地址
+const newAddresses = await getAddresses();
+addresses = addresses.concat(newAddresses);
 
-  // 构建响应内容
-  const responseBody = addresses.map(address => {
-    // 检查地址中是否包含冒号，补充 ":443"
-    if (!address.includes(':')) {
-      address += ':443';
-    }
+// 构建响应内容
+const responseBody = addresses.map(address => {
+  let port = "443";
+  let addressid = address;
 
-    // 提取 addressid
-    const addressid = address.split(':')[0];
+  // 检查地址中是否包含冒号和井号
+  if (address.includes(':') && address.includes('#')) {
+    const parts = address.split(':');
+    address = parts[0];
+    const subParts = parts[1].split('#');
+    port = subParts[0];
+    addressid = subParts[1];
+  } else if (address.includes(':')) {
+    const parts = address.split(':');
+    address = parts[0];
+    port = parts[1];
+  } else if (address.includes('#')) {
+    const parts = address.split('#');
+    address = parts[0];
+    addressid = parts[1];
+  }
 
-    // 构建vless链接
-    const vlessLink = `vless://${uuid}@${address}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
+  // 如果addressid包含冒号，只保留冒号前的内容
+  if (addressid.includes(':')) {
+    addressid = addressid.split(':')[0];
+  }
 
-    return vlessLink;
-  }).join('\n');
+  // 构建vless链接
+  const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
+
+  return vlessLink;
+}).join('\n');
 
   // Base64 编码整个响应内容
   const base64Response = btoa(responseBody);
