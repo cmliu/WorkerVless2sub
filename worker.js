@@ -21,7 +21,6 @@ async function getAddresses() {
   try {
     const response = await fetch(addressesapi);
 
-    // 如果响应状态码不为 200 OK，直接跳过返回空数组
     if (!response.ok) {
       console.error('获取地址时出错:', response.status, response.statusText);
       return [];
@@ -29,15 +28,12 @@ async function getAddresses() {
 
     const text = await response.text();
     const lines = text.split('\n');
-
-    // 正则表达式用于匹配IPv4地址和端口号
     const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
 
-    // 使用map函数处理每一行，只保留符合正则表达式的部分
     const addresses = lines.map(line => {
       const match = line.match(regex);
       return match ? match[0] : null;
-    }).filter(Boolean);  // 使用filter(Boolean)来移除null值
+    }).filter(Boolean);  
 
     return addresses;
   } catch (error) {
@@ -47,13 +43,11 @@ async function getAddresses() {
 }
 
 async function handleRequest(request) {
-  // 解析查询参数
   const url = new URL(request.url);
   const host = url.searchParams.get('host');
   const uuid = url.searchParams.get('uuid');
   let path = url.searchParams.get('path');
 
-  // 检查路径是否包含 "/sub"
   if (!url.pathname.includes("/sub")) {
     const workerUrl = url.origin + url.pathname;
     const responseText = `
@@ -70,7 +64,6 @@ ${workerUrl}sub?host=[your host]&uuid=[your uuid]&path=[your path]
     });
   }
 
-  // 检查参数是否缺失
   if (!host || !uuid) {
     const workerUrl = url.origin + url.pathname;
     const responseText = `
@@ -87,54 +80,49 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
     });
   }
 
-  // 如果path缺失或为空，设置默认值
   if (!path || path.trim() === '') {
     path = encodeURIComponent('/?ed=2048');
   } else {
     path = encodeURIComponent(path);
   }
 
-// 获取新的地址
-const newAddresses = await getAddresses();
-addresses = addresses.concat(newAddresses);
+  const newAddresses = await getAddresses();
+  addresses = addresses.concat(newAddresses);
 
-// 构建响应内容
-const responseBody = addresses.map(address => {
-  let port = "443";
-  let addressid = address;
+  // 使用Set对象去重
+  const uniqueAddresses = [...new Set(addresses)];
 
-  // 检查地址中是否包含冒号和井号
-  if (address.includes(':') && address.includes('#')) {
-    const parts = address.split(':');
-    address = parts[0];
-    const subParts = parts[1].split('#');
-    port = subParts[0];
-    addressid = subParts[1];
-  } else if (address.includes(':')) {
-    const parts = address.split(':');
-    address = parts[0];
-    port = parts[1];
-  } else if (address.includes('#')) {
-    const parts = address.split('#');
-    address = parts[0];
-    addressid = parts[1];
-  }
+  const responseBody = uniqueAddresses.map(address => {
+    let port = "443";
+    let addressid = address;
 
-  // 如果addressid包含冒号，只保留冒号前的内容
-  if (addressid.includes(':')) {
-    addressid = addressid.split(':')[0];
-  }
+    if (address.includes(':') && address.includes('#')) {
+      const parts = address.split(':');
+      address = parts[0];
+      const subParts = parts[1].split('#');
+      port = subParts[0];
+      addressid = subParts[1];
+    } else if (address.includes(':')) {
+      const parts = address.split(':');
+      address = parts[0];
+      port = parts[1];
+    } else if (address.includes('#')) {
+      const parts = address.split('#');
+      address = parts[0];
+      addressid = parts[1];
+    }
 
-  // 构建vless链接
-  const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
+    if (addressid.includes(':')) {
+      addressid = addressid.split(':')[0];
+    }
 
-  return vlessLink;
-}).join('\n');
+    const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
 
-  // Base64 编码整个响应内容
+    return vlessLink;
+  }).join('\n');
+
   const base64Response = btoa(responseBody);
 
-  // 构建Response对象
   const response = new Response(base64Response, {
     headers: { 'content-type': 'text/plain' },
   });
