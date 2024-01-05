@@ -89,7 +89,7 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
   }
 
   if (!path || path.trim() === '') {
-    path = encodeURIComponent('/?ed=2048');
+    path = encodeURIComponent('?ed=2048');
   } else {
     path = encodeURIComponent(path);
   }
@@ -124,7 +124,7 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
       addressid = addressid.split(':')[0];
     }
 
-    const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
+    const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=/${path}#${addressid}`;
 
     return vlessLink;
   }).join('\n');
