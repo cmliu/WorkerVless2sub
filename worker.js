@@ -137,7 +137,3 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
 
   return response;
 }
-
-
-  return response;
-}
