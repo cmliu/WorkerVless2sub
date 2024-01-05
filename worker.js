@@ -10,36 +10,44 @@ let addresses = [
 ];
 
 // 设置优选地址api接口
-let addressesapi = '';
-// let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt'; //可参考内容格式 自行搭建。
+let addressesapi = [
+  'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //可参考内容格式 自行搭建。
+];
+
 
 async function getAddresses() {
-  if (!addressesapi || addressesapi.trim() === '') {
+  if (!addressesapi || addressesapi.length === 0) {
     return [];
   }
 
-  try {
-    const response = await fetch(addressesapi);
+  let newAddresses = [];
 
-    if (!response.ok) {
-      console.error('获取地址时出错:', response.status, response.statusText);
-      return [];
+  for (const apiUrl of addressesapi) {
+    try {
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        console.error('获取地址时出错:', response.status, response.statusText);
+        continue;
+      }
+
+      const text = await response.text();
+      const lines = text.split('\n');
+      const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
+
+      const apiAddresses = lines.map(line => {
+        const match = line.match(regex);
+        return match ? match[0] : null;
+      }).filter(Boolean);
+
+      newAddresses = newAddresses.concat(apiAddresses);
+    } catch (error) {
+      console.error('获取地址时出错:', error);
+      continue;
     }
-
-    const text = await response.text();
-    const lines = text.split('\n');
-    const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
-
-    const addresses = lines.map(line => {
-      const match = line.match(regex);
-      return match ? match[0] : null;
-    }).filter(Boolean);  
-
-    return addresses;
-  } catch (error) {
-    console.error('获取地址时出错:', error);
-    return [];
   }
+
+  return newAddresses;
 }
 
 async function handleRequest(request) {
@@ -60,7 +68,7 @@ ${workerUrl}sub?host=[your host]&uuid=[your uuid]&path=[your path]
 
     return new Response(responseText, {
       status: 400,
-      headers: { 'content-type': 'text/plain; charset=utf-8'  },
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
     });
   }
 
@@ -76,7 +84,7 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
 
     return new Response(responseText, {
       status: 400,
-      headers: { 'content-type': 'text/plain; charset=utf-8'  },
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
     });
   }
 
@@ -126,6 +134,10 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
   const response = new Response(base64Response, {
     headers: { 'content-type': 'text/plain' },
   });
+
+  return response;
+}
+
 
   return response;
 }
