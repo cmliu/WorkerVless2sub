@@ -38,7 +38,9 @@ let addresses = [
 ### 获取额外优选地址
 脚本允许从 API 获取额外的地址。在脚本中设置 addressesapi 变量为 **优选地址API接口** 的 URL。
 ```js
-let addressesapi = 'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt'; //该接口只是示例，并不进行维护。
+let addressesapi = [
+  'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //该接口只是示例，并不进行维护。可参考内容格式 自行搭建。
+];
 ```
 
 ## 示例
