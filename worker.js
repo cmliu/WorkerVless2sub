@@ -64,6 +64,12 @@ The path must contain "/sub"
 مسیر باید شامل "/sub" باشد
 
 ${workerUrl}sub?host=[your host]&uuid=[your uuid]&path=[your path]
+
+
+
+
+
+
     
     https://github.com/cmliu/WorkerVless2sub
     `;
@@ -82,6 +88,12 @@ Missing required parameters: host and uuid
 پارامترهای ضروری وارد نشده: هاست و یوآی‌دی
 
 ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
+
+
+
+
+
+
     
     https://github.com/cmliu/WorkerVless2sub
     `;
