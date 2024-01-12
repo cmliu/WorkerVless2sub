@@ -30,11 +30,20 @@ jobs:
       
     - name: 执行推送
       run: |
-        while IFS= read -r line; do
+        counter=0
+        while IFS= read -r line && [ "$counter" -lt 8 ]; do
           ips+="$(echo "$line" | sed 's/#/, /g')"$'\n'
+          ((counter++))
         done < addressesapi.txt
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
         
-        $ips"
+        $ips
+        ...更多优选IP可通过自定义订阅方式获取
+        https://sub.cmliucdn.tk/sub?host=<你的Vless域名>&uuid=<你的UUID>&path=<你的ws路径>
+        
+        如果你的vless是通过worker部署且没有path参数,可填入以下对应参数后订阅节点信息
+        https://sub.cmliucdn.tk/sub?host=<你的Worker域名>&uuid=<你的UUID>
+        实际使用时请去掉<>符号
+        注意：您可以将此链接分享传播到任何地方😁"
 
         wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
