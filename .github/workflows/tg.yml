@@ -21,13 +21,6 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: 读取文件内容
-      id: read_file
-      run: |
-        file_content=$(cat addressesapi.txt)
-        encoded_content=$(echo "$file_content" | sed 's/#/, /g' | base64)
-        echo "::set-output name=encoded_content::${encoded_content}"
-
     - name: Get Beijing Time
       id: time
       run: |
@@ -37,8 +30,11 @@ jobs:
       
     - name: 执行推送
       run: |
+        while IFS= read -r line; do
+          ips+="$(echo "$line" | sed 's/#/, /g')"$'\n'
+        done < addressesapi.txt
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
         
-        $(echo "${{ steps.read_file.outputs.encoded_content }}" | base64 -d)"
+        $ips"
 
         wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
