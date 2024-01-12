@@ -1,0 +1,36 @@
+name: TG推送
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'addressesapi.txt'
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 加载当前的 GitHub 库
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Get Beijing Time
+      id: time
+      run: |
+        TIME_ZONE="Asia/Shanghai"
+        CURRENT_TIME=$(TZ=${TIME_ZONE} date +"%Y-%m-%d %H:%M:%S")
+        echo "::set-output name=current_time::${CURRENT_TIME}"
+      
+    - name: 执行推送
+      run: |
+        message="今日优选 For: ${{ steps.time.outputs.current_time }}
+        
+        "
+        wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
