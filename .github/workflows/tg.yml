@@ -32,11 +32,11 @@ jobs:
       run: |
         head -n 8 addressesapi.txt > addressesapi_truncated.txt
         while IFS= read -r line; do
-          ips+=$'\n'"$(echo "$line" | sed 's/#/, /g')"
+          ips+="$(echo "$line" | sed 's/#/, /g')"$'\n'
         done < addressesapi_truncated.txt
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
-        $ips
-        ...更多优选IP可通过自定义订阅方式获取
+        
+        $ips...更多优选IP可通过自定义订阅方式获取
         https://sub.cmliucdn.tk/sub?host=<你的Vless域名>&uuid=<你的UUID>&path=<你的ws路径>
         
         如果你的vless是通过worker部署且没有path参数,可填入以下对应参数后订阅节点信息
