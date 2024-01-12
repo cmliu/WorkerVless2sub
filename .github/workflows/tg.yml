@@ -40,9 +40,9 @@ jobs:
         https://sub.cmliucdn.tk/sub?host=<你的Vless域名>%26uuid=<你的UUID>%26path=<你的ws路径>
         
         如果你的vless是通过worker部署且没有path参数,可填入以下对应参数后订阅节点信息
-        https://sub.cmliucdn.tk/sub?host=<你的Worker域名>&uuid=<你的UUID>
+        https://sub.cmliucdn.tk/sub?host=<你的Worker域名>%26uuid=<你的UUID>
         实际使用时请去掉<>符号
-        注意：您可以将此链接分享传播到任何地方😁"
+        注意：您可以将此链接分享传播到任何地方😁%7C%7Ctest%7C%7C"
         
         # wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
         curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
