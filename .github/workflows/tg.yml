@@ -30,11 +30,10 @@ jobs:
       
     - name: 执行推送
       run: |
-        counter=0
-        while IFS= read -r line && [ "$counter" -lt 8 ]; do
+        head -n 8 addressesapi.txt > addressesapi_truncated.txt
+        while IFS= read -r line; do
           ips+="$(echo "$line" | sed 's/#/, /g')"$'\n'
-          ((counter++))
-        done < addressesapi.txt
+        done < addressesapi_truncated.txt
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
         
         $ips
