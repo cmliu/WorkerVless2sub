@@ -37,12 +37,12 @@ jobs:
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
         
         ${ips}......更多优选IP可通过自定义订阅方式获取
-        https://sub.cmliucdn.tk/sub?host=<你的Vless域名>%26uuid=<你的UUID>%26path=<你的ws路径>
+        https://sub.cmliucdn.tk/sub?host=[你的Vless域名]%26uuid=[你的UUID]%26path=[你的ws路径]
         
-        如你的vless是通过worker部署且没有path参数,可填入参数后订阅节点信息
-        https://sub.cmliucdn.tk/sub?host=<你的Worker域名>%26uuid=<你的UUID>
-        实际使用时请去掉<>符号，Worker域名优先使用自定义域
-        注意：您可以将此链接分享传播到任何地方😁"
+        如果你的vless是通过worker部署且没有path参数,可填入参数后订阅节点信息
+        https://sub.cmliucdn.tk/sub?host=[你的Worker域名]%26uuid=[你的UUID]
+        实际使用时请去掉[ ]符号，Worker域名优先使用自定义域
+        注意：您可以将此链接分享传播到任何地方😁顺便给3Kmfi6HP大佬敬个礼"
         
         # wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
         curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
