@@ -25,7 +25,8 @@ jobs:
       id: read_file
       run: |
         file_content=$(cat addressesapi.txt)
-        echo "::set-output name=file_content::${file_content}"
+        encoded_content=$(echo "$file_content" | base64)
+        echo "::set-output name=encoded_content::${encoded_content}"
 
     - name: Get Beijing Time
       id: time
@@ -37,6 +38,7 @@ jobs:
     - name: 执行推送
       run: |
         message="For: ${{ steps.time.outputs.current_time }}
-        ${{ steps.read_file.outputs.file_content }}"
+        
+        $(echo "${{ steps.read_file.outputs.encoded_content }}" | base64 -d)"
 
         wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
