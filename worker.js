@@ -105,9 +105,10 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
   }
 
   if (!path || path.trim() === '') {
-    path = encodeURIComponent('?ed=2048');
+    path = encodeURIComponent('/?ed=2048');
   } else {
-    path = encodeURIComponent(path);
+    // 如果第一个字符不是斜杠，则在前面添加一个斜杠
+    path = (path[0] === '/') ? encodeURIComponent(path) : encodeURIComponent('/' + path);
   }
 
   const newAddresses = await getAddresses();
@@ -140,7 +141,7 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
       addressid = addressid.split(':')[0];
     }
 
-    const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=/${path}#${addressid}`;
+    const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
 
     return vlessLink;
   }).join('\n');
