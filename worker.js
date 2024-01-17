@@ -14,40 +14,100 @@ let addressesapi = [
   'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //可参考内容格式 自行搭建。
 ];
 
+let DLS = 4;
+let addressescsv = [
+	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
+];
 
-async function getAddresses() {
-  if (!addressesapi || addressesapi.length === 0) {
-    return [];
-  }
+async function getAddressesapi() {
+	if (!addressesapi || addressesapi.length === 0) {
+	  return [];
+	}
+  
+	let newAddressesapi = [];
+  
+	for (const apiUrl of addressesapi) {
+	  try {
+		const response = await fetch(apiUrl);
+  
+		if (!response.ok) {
+		  console.error('获取地址时出错:', response.status, response.statusText);
+		  continue;
+		}
+  
+		const text = await response.text();
+		const lines = text.split('\n');
+		const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
+  
+		const apiAddresses = lines.map(line => {
+		  const match = line.match(regex);
+		  return match ? match[0] : null;
+		}).filter(Boolean);
+  
+		newAddressesapi = newAddressesapi.concat(apiAddresses);
+	  } catch (error) {
+		console.error('获取地址时出错:', error);
+		continue;
+	  }
+	}
+  
+	return newAddressesapi;
+}
 
-  let newAddresses = [];
-
-  for (const apiUrl of addressesapi) {
-    try {
-      const response = await fetch(apiUrl);
-
-      if (!response.ok) {
-        console.error('获取地址时出错:', response.status, response.statusText);
-        continue;
-      }
-
-      const text = await response.text();
-      const lines = text.split('\n');
-      const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
-
-      const apiAddresses = lines.map(line => {
-        const match = line.match(regex);
-        return match ? match[0] : null;
-      }).filter(Boolean);
-
-      newAddresses = newAddresses.concat(apiAddresses);
-    } catch (error) {
-      console.error('获取地址时出错:', error);
-      continue;
-    }
-  }
-
-  return newAddresses;
+async function getAddressescsv() {
+	if (!addressescsv || addressescsv.length === 0) {
+	  return [];
+	}
+  
+	let newAddressescsv = [];
+  
+	for (const csvUrl of addressescsv) {
+	  try {
+		const response = await fetch(csvUrl);
+  
+		if (!response.ok) {
+		  console.error('获取CSV地址时出错:', response.status, response.statusText);
+		  continue;
+		}
+  
+		const text = await response.text();  // 使用正确的字符编码解析文本内容
+		const lines = text.split('\n');
+  
+		// 检查CSV头部是否包含必需字段
+		const header = lines[0].split(',');
+		const tlsIndex = header.indexOf('TLS');
+		const speedIndex = header.length - 1; // 最后一个字段
+  
+		const ipAddressIndex = 0;  // IP地址在 CSV 头部的位置
+		const portIndex = 1;  // 端口在 CSV 头部的位置
+		const dataCenterIndex = tlsIndex + 1; // 数据中心是 TLS 的后一个字段
+  
+		if (tlsIndex === -1) {
+		  console.error('CSV文件缺少必需的字段');
+		  continue;
+		}
+  
+		// 从第二行开始遍历CSV行
+		for (let i = 1; i < lines.length; i++) {
+		  const columns = lines[i].split(',');
+  
+		  // 检查TLS是否为"TRUE"且速度大于DLS
+		  if (columns[tlsIndex] === 'TRUE' && parseFloat(columns[speedIndex]) > DLS) {
+			const ipAddress = columns[ipAddressIndex];
+			const port = columns[portIndex];
+			const dataCenter = columns[dataCenterIndex];
+  
+			const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
+			newAddressescsv.push(formattedAddress);
+		  }
+		}
+	  } catch (error) {
+		console.error('获取CSV地址时出错:', error);
+		continue;
+	  }
+	}
+  
+	return newAddressescsv;
 }
 
 async function handleRequest(request) {
@@ -111,8 +171,10 @@ ${workerUrl}?host=[your host]&uuid=[your uuid]&path=[your path]
     path = (path[0] === '/') ? encodeURIComponent(path) : encodeURIComponent('/' + path);
   }
 
-  const newAddresses = await getAddresses();
-  addresses = addresses.concat(newAddresses);
+	const newAddressesapi = await getAddressesapi();
+	const newAddressescsv = await getAddressescsv();
+	addresses = addresses.concat(newAddressesapi);
+	addresses = addresses.concat(newAddressescsv);
 
   // 使用Set对象去重
   const uniqueAddresses = [...new Set(addresses)];
