@@ -1,4 +1,4 @@
-IP地址,端口,回源端口,TLS,数据中心,地区,城市,TCP延迟(ms),速度(MB/s)
+IP鍦板潃,绔彛,鍥炴簮绔彛,TLS,鏁版嵁涓績,鍦板尯,鍩庡競,TCP寤惰繜(ms),閫熷害(MB/s)
 8.219.111.147,2087,2087,TRUE,SIN,Asia Pacific,Singapore,4,5.74
 8.219.122.55,2087,2087,TRUE,SIN,Asia Pacific,Singapore,32,5.72
 8.222.255.15,2086,2086,FALSE,SIN,Asia Pacific,Singapore,26,5.71
