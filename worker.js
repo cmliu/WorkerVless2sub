@@ -2,11 +2,11 @@ addEventListener('fetch', event => {
 	event.respondWith(handleRequest(event.request))
   })
   
-  // 设置优选地址，不带端口号默认443，不支持非TLS订阅生成
+  // 设置优选地址，不带端口号默认8443，不支持非TLS订阅生成
   let addresses = [
-	'www.visa.com.hk:2096',
-	'icook.tw:2053',
-	'cloudflare.cfgo.cc'
+	'www.visa.com.hk:2096#假装是香港',
+	'icook.tw:2053#假装是台湾',
+	'cloudflare.cfgo.cc#真的是美国'
   ];
   
   // 设置优选地址api接口
@@ -121,6 +121,51 @@ addEventListener('fetch', event => {
 		uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
 		path = "/?ed=2048";
 
+	} else if (url.pathname.includes("/lunzi")) {
+		let sites = [
+			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/config.json',type: "xray"},
+			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/1/config.json',type: "xray" },
+			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/2/config.json',type: "xray"},
+			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/3/config.json',type: "xray"},
+			{ url: 'https://gitlab.com/free9999/ipupdate/-/raw/master/xray/config.json',type: "xray"},
+			{ url: 'https://gitlab.com/free9999/ipupdate/-/raw/master/xray/2/config.json',type: "xray"},
+		];
+
+		const maxRetries = 6;
+		let retryCount = 0;
+		let data = null;
+	
+		while (retryCount < maxRetries) {
+		  const randomSite = sites[Math.floor(Math.random() * sites.length)];
+		  const response = await fetch(randomSite.url);
+	
+		  if (response.ok) {
+			data = await response.json();
+			break; // 成功获取数据时跳出循环
+		  } else {
+			console.error('Failed to fetch data. Retrying...');
+			retryCount++;
+		  }
+		}
+	
+		if (!data) {
+		  console.error('Failed to fetch data after multiple retries.');
+		  // 这里你可以选择如何处理失败，比如返回错误响应或执行其他逻辑
+		  return new Response('Failed to fetch data after multiple retries.', {
+			status: 500,
+			headers: { 'content-type': 'text/plain; charset=utf-8' },
+		  });
+		}
+	
+		processXray(data);
+	
+		function processXray(data) {
+		  let outboundConfig = data.outbounds[0];
+		  host = outboundConfig?.streamSettings?.wsSettings?.headers?.Host;
+		  uuid = outboundConfig.settings?.vnext?.[0]?.users?.[0]?.id;
+		  path = outboundConfig?.streamSettings?.wsSettings?.path;
+		}
+
 	} else {
 		host = url.searchParams.get('host');
 		uuid = url.searchParams.get('uuid');
@@ -191,7 +236,7 @@ addEventListener('fetch', event => {
 	const uniqueAddresses = [...new Set(addresses)];
   
 	const responseBody = uniqueAddresses.map(address => {
-	  let port = "443";
+	  let port = "8443";
 	  let addressid = address;
   
 	  if (address.includes(':') && address.includes('#')) {
@@ -214,7 +259,7 @@ addEventListener('fetch', event => {
 		addressid = addressid.split(':')[0];
 	  }
   
-	  const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${addressid}`;
+	  const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
   
 	  return vlessLink;
 	}).join('\n');
