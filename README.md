@@ -26,12 +26,12 @@ https://[YOUR-WORKER-URL]/sub?host=[YOUR-HOST]&uuid=[YOUR-UUID]&path=[YOUR-PATH]
 用您实际的值替换占位符，如 **YOUR-WORKER-URL**、**YOUR-HOST** 和 **YOUR-UUID**，**YOUR-PATH**为空可不填。此外，根据您的具体用例考虑添加更多详细信息或自定义。
 
 ### 设置你的专属优选域名
-请自行修改添加 **addresses** 参数即可，若不带端口号默认443，不支持生成非TLS订阅
+请自行修改添加 **addresses** 参数即可，若不带端口号默认8443，不支持生成非TLS订阅，#号后为备注别名
 ```js
 let addresses = [
-  'www.visa.com.hk:2096',
-  'icook.tw:2053',
-  'what.the.fuck.cloudns.biz'
+	'www.visa.com.hk:2096#假装是香港',
+	'icook.tw:2053#假装是台湾',
+	'cloudflare.cfgo.cc#真的是美国'
 ];
 ```
 
@@ -46,7 +46,7 @@ let addressesapi = [
 ## 示例
 ### 请求
 ```lua
-https://sub.fxxk.dedyn.io/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
+https://sub.cmliucdn.tk/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
 ```
 
 ### 响应
@@ -57,6 +57,6 @@ dmxlc3M6Ly95b3VyLWhvc3Q9eXlvdXIuaG9zdDpkb2N0OjQ0My9lZG=...
 ```
 
 ## 感谢
-我自己的脑洞
+我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)
 
 
