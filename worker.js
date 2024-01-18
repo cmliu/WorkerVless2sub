@@ -37,7 +37,7 @@ async function getAddressesapi() {
   
 		const text = await response.text();
 		const lines = text.split('\n');
-		const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
+                const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#.*)?$/;
   
 		const apiAddresses = lines.map(line => {
 		  const match = line.match(regex);
