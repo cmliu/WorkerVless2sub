@@ -2,7 +2,7 @@ addEventListener('fetch', event => {
 	event.respondWith(handleRequest(event.request))
   })
   
-  // 设置优选地址，不带端口号默认8443，不支持非TLS订阅生成
+  // 设置优选地址，不带端口号默认443，不支持非TLS订阅生成
   let addresses = [
 	'www.visa.com.hk:2096',
 	'icook.tw:2053',
@@ -16,7 +16,7 @@ addEventListener('fetch', event => {
   
   let DLS = 4;
   let addressescsv = [
-	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
+	  //'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
   ];
   
   async function getAddressesapi() {
@@ -49,6 +49,7 @@ addEventListener('fetch', event => {
 		  console.error('获取地址时出错:', error);
 		  continue;
 		}
+	  }
 	
 	  return newAddressesapi;
   }
@@ -116,8 +117,8 @@ addEventListener('fetch', event => {
 	let path = "";
   
 	if (url.pathname.includes("/auto") || url.pathname.includes("/404") || url.pathname.includes("/sos")) {
-		host = "未设置应急host";
-		uuid = "未设置应急uuid";
+		host = "cmliussss.pages.dev";
+		uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
 		path = "/?ed=2048";
 
 	} else {
@@ -190,7 +191,7 @@ addEventListener('fetch', event => {
 	const uniqueAddresses = [...new Set(addresses)];
   
 	const responseBody = uniqueAddresses.map(address => {
-	  let port = "8443";
+	  let port = "443";
 	  let addressid = address;
   
 	  if (address.includes(':') && address.includes('#')) {
