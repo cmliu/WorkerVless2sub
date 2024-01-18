@@ -37,7 +37,7 @@ addEventListener('fetch', event => {
 	
 		  const text = await response.text();
 		  const lines = text.split('\n');
-		  const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#\w+)?$/;
+		  const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#.*)?$/;
 	
 		  const apiAddresses = lines.map(line => {
 			const match = line.match(regex);
@@ -49,7 +49,6 @@ addEventListener('fetch', event => {
 		  console.error('获取地址时出错:', error);
 		  continue;
 		}
-	  }
 	
 	  return newAddressesapi;
   }
