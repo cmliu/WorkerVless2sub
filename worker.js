@@ -92,7 +92,7 @@ addEventListener('fetch', event => {
 			const columns = lines[i].split(',');
 	
 			// 检查TLS是否为"TRUE"且速度大于DLS
-			if (columns[tlsIndex] === 'TRUE' && parseFloat(columns[speedIndex]) > DLS) {
+			if (columns[tlsIndex].toUpperCase() === 'TRUE' && parseFloat(columns[speedIndex]) > DLS) {
 			  const ipAddress = columns[ipAddressIndex];
 			  const port = columns[portIndex];
 			  const dataCenter = columns[dataCenterIndex];
