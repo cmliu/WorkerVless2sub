@@ -16,9 +16,12 @@ addEventListener('fetch', event => {
   
   let DLS = 4;
   let addressescsv = [
-	  //'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
+	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
   ];
   
+  let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
+  let subconfig = "https://raw.githubusercontent.com/cmliu/edgetunnel/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
+
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
 		return [];
@@ -111,6 +114,7 @@ addEventListener('fetch', event => {
   }
   
   async function handleRequest(request) {
+	const userAgent = request.headers.get('User-Agent').toLowerCase();
 	const url = new URL(request.url);
 	let host = "";
 	let uuid = "";
@@ -227,48 +231,94 @@ addEventListener('fetch', event => {
 		  }
 	}
   
-	  const newAddressesapi = await getAddressesapi();
-	  const newAddressescsv = await getAddressescsv();
-	  addresses = addresses.concat(newAddressesapi);
-	  addresses = addresses.concat(newAddressescsv);
-  
-	// 使用Set对象去重
-	const uniqueAddresses = [...new Set(addresses)];
-  
-	const responseBody = uniqueAddresses.map(address => {
-	  let port = "8443";
-	  let addressid = address;
-  
-	  if (address.includes(':') && address.includes('#')) {
-		const parts = address.split(':');
-		address = parts[0];
-		const subParts = parts[1].split('#');
-		port = subParts[0];
-		addressid = subParts[1];
-	  } else if (address.includes(':')) {
-		const parts = address.split(':');
-		address = parts[0];
-		port = parts[1];
-	  } else if (address.includes('#')) {
-		const parts = address.split('#');
-		address = parts[0];
-		addressid = parts[1];
-	  }
-  
-	  if (addressid.includes(':')) {
-		addressid = addressid.split(':')[0];
-	  }
-  
-	  const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
-  
-	  return vlessLink;
-	}).join('\n');
-  
-	const base64Response = btoa(responseBody);
-  
-	const response = new Response(base64Response, {
-	  headers: { 'content-type': 'text/plain' },
-	});
-  
-	return response;
+	if (userAgent.includes('clash')) {
+		const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(url.origin + url.pathname)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+
+		try {
+		  const subconverterResponse = await fetch(subconverterUrl);
+	  
+		  if (!subconverterResponse.ok) {
+			throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+		  }
+	  
+		  const subconverterContent = await subconverterResponse.text();
+	  
+		  return new Response(subconverterContent, {
+			headers: { 'content-type': 'text/plain; charset=utf-8' },
+		  });
+		} catch (error) {
+		  return new Response(`Error: ${error.message}`, {
+			status: 500,
+			headers: { 'content-type': 'text/plain; charset=utf-8' },
+		  });
+		}
+	} else if (userAgent.includes('sing-box') || userAgent.includes('singbox')){
+		const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(url.origin + url.pathname)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+
+		try {
+		  const subconverterResponse = await fetch(subconverterUrl);
+	  
+		  if (!subconverterResponse.ok) {
+			throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+		  }
+	  
+		  const subconverterContent = await subconverterResponse.text();
+	  
+		  return new Response(subconverterContent, {
+			headers: { 'content-type': 'text/plain; charset=utf-8' },
+		  });
+		} catch (error) {
+		  return new Response(`Error: ${error.message}`, {
+			status: 500,
+			headers: { 'content-type': 'text/plain; charset=utf-8' },
+		  });
+		}
+	} else {
+		const newAddressesapi = await getAddressesapi();
+		const newAddressescsv = await getAddressescsv();
+		addresses = addresses.concat(newAddressesapi);
+		addresses = addresses.concat(newAddressescsv);
+	
+	  // 使用Set对象去重
+	  const uniqueAddresses = [...new Set(addresses)];
+	
+	  const responseBody = uniqueAddresses.map(address => {
+		let port = "8443";
+		let addressid = address;
+	
+		if (address.includes(':') && address.includes('#')) {
+		  const parts = address.split(':');
+		  address = parts[0];
+		  const subParts = parts[1].split('#');
+		  port = subParts[0];
+		  addressid = subParts[1];
+		} else if (address.includes(':')) {
+		  const parts = address.split(':');
+		  address = parts[0];
+		  port = parts[1];
+		} else if (address.includes('#')) {
+		  const parts = address.split('#');
+		  address = parts[0];
+		  addressid = parts[1];
+		}
+	
+		if (addressid.includes(':')) {
+		  addressid = addressid.split(':')[0];
+		}
+	
+		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
+	
+		return vlessLink;
+	  }).join('\n');
+	
+	  const base64Response = btoa(responseBody);
+	
+	  const response = new Response(base64Response, {
+		headers: { 'content-type': 'text/plain' },
+	  });
+	
+	  return response;
+	}
+
+	
   }
