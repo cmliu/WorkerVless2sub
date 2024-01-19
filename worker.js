@@ -232,7 +232,7 @@ addEventListener('fetch', event => {
 	}
   
 	if (userAgent.includes('clash')) {
-		const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(url.origin + url.pathname)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+		const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
 
 		try {
 		  const subconverterResponse = await fetch(subconverterUrl);
@@ -253,7 +253,7 @@ addEventListener('fetch', event => {
 		  });
 		}
 	} else if (userAgent.includes('sing-box') || userAgent.includes('singbox')){
-		const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(url.origin + url.pathname)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+		const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
 
 		try {
 		  const subconverterResponse = await fetch(subconverterUrl);
