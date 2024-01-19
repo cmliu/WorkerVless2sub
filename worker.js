@@ -114,7 +114,8 @@ addEventListener('fetch', event => {
   }
   
   async function handleRequest(request) {
-	const userAgent = request.headers.get('User-Agent').toLowerCase();
+	const userAgentHeader = request.headers.get('User-Agent');
+	const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 	const url = new URL(request.url);
 	let host = "";
 	let uuid = "";
