@@ -2,6 +2,14 @@
 ### 这个是一个将 Cloudflare Workers - VLESS 搭配 自建优选域名 的 订阅生成器
 此 Cloudflare Workers 脚本根据指定的首选项和额外的动态地址生成 VLESS 订阅链接。它提供了一种简便的方式来设置具有首选地址的 VLESS 订阅，并支持从 API 获取额外的地址。
 
+# This bot runs perfectly on DartNode!
+
+![image](https://github.com/cmliu/WorkerVless2sub/assets/24787744/b4eac86c-011b-48bc-b490-b2820622e4a0)
+
+<a href="https://dartnode.com/?via=benny"><img src="assets/dartnode.png" width="500px"  alt="DartNode"/></a>
+
+Find out more on [DartNode](https://dartnode.com/?via=benny)
+
 ## 使用方法
 要使用此 Cloudflare Workers，请按照以下步骤进行：
 
