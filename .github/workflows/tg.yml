@@ -37,12 +37,31 @@ jobs:
         message="今日优选 For: ${{ steps.time.outputs.current_time }}
         
         ${ips}......更多优选IP可通过自定义订阅方式获取
+        ————
+        vless快速体验订阅地址：https://sub.cmliucdn.tk/auto
+        vless自定义订阅详细使用方法：
         https://sub.cmliucdn.tk/sub?host=[你的Vless域名]%26uuid=[你的UUID]%26path=[你的ws路径]
         
-        如果你的vless是通过worker部署且没有path参数,可填入参数后订阅节点信息
+        快速订阅方式,如果你的vless是通过worker部署可填入以下参数后获取节点订阅信息
         https://sub.cmliucdn.tk/sub?host=[你的Worker域名]%26uuid=[你的UUID]
         实际使用时请去掉[ ]符号，Worker域名优先使用自定义域
-        注意：您可以将此链接分享传播到任何地方😁顺便给3Kmfi6HP大佬敬个礼"
+        ————
+        vmess快速体验订阅地址：https://vmess.cmliucdn.tk/auto
+        vmess自定义订阅详细使用方法：
+        https://vmess.cmliucdn.tk/sub?cc=[Vmess服务名字]&host=[你的Vmess域名]&uuid=[你的UUID]&path=[你的ws路径]&alterid=[额外ID]&security=[加密方式]
+        
+        *cc 非必填项
+        *alterid 非必填项,默认0
+        *security 非必填项,默认auto
+        
+        快速订阅方式,注意worker不支持vmess!worker不支持vmess!worker不支持vmess!
+        https://vmess.cmliucdn.tk/sub?host=[你的Vmess域名]&uuid=[你的UUID]&path=[你的ws路径]
+        
+        cc字段可能会影响使用在线订阅转换时的地区分配，推荐使用地区代号，例如HK、SG、US
+        实际使用时请去掉[ ]符号，
+        ————
+        注意：您可以将此链接分享传播到任何地方😁
+        顺便给3Kmfi6HP大佬、白嫖哥、Mingyu大佬敬个礼"
         
         # wget -qO- "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage?chat_id=${{ secrets.TG_TESTPD_ID }}&text=$message"
         curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
