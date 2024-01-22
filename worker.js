@@ -112,7 +112,8 @@ addEventListener('fetch', event => {
 	
 	  return newAddressescsv;
   }
-  
+
+  let protocol;
   async function handleRequest(request) {
 	const userAgentHeader = request.headers.get('User-Agent');
 	const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
@@ -120,7 +121,7 @@ addEventListener('fetch', event => {
 	let host = "";
 	let uuid = "";
 	let path = "";
-  
+
 	if (url.pathname.includes("/auto") || url.pathname.includes("/404") || url.pathname.includes("/sos")) {
 		host = "cmliussss.pages.dev";
 		uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
@@ -139,36 +140,39 @@ addEventListener('fetch', event => {
 		const maxRetries = 6;
 		let retryCount = 0;
 		let data = null;
-	
+
 		while (retryCount < maxRetries) {
 		  const randomSite = sites[Math.floor(Math.random() * sites.length)];
 		  const response = await fetch(randomSite.url);
-	
-		  if (response.ok) {
-			data = await response.json();
-			break; // 成功获取数据时跳出循环
-		  } else {
-			console.error('Failed to fetch data. Retrying...');
-			retryCount++;
-		  }
-		}
-	
-		if (!data) {
-		  console.error('Failed to fetch data after multiple retries.');
-		  // 这里你可以选择如何处理失败，比如返回错误响应或执行其他逻辑
-		  return new Response('Failed to fetch data after multiple retries.', {
-			status: 500,
-			headers: { 'content-type': 'text/plain; charset=utf-8' },
-		  });
-		}
-	
-		processXray(data);
-	
-		function processXray(data) {
-		  let outboundConfig = data.outbounds[0];
-		  host = outboundConfig?.streamSettings?.wsSettings?.headers?.Host;
-		  uuid = outboundConfig.settings?.vnext?.[0]?.users?.[0]?.id;
-		  path = outboundConfig?.streamSettings?.wsSettings?.path;
+
+			if (response.ok) {
+				data = await response.json();
+				if (!data) {
+					console.error('Failed to fetch data after multiple retries.');
+					// 这里你可以选择如何处理失败，比如返回错误响应或执行其他逻辑
+					return new Response('Failed to fetch data after multiple retries.', {
+					status: 500,
+					headers: { 'content-type': 'text/plain; charset=utf-8' },
+					});
+				}
+			
+				processXray(data);
+			
+				function processXray(data) {
+					let outboundConfig = data.outbounds[0];
+					host = outboundConfig?.streamSettings?.wsSettings?.headers?.Host;
+					uuid = outboundConfig.settings?.vnext?.[0]?.users?.[0]?.id;
+					path = outboundConfig?.streamSettings?.wsSettings?.path;
+					protocol = outboundConfig.protocol;
+				}
+
+				if (protocol.toLowerCase() === 'vless') {
+					break; // 成功获取数据时跳出循环
+				}
+			} else {
+				console.error('Failed to fetch data. Retrying...');
+				retryCount++;
+			}
 		}
 
 	} else {
