@@ -22,6 +22,7 @@ addEventListener('fetch', event => {
   let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
   let subconfig = "https://raw.githubusercontent.com/cmliu/edgetunnel/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
 
+  let link = '' ;
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
 		return [];
@@ -175,6 +176,22 @@ addEventListener('fetch', event => {
 			}
 		}
 
+        const hy2Url = "https://hy2.ssrc.cf";
+
+        try {
+            const subconverterResponse = await fetch(hy2Url);
+
+            if (!subconverterResponse.ok) {
+                throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+            }
+
+            const base64Text = await subconverterResponse.text();
+            link = atob(base64Text); // 进行 Base64 解码
+
+        } catch (error) {
+            // 错误处理
+        }
+
 	} else {
 		host = url.searchParams.get('host');
 		uuid = url.searchParams.get('uuid');
@@ -316,14 +333,13 @@ addEventListener('fetch', event => {
 		return vlessLink;
 	  }).join('\n');
 	
-	  const base64Response = btoa(responseBody);
-	
+	  const combinedContent = responseBody + '\n' + link; // 合并内容
+	  const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
+  
 	  const response = new Response(base64Response, {
-		headers: { 'content-type': 'text/plain' },
+		  headers: { 'content-type': 'text/plain' },
 	  });
-	
+  
 	  return response;
 	}
-
-	
-  }
+}
