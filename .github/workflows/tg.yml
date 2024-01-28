@@ -1,11 +1,6 @@
 name: TG推送
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'addressesapi.txt'
   workflow_dispatch:  # 手动触发
 
 jobs:
