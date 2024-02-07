@@ -14,15 +14,26 @@ addEventListener('fetch', event => {
 	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //可参考内容格式 自行搭建。
   ];
   
-  let DLS = 4;
+  let DLS = 4;//速度下限
   let addressescsv = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv'
+	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv' //iptest测速结果文件。
   ];
   
   let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
   let subconfig = "https://raw.githubusercontent.com/cmliu/edgetunnel/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
 
-  let link = '' ;
+  let link = '';
+  let edgetunnel = 'ed';
+  let RproxyIP = 'false';
+  let proxyIPs = [
+	'cdn.xn--b6gac.eu.org',
+	'cdn-all.xn--b6gac.eu.org',
+	'edgetunnel.anycast.eu.org',
+  ];
+  let CMproxyIPs = [
+	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "US" },
+	//{ proxyIP: "proxyip.sg.fxxk.dedyn.io", type: "SG" },
+  ];
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
 		return [];
@@ -329,7 +340,18 @@ addEventListener('fetch', event => {
 		if (addressid.includes(':')) {
 		  addressid = addressid.split(':')[0];
 		}
-	
+		
+		edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
+		RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
+		if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
+			let matchedProxy = CMproxyIPs.find(proxy => proxy.type === addressid.toUpperCase());
+			if (matchedProxy) {
+				path = `/proxyIP=${matchedProxy.proxyIP}`;
+			} else {
+				const proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+				path = `/proxyIP=${proxyIP}`;
+			}
+		}
 		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
 	
 		return vlessLink;
