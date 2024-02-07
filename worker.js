@@ -138,6 +138,8 @@ addEventListener('fetch', event => {
 		host = "cmliussss.pages.dev";
 		uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
 		path = "/?ed=2048";
+		//edgetunnel = 'cmliu';
+		//RproxyIP = 'true';
 
 	} else if (url.pathname.includes("/lunzi")) {
 		let sites = [
