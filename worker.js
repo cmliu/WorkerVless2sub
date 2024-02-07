@@ -346,12 +346,26 @@ addEventListener('fetch', event => {
 		edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
 		RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 		if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
-			let matchedProxy = CMproxyIPs.find(proxy => proxy.type === addressid.toUpperCase());
-			if (matchedProxy) {
-				path = `/proxyIP=${matchedProxy.proxyIP}`;
+			// 将addressid转换为小写
+			let lowerAddressid = addressid.toLowerCase();
+			// 初始化找到的proxyIP为null
+			let foundProxyIP = null;
+
+			// 遍历CMproxyIPs数组查找匹配项
+			for (let item of CMproxyIPs) {
+				if (lowerAddressid.includes(item.type.toLowerCase())) {
+				foundProxyIP = item.proxyIP;
+				break; // 找到匹配项，跳出循环
+				}
+			}
+
+			if (foundProxyIP) {
+				// 如果找到匹配的proxyIP，赋值给path
+				path = `/proxyIP=${foundProxyIP}`;
 			} else {
-				const proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-				path = `/proxyIP=${proxyIP}`;
+				// 如果没有找到匹配项，随机选择一个proxyIP
+				const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+				path = `/proxyIP=${randomProxyIP}`;
 			}
 		}
 		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
