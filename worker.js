@@ -34,6 +34,8 @@ addEventListener('fetch', event => {
 	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "US" },
 	//{ proxyIP: "proxyip.sg.fxxk.dedyn.io", type: "SG" },
   ];
+  let BotToken ='';
+  let ChatID =''; 
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
 		return [];
@@ -140,7 +142,8 @@ addEventListener('fetch', event => {
 		path = "/?ed=2048";
 		//edgetunnel = 'cmliu';
 		//RproxyIP = 'true';
-
+	
+	await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}`);
 	} else if (url.pathname.includes("/lunzi")) {
 		let sites = [
 			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/config.json',type: "xray"},
@@ -381,5 +384,28 @@ addEventListener('fetch', event => {
 	  });
   
 	  return response;
+	}
+}
+
+async function sendMessage(type, ip, add_data = "") {
+	if ( BotToken !== '' && ChatID !== ''){
+		let msg = "";
+		const response = await fetch(`http://ip-api.com/json/${ip}?lang=zh-CN`);
+		if (response.status == 200) {
+			const ipInfo = await response.json();
+			msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n城市: ${ipInfo.city}\nISP: ${ipInfo.isp}\nASN: ${ipInfo.as}\n${add_data}`;
+		} else {
+			msg = `${type}\nIP: ${ip}\n${add_data}`;
+		}
+	  
+		let url = "https://api.telegram.org/bot"+ BotToken +"/sendMessage?chat_id=" + ChatID + "&text=" + encodeURIComponent(msg);
+		return fetch(url, {
+		  method: 'get',
+		  headers: {
+			'Accept': 'text/html,application/xhtml+xml,application/xml;',
+			'Accept-Encoding': 'gzip, deflate, br',
+			'User-Agent': 'Mozilla/5.0 Chrome/90.0.4430.72'
+		  }
+		});
 	}
 }
