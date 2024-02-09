@@ -143,7 +143,7 @@ addEventListener('fetch', event => {
 		//edgetunnel = 'cmliu';
 		//RproxyIP = 'true';
 	
-	await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}`);
+	await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}\n域名: ${url.hostname}\n入口: ${url.pathname + url.search}`);
 	} else if (url.pathname.includes("/lunzi")) {
 		let sites = [
 			{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/config.json',type: "xray"},
