@@ -36,6 +36,10 @@ addEventListener('fetch', event => {
   ];
   let BotToken ='';
   let ChatID =''; 
+  let proxyhosts = [
+    'warp-sub.pages.dev',// 可自行搭建后cname绑定域名 https://github.com/cmliu/PagesProxyForV2ray
+  ];
+  let EndPS = '';
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
 		return [];
@@ -371,7 +375,14 @@ addEventListener('fetch', event => {
 				path = `/proxyIP=${randomProxyIP}`;
 			}
 		}
-		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${path}#${encodeURIComponent(addressid)}`;
+		  
+		let 最终路径 = path ;
+		if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
+			最终路径 = `/${url.searchParams.get('host')}${path}`;
+			host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
+			EndPS = ' 已启用临时域名中转服务,请尽快绑定自定义域!';
+		}
+		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${最终路径}#${encodeURIComponent(addressid + EndPS)}`;
 	
 		return vlessLink;
 	  }).join('\n');
