@@ -36,7 +36,7 @@ addEventListener('fetch', event => {
   ];
   let BotToken ='';
   let ChatID =''; 
-  let proxyhosts = [ // 可自行搭建后cname绑定域名 https://github.com/cmliu/PagesProxyForV2ray
+  let proxyhosts = [ 
     	'fc071d49-af91-42d6-a20e-5a64e24a53bc.71a45835-dd0c-4d51-8bd4-9ccf9f223662.casacam.net',
 	'68123106-3e43-4958-b75a-b06e81eabf79.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
 	'30388d70-6f5c-4d7c-8daa-9d3df7c5c526.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
