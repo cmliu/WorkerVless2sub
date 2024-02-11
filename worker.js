@@ -36,8 +36,15 @@ addEventListener('fetch', event => {
   ];
   let BotToken ='';
   let ChatID =''; 
-  let proxyhosts = [
-    'warp-sub.pages.dev',// 可自行搭建后cname绑定域名 https://github.com/cmliu/PagesProxyForV2ray
+  let proxyhosts = [ // 可自行搭建后cname绑定域名 https://github.com/cmliu/PagesProxyForV2ray
+    	'fc071d49-af91-42d6-a20e-5a64e24a53bc.71a45835-dd0c-4d51-8bd4-9ccf9f223662.casacam.net',
+	'68123106-3e43-4958-b75a-b06e81eabf79.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
+	'30388d70-6f5c-4d7c-8daa-9d3df7c5c526.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
+	'ca3ff542-1cef-4e11-8fe2-edf0be054938.ee137666-1e0a-46db-bbd6-cc18f9841234.accesscam.org',
+	'45c6457b-17f3-403d-bb15-9bfb4718964a.71a45835-dd0c-4d51-8bd4-9ccf9f223662.casacam.net',
+	'32402ac4-000d-4d4b-81cb-8d360cb770b1.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
+	'1e84f9b8-ceb1-47fc-9c10-634201bd9959.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
+	'15212712-20f5-40a5-b9aa-8363e0130171.ee137666-1e0a-46db-bbd6-cc18f9841234.accesscam.org',
   ];
   let EndPS = '';
   async function getAddressesapi() {
