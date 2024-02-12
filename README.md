@@ -46,7 +46,7 @@ let addressesapi = [
 ## 示例
 ### 请求
 ```lua
-https://sub.cmliucdn.tk/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
+https://sub.cmliussss.workers.dev/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
 ```
 
 ### 响应
@@ -57,6 +57,6 @@ dmxlc3M6Ly95b3VyLWhvc3Q9eXlvdXIuaG9zdDpkb2N0OjQ0My9lZG=...
 ```
 
 ## 感谢
-我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)
+我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[vfarid](https://github.com/vfarid)
 
 
