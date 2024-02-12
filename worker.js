@@ -45,6 +45,10 @@ addEventListener('fetch', event => {
 	'32402ac4-000d-4d4b-81cb-8d360cb770b1.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
 	'1e84f9b8-ceb1-47fc-9c10-634201bd9959.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
 	'15212712-20f5-40a5-b9aa-8363e0130171.ee137666-1e0a-46db-bbd6-cc18f9841234.accesscam.org',
+	'478a9f2a-0d66-4035-a797-06e9c83c6739.3869fe04-6fcd-4ad4-a8f4-40582f4fa0c4.giize.com',
+	'e8b99cbe-9ebd-4a20-a497-38f4b29f2c98.83b11782-ecae-411f-90c3-2a01bb33260a.gleeze.com',
+	'fe9b5676-a2aa-4b6a-8257-cd2dd0910205.8c98ef2b-bee2-470b-b759-9f5efbc10812.freeddns.org',
+	'159d770e-fd74-4069-a73b-fe6ececa7951.f82aee4c-752c-4b0c-9793-380d4d76435c.ddnsgeek.com',
   ];
   let EndPS = '';
   async function getAddressesapi() {
