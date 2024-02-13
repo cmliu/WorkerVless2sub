@@ -277,10 +277,10 @@ addEventListener('fetch', event => {
 		  }
 		
 		  if (!path || path.trim() === '') {
-			path = encodeURIComponent('/?ed=2048');
+			path = '/?ed=2048';
 		  } else {
 			// 如果第一个字符不是斜杠，则在前面添加一个斜杠
-			path = (path[0] === '/') ? encodeURIComponent(path) : encodeURIComponent('/' + path);
+			path = (path[0] === '/') ? path : '/' + path;
 		  }
 	}
   
@@ -393,7 +393,7 @@ addEventListener('fetch', event => {
 			host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
 			EndPS = ' 已启用临时域名中转服务,请尽快绑定自定义域!';
 		}
-		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${最终路径}#${encodeURIComponent(addressid + EndPS)}`;
+		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + EndPS)}`;
 	
 		return vlessLink;
 	  }).join('\n');
