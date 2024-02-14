@@ -36,20 +36,10 @@ addEventListener('fetch', event => {
   ];
   let BotToken ='';
   let ChatID =''; 
-  let proxyhosts = [ 
-    	'fc071d49-af91-42d6-a20e-5a64e24a53bc.71a45835-dd0c-4d51-8bd4-9ccf9f223662.casacam.net',
-	'68123106-3e43-4958-b75a-b06e81eabf79.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
-	'30388d70-6f5c-4d7c-8daa-9d3df7c5c526.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
-	'ca3ff542-1cef-4e11-8fe2-edf0be054938.ee137666-1e0a-46db-bbd6-cc18f9841234.accesscam.org',
-	'45c6457b-17f3-403d-bb15-9bfb4718964a.71a45835-dd0c-4d51-8bd4-9ccf9f223662.casacam.net',
-	'32402ac4-000d-4d4b-81cb-8d360cb770b1.50d88e28-a870-497d-bf87-c20fb6802871.camdvr.org',
-	'1e84f9b8-ceb1-47fc-9c10-634201bd9959.9150e878-8296-4798-a172-c3fe66b8dee5.ddnsgeek.com',
-	'15212712-20f5-40a5-b9aa-8363e0130171.ee137666-1e0a-46db-bbd6-cc18f9841234.accesscam.org',
-	'478a9f2a-0d66-4035-a797-06e9c83c6739.3869fe04-6fcd-4ad4-a8f4-40582f4fa0c4.giize.com',
-	'e8b99cbe-9ebd-4a20-a497-38f4b29f2c98.83b11782-ecae-411f-90c3-2a01bb33260a.gleeze.com',
-	'fe9b5676-a2aa-4b6a-8257-cd2dd0910205.8c98ef2b-bee2-470b-b759-9f5efbc10812.freeddns.org',
-	'159d770e-fd74-4069-a73b-fe6ececa7951.f82aee4c-752c-4b0c-9793-380d4d76435c.ddnsgeek.com',
+  let proxyhosts = [  //代理域名池
+    //'ppfv2tl9veojd-maillazy.pages.dev',
   ];
+  let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//代理域名池URL
   let EndPS = '';
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
@@ -329,74 +319,95 @@ addEventListener('fetch', event => {
 		  });
 		}
 	} else {
+		if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
+			if (proxyhostsURL) {
+				try {
+					const response = await fetch(proxyhostsURL); 
+			
+					if (!response.ok) {
+						console.error('获取地址时出错:', response.status, response.statusText);
+						return; // 如果有错误，直接返回
+					}
+			
+					const text = await response.text();
+					const lines = text.split('\n');
+			
+					proxyhosts = proxyhosts.concat(lines);
+				} catch (error) {
+					console.error('获取地址时出错:', error);
+				}
+			}
+			// 使用Set对象去重
+			proxyhosts = [...new Set(proxyhosts)];
+		}
 		const newAddressesapi = await getAddressesapi();
 		const newAddressescsv = await getAddressescsv();
 		addresses = addresses.concat(newAddressesapi);
 		addresses = addresses.concat(newAddressescsv);
 	
-	  // 使用Set对象去重
-	  const uniqueAddresses = [...new Set(addresses)];
-	
-	  const responseBody = uniqueAddresses.map(address => {
-		let port = "8443";
-		let addressid = address;
-	
-		if (address.includes(':') && address.includes('#')) {
-		  const parts = address.split(':');
-		  address = parts[0];
-		  const subParts = parts[1].split('#');
-		  port = subParts[0];
-		  addressid = subParts[1];
-		} else if (address.includes(':')) {
-		  const parts = address.split(':');
-		  address = parts[0];
-		  port = parts[1];
-		} else if (address.includes('#')) {
-		  const parts = address.split('#');
-		  address = parts[0];
-		  addressid = parts[1];
-		}
-	
-		if (addressid.includes(':')) {
-		  addressid = addressid.split(':')[0];
-		}
+		// 使用Set对象去重
+		const uniqueAddresses = [...new Set(addresses)];
 		
-		edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
-		RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
-		if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
-			// 将addressid转换为小写
-			let lowerAddressid = addressid.toLowerCase();
-			// 初始化找到的proxyIP为null
-			let foundProxyIP = null;
-
-			// 遍历CMproxyIPs数组查找匹配项
-			for (let item of CMproxyIPs) {
-				if (lowerAddressid.includes(item.type.toLowerCase())) {
-				foundProxyIP = item.proxyIP;
-				break; // 找到匹配项，跳出循环
+		const responseBody = uniqueAddresses.map(address => {
+			let port = "8443";
+			let addressid = address;
+		
+			if (address.includes(':') && address.includes('#')) {
+				const parts = address.split(':');
+				address = parts[0];
+				const subParts = parts[1].split('#');
+				port = subParts[0];
+				addressid = subParts[1];
+			} else if (address.includes(':')) {
+				const parts = address.split(':');
+				address = parts[0];
+				port = parts[1];
+			} else if (address.includes('#')) {
+				const parts = address.split('#');
+				address = parts[0];
+				addressid = parts[1];
+			}
+		
+			if (addressid.includes(':')) {
+			addressid = addressid.split(':')[0];
+			}
+			
+			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
+			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
+			if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
+				// 将addressid转换为小写
+				let lowerAddressid = addressid.toLowerCase();
+				// 初始化找到的proxyIP为null
+				let foundProxyIP = null;
+	
+				// 遍历CMproxyIPs数组查找匹配项
+				for (let item of CMproxyIPs) {
+					if (lowerAddressid.includes(item.type.toLowerCase())) {
+					foundProxyIP = item.proxyIP;
+					break; // 找到匹配项，跳出循环
+					}
+				}
+	
+				if (foundProxyIP) {
+					// 如果找到匹配的proxyIP，赋值给path
+					path = `/proxyIP=${foundProxyIP}`;
+				} else {
+					// 如果没有找到匹配项，随机选择一个proxyIP
+					const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+					path = `/proxyIP=${randomProxyIP}`;
 				}
 			}
-
-			if (foundProxyIP) {
-				// 如果找到匹配的proxyIP，赋值给path
-				path = `/proxyIP=${foundProxyIP}`;
-			} else {
-				// 如果没有找到匹配项，随机选择一个proxyIP
-				const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-				path = `/proxyIP=${randomProxyIP}`;
+			  
+			let 最终路径 = path ;
+			if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
+				最终路径 = `/${url.searchParams.get('host')}${path}`;
+				host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
+				EndPS = ' 已启用临时域名中转服务,请尽快绑定自定义域!';
 			}
-		}
-		  
-		let 最终路径 = path ;
-		if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
-			最终路径 = `/${url.searchParams.get('host')}${path}`;
-			host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-			EndPS = ' 已启用临时域名中转服务,请尽快绑定自定义域!';
-		}
-		const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + EndPS)}`;
-	
-		return vlessLink;
-	  }).join('\n');
+			const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + EndPS)}`;
+		
+			return vlessLink;
+		  }).join('\n');
 	
 	  const combinedContent = responseBody + '\n' + link; // 合并内容
 	  const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
