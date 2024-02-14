@@ -36,10 +36,10 @@ addEventListener('fetch', event => {
   ];
   let BotToken ='';
   let ChatID =''; 
-  let proxyhosts = [  //代理域名池
+  let proxyhosts = [  //本地代理域名池
     //'ppfv2tl9veojd-maillazy.pages.dev',
   ];
-  let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//代理域名池URL
+  let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
   let EndPS = '';
   async function getAddressesapi() {
 	  if (!addressesapi || addressesapi.length === 0) {
@@ -142,7 +142,7 @@ addEventListener('fetch', event => {
 	let path = "";
 
 	if (url.pathname.includes("/auto") || url.pathname.includes("/404") || url.pathname.includes("/sos")) {
-		host = "cmliussss.pages.dev";
+		host = "edgetunnel-2z2.pages.dev";
 		uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
 		path = "/?ed=2048";
 		//edgetunnel = 'cmliu';
