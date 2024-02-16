@@ -322,7 +322,7 @@ addEventListener('fetch', event => {
 		if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
 			if (proxyhostsURL) {
 				try {
-					const response = await fetch(proxyhostsURL); 
+					const response = await fetch(proxyhostsURL); // 直接使用vmessLinksURL
 			
 					if (!response.ok) {
 						console.error('获取地址时出错:', response.status, response.statusText);
@@ -331,8 +331,10 @@ addEventListener('fetch', event => {
 			
 					const text = await response.text();
 					const lines = text.split('\n');
+					// 过滤掉空行或只包含空白字符的行
+					const nonEmptyLines = lines.filter(line => line.trim() !== '');
 			
-					proxyhosts = proxyhosts.concat(lines);
+					proxyhosts = proxyhosts.concat(nonEmptyLines);
 				} catch (error) {
 					console.error('获取地址时出错:', error);
 				}
@@ -402,7 +404,7 @@ addEventListener('fetch', event => {
 			if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
 				最终路径 = `/${url.searchParams.get('host')}${path}`;
 				host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-				EndPS = ' 已启用临时域名中转服务,请尽快绑定自定义域!';
+				EndPS = ' 已启用临时域名中转服务，请尽快绑定自定义域！';
 			}
 			const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + EndPS)}`;
 		
