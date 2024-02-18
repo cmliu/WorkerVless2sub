@@ -5,7 +5,7 @@
 ## 使用方法
 要使用此 Cloudflare Workers，请按照以下步骤进行：
 
-在您的 Cloudflare 帐户上部署 [worker.js](https://github.com/cmliu/WorkerVless2sub/blob/main/worker.js) 脚本。
+在您的 Cloudflare 帐户上部署 [worker.js](https://github.com/cmliu/WorkerVless2sub/blob/main/_worker.js) 脚本。
 配置您的 VLESS 客户端以使用生成的订阅链接。
 
 ## 参数
