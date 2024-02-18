@@ -219,7 +219,7 @@ export default {
 				}
 			}
 
-			const hy2Url = "https://hy2.ssrc.cf";
+			const hy2Url = "https://hy2sub.pages.dev";
 
 			try {
 				const subconverterResponse = await fetch(hy2Url);
