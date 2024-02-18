@@ -169,72 +169,23 @@ export default {
 			//edgetunnel = 'cmliu';
 			//RproxyIP = 'true';
 			
+			if (url.pathname.includes("/sos")) {
+				const hy2Url = "https://hy2sub.pages.dev";
+				try {
+					const subconverterResponse = await fetch(hy2Url);
+	
+					if (!subconverterResponse.ok) {
+						throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+					}
+	
+					const base64Text = await subconverterResponse.text();
+					link = atob(base64Text); // 进行 Base64 解码
+	
+				} catch (error) {
+					// 错误处理
+				}	
+			}
 		await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
-		} else if (url.pathname.includes("/lunzi")) {
-			
-			let sites = [
-				{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/config.json',type: "xray"},
-				{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/1/config.json',type: "xray" },
-				{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/2/config.json',type: "xray"},
-				{ url: 'https://raw.githubusercontent.com/Alvin9999/pac2/master/xray/3/config.json',type: "xray"},
-				{ url: 'https://gitlab.com/free9999/ipupdate/-/raw/master/xray/config.json',type: "xray"},
-				{ url: 'https://gitlab.com/free9999/ipupdate/-/raw/master/xray/2/config.json',type: "xray"},
-			];
-
-			const maxRetries = 6;
-			let retryCount = 0;
-			let data = null;
-
-			while (retryCount < maxRetries) {
-				const randomSite = sites[Math.floor(Math.random() * sites.length)];
-				const response = await fetch(randomSite.url);
-
-				if (response.ok) {
-					data = await response.json();
-					if (!data) {
-						console.error('Failed to fetch data after multiple retries.');
-						// 这里你可以选择如何处理失败，比如返回错误响应或执行其他逻辑
-						return new Response('Failed to fetch data after multiple retries.', {
-						status: 500,
-						headers: { 'content-type': 'text/plain; charset=utf-8' },
-						});
-					}
-					
-					processXray(data);
-					
-					function processXray(data) {
-						let outboundConfig = data.outbounds[0];
-						host = outboundConfig?.streamSettings?.wsSettings?.headers?.Host;
-						uuid = outboundConfig.settings?.vnext?.[0]?.users?.[0]?.id;
-						path = outboundConfig?.streamSettings?.wsSettings?.path;
-						protocol = outboundConfig.protocol;
-					}
-
-					if (protocol.toLowerCase() === 'vless') {
-						break; // 成功获取数据时跳出循环
-					}
-				} else {
-					console.error('Failed to fetch data. Retrying...');
-					retryCount++;
-				}
-			}
-
-			const hy2Url = "https://hy2sub.pages.dev";
-
-			try {
-				const subconverterResponse = await fetch(hy2Url);
-
-				if (!subconverterResponse.ok) {
-					throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
-				}
-
-				const base64Text = await subconverterResponse.text();
-				link = atob(base64Text); // 进行 Base64 解码
-
-			} catch (error) {
-				// 错误处理
-			}
-			
 		} else {
 			host = url.searchParams.get('host');
 			uuid = url.searchParams.get('uuid');
