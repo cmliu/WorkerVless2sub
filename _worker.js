@@ -290,7 +290,7 @@ export default {
 				});
 			}
 		} else {
-			if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
+			if(url.searchParams.get('host') && (url.searchParams.get('host').includes('workers.dev') || url.searchParams.get('host').includes('pages.dev'))) {
 				if (proxyhostsURL) {
 					try {
 						const response = await fetch(proxyhostsURL); 
@@ -373,7 +373,7 @@ export default {
 				}
 				
 				let 最终路径 = path ;
-				if(url.searchParams.get('host') && url.searchParams.get('host').includes('workers.dev')) {
+				if(url.searchParams.get('host') && (url.searchParams.get('host').includes('workers.dev') || url.searchParams.get('host').includes('pages.dev'))) {
 					最终路径 = `/${url.searchParams.get('host')}${path}`;
 					host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
 					EndPS = ' 已启用临时域名中转服务，请尽快绑定自定义域！';
