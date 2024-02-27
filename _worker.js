@@ -1,3 +1,8 @@
+
+// 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
+
+let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
+
 // 设置优选地址，不带端口号默认8443，不支持非TLS订阅生成
 let addresses = [
 	'www.visa.com.hk:2096#假装是香港',
@@ -154,7 +159,12 @@ async function getAddressescsv() {
 
 let protocol;
 export default {
-	async fetch (request) {
+	async fetch (request, env) {
+		mytoken = env.TOKEN || mytoken;
+		BotToken = env.TGTOKEN || BotToken;
+		ChatID = env.TGID || ChatID; 
+		subconverter = env.SUBAPI || subconverter;
+		subconfig = env.SUBCONFIG || subconfig;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
@@ -162,14 +172,15 @@ export default {
 		let uuid = "";
 		let path = "";
 
-		if (url.pathname.includes("/auto") || url.pathname.includes("/404") || url.pathname.includes("/sos")) {
-			host = "edgetunnel-2z2.pages.dev";
-			uuid = "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
-			path = "/?ed=2048";
-			//edgetunnel = 'cmliu';
-			//RproxyIP = 'true';
-			
-			if (url.pathname.includes("/sos")) {
+		if (mytoken !== '' && url.pathname.includes(mytoken)) {
+			host = env.HOTS || "edgetunnel-2z2.pages.dev";
+			uuid = env.UUID || "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
+			path = env.PATH || "/?ed=2048";
+			edgetunnel = env.ED || edgetunnel;
+			RproxyIP = env.RPROXYIP || RproxyIP;
+
+			const hasSos = url.searchParams.has('sos');
+			if (hasSos) {
 				const hy2Url = "https://hy2sub.pages.dev";
 				try {
 					const subconverterResponse = await fetch(hy2Url);
