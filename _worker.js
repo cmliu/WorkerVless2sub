@@ -375,11 +375,11 @@ export default {
 				
 					if (foundProxyIP) {
 						// 如果找到匹配的proxyIP，赋值给path
-						path = `/proxyIP=${foundProxyIP}`;
+						path = `/proxyIP=${foundProxyIP}?ed=2048`;
 					} else {
 						// 如果没有找到匹配项，随机选择一个proxyIP
 						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-						path = `/proxyIP=${randomProxyIP}`;
+						path = `/proxyIP=${randomProxyIP}?ed=2048`;
 					}
 				}
 				
