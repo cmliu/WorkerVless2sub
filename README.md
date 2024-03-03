@@ -1,62 +1,81 @@
-# WorkerVless2sub
-### 这个是一个将 Cloudflare Workers - VLESS 搭配 自建优选域名 的 订阅生成器
-此 Cloudflare Workers 脚本根据指定的首选项和额外的动态地址生成 VLESS 订阅链接。它提供了一种简便的方式来设置具有首选地址的 VLESS 订阅，并支持从 API 获取额外的地址。
+# 优选订阅生成器-WorkerVless2sub
+### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器
 
-## 使用方法
-要使用此 Cloudflare Workers，请按照以下步骤进行：
+Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
-在您的 Cloudflare 帐户上部署 [worker.js](https://github.com/cmliu/WorkerVless2sub/blob/main/_worker.js) 脚本。
-配置您的 VLESS 客户端以使用生成的订阅链接。
+# Workers 部署方法
+### 1. 部署 Cloudflare Worker：
+   - 在 Cloudflare Worker 控制台中创建一个新的 Worker。
+   - 将 [worker.js](https://github.com/cmliu/WorkerVless2sub/blob/main/_worker.js)  的内容粘贴到 Worker 编辑器中。
 
-## 参数
-该脚本支持以下参数：
 
-**host**：您的 VLESS 服务器主机名。
+### 2. 添加你的专属优选线路：
+**2.1 修改 addresses 参数示例**
+ - 修改 `addresses` 参数添加本地静态的优选线路，若不带端口号默认8443，不支持生成非TLS订阅，#号后为备注别名，例如：
+	```js
+	let addresses = [
+		'icook.tw:2053#优选域名',
+		'cloudflare.cfgo.cc#优选官方线路',
+		'185.221.160.203:443#电信优选IP',
+	];
+	```
+	该方式仅推荐添加优选域名的部分，频繁变更的优选推荐通过 `addressesapi` 来实现。
 
-**uuid**：您的 VLESS 客户端 UUID。
 
-**path**（可选）：您的 VLESS 的 WS 路径（没有可留空不填）。
+ **2.2 修改 addressesapi 参数示例**
+ - 修改 `addressesapi` 参数，在脚本中设置 `addressesapi` 变量为 **优选IP地址txt文件** 的 URL。例如：
+	```js
+	let addressesapi = [
+		'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt',
+ 		'https://addressesapi.090227.xyz/CloudFlareYes',
+	];
+	```
+	可参考 [addressesapi.txt](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt) 内容格式 自行搭建。
 
-## 路径要求
-路径必须包含 "/sub"。例如：
 
-```lua
-https://[YOUR-WORKER-URL]/sub?host=[YOUR-HOST]&uuid=[YOUR-UUID]&path=[YOUR-PATH]
-```
-用您实际的值替换占位符，如 **YOUR-WORKER-URL**、**YOUR-HOST** 和 **YOUR-UUID**，**YOUR-PATH**为空可不填。此外，根据您的具体用例考虑添加更多详细信息或自定义。
+<details>
+<summary><code><strong>「 我不是小白！我知道iptest是什么！我有IP库也有csv测速文件！ 」</strong></code></summary>
 
-### 设置你的专属优选域名
-请自行修改添加 **addresses** 参数即可，若不带端口号默认8443，不支持生成非TLS订阅，#号后为备注别名
-```js
-let addresses = [
-	'www.visa.com.hk:2096#假装是香港',
-	'icook.tw:2053#假装是台湾',
-	'cloudflare.cfgo.cc#真的是美国'
-];
-```
+ 
+  **2.3 修改 addressescsv 参数示例**
+ - 修改 `addressescsv` 参数，在脚本中设置 `addressescsv` 变量为 **iptest测速结果csv文件地址** 的 URL。例如：
+	```js
+	let DLS = 4;//速度下限
+	let addressescsv = [
+		'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv',
+ 		'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv',
+	];
+	```
+	`DLS` 为要求满足的最低速度，不满足改数值以上的IP将不会添加至优选订阅内容。注意：不考虑单位，只看数值，请按照您的测速结果而定。
 
-### 获取额外优选地址
-脚本允许从 API 获取额外的地址。在脚本中设置 addressesapi 变量为 **优选地址API接口** 的 URL。
-```js
-let addressesapi = [
-  'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //该接口只是示例，并不进行维护。可参考内容格式 自行搭建。
-];
-```
+ </details>
 
-## 示例
-### 请求
-```lua
-https://sub.cmliussss.workers.dev/sub?host=www.google.com&uuid=bbcd7623-bae1-4513-b177-f17f9c244327&path=ws
-```
 
-### 响应
-响应将是一个 Base64 编码的 VLESS 订阅链接：
+### 3. 修改默认内置 Vless 节点 以及 快速订阅入口，通过添加 `HOST`、`UUID`、`PATH`、`TOKEN` 变量 修改默认订阅节点配置信息：
+  例如您的workers项目域名为：`sub.cmliussss.workers.dev`；
+   - 添加 `HOST` 变量，例如 `edgetunnel-2z2.pages.dev`；
+   - 添加 `UUID` 变量，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
+   - 添加 `PATH` 变量，例如 `/?ed=2048`；
+   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
 
-```makefile
-dmxlc3M6Ly95b3VyLWhvc3Q9eXlvdXIuaG9zdDpkb2N0OjQ0My9lZG=...
-```
 
-## 感谢
-我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[vfarid](https://github.com/vfarid)
+# 订阅生成器 使用方法
+  例如您的workers项目域名为：`sub.cmliussss.workers.dev`；
+### 1. 自定义订阅 [视频教程](https://youtu.be/OjqCKeEY7DQ)
+   - **自定义订阅格式** `https://[你的Workers域名]/sub?host=[你的Vless域名]&uuid=[你的UUID]&path=[你的ws路径]`
+   - **host**：您的 VLESS 伪装域名，例如 `edgetunnel-2z2.pages.dev`；
+   - **uuid**：您的 VLESS 客户端 UUID，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
+   - **path**（可选）：您的 VLESS 的 WS 路径（没有可留空不填），例如 `/?ed=2048`。
+   - 自定义订阅地址如下：`https://sub.cmliussss.workers.dev/sub?host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048`
+   - 注意路径必须包含 "/sub"。
+
+### 2. 快速订阅
+   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
+
+## Star 星星走起
+[![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
+
+# 感谢
+我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)
 
 
