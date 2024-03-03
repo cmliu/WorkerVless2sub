@@ -391,7 +391,7 @@ export default {
 					伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
 					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
 				}
-				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${伪装域名}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${伪装域名}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 			
 				return vlessLink;
 			}).join('\n');
