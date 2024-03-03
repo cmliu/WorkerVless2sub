@@ -41,7 +41,7 @@ let proxyhosts = [//本地代理域名池
 	//'ppfv2tl9veojd-maillazy.pages.dev',
 ];
 let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
-let EndPS = '';
+let EndPS = '';//节点名备注内容
 
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
@@ -301,7 +301,7 @@ export default {
 				});
 			}
 		} else {
-			if(url.searchParams.get('host') && (url.searchParams.get('host').includes('workers.dev') || url.searchParams.get('host').includes('pages.dev'))) {
+			if(host.includes('workers.dev') || host.includes('pages.dev')) {
 				if (proxyhostsURL) {
 					try {
 						const response = await fetch(proxyhostsURL); 
@@ -383,13 +383,15 @@ export default {
 					}
 				}
 				
+				let 伪装域名 = host ;
 				let 最终路径 = path ;
-				if(url.searchParams.get('host') && (url.searchParams.get('host').includes('workers.dev') || url.searchParams.get('host').includes('pages.dev'))) {
-					最终路径 = `/${url.searchParams.get('host')}${path}`;
-					host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-					EndPS = ' 已启用临时域名中转服务，请尽快绑定自定义域！';
+				let 节点备注 = EndPS ;
+				if(proxyhosts && (host.includes('workers.dev') || host.includes('pages.dev'))) {
+					最终路径 = `/${host}${path}`;
+					伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
+					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
 				}
-				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + EndPS)}`;
+				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${伪装域名}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 			
 				return vlessLink;
 			}).join('\n');
