@@ -1,16 +1,21 @@
-# 优选订阅生成器-WorkerVless2sub
+# 优选订阅生成器_WorkerVless2sub
+
 ### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器
 
 Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
-# Workers 部署方法
+# Workers 部署方法 [视频教程](https://youtu.be/AtCF7eq0hcE)
+
 ### 1. 部署 Cloudflare Worker：
+
    - 在 Cloudflare Worker 控制台中创建一个新的 Worker。
    - 将 [worker.js](https://github.com/cmliu/WorkerVless2sub/blob/main/_worker.js)  的内容粘贴到 Worker 编辑器中。
 
 
 ### 2. 添加你的专属优选线路：
+
 **2.1 修改 addresses 参数示例**
+
  - 修改 `addresses` 参数添加本地静态的优选线路，若不带端口号默认8443，不支持生成非TLS订阅，#号后为备注别名，例如：
 	```js
 	let addresses = [
@@ -23,6 +28,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
 
  **2.2 修改 addressesapi 参数示例**
+ 
  - 修改 `addressesapi` 参数，在脚本中设置 `addressesapi` 变量为 **优选IP地址txt文件** 的 URL。例如：
 	```js
 	let addressesapi = [
@@ -34,10 +40,11 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
 
 <details>
-<summary><code><strong>「 我不是小白！我知道iptest是什么！我有IP库也有csv测速文件！ 」</strong></code></summary>
+<summary><code><strong>「 我不是小白！我知道IPtest是什么！我有IP库！我也有csv测速文件！ 」</strong></code></summary>
 
  
   **2.3 修改 addressescsv 参数示例**
+  
  - 修改 `addressescsv` 参数，在脚本中设置 `addressescsv` 变量为 **iptest测速结果csv文件地址** 的 URL。例如：
 	```js
 	let DLS = 4;//速度下限
@@ -51,17 +58,22 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
  </details>
 
 
-### 3. 修改默认内置 Vless 节点 以及 快速订阅入口，通过添加 `HOST`、`UUID`、`PATH`、`TOKEN` 变量 修改默认订阅节点配置信息：
+### 3. 修改 快速订阅入口 以及 默认内置 Vless 节点信息：
+
   例如您的workers项目域名为：`sub.cmliussss.workers.dev`；
+   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
    - 添加 `HOST` 变量，例如 `edgetunnel-2z2.pages.dev`；
    - 添加 `UUID` 变量，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
    - 添加 `PATH` 变量，例如 `/?ed=2048`；
-   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
 
 
-# 订阅生成器 使用方法
+
+# 订阅生成器 使用方法 [视频教程](https://youtu.be/OjqCKeEY7DQ)
+
   例如您的workers项目域名为：`sub.cmliussss.workers.dev`；
-### 1. 自定义订阅 [视频教程](https://youtu.be/OjqCKeEY7DQ)
+  
+### 1. 自定义订阅 
+
    - **自定义订阅格式** `https://[你的Workers域名]/sub?host=[你的Vless域名]&uuid=[你的UUID]&path=[你的ws路径]`
    - **host**：您的 VLESS 伪装域名，例如 `edgetunnel-2z2.pages.dev`；
    - **uuid**：您的 VLESS 客户端 UUID，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
@@ -70,6 +82,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
    - 注意路径必须包含 "/sub"。
 
 ### 2. 快速订阅
+
    - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
 
 ## Star 星星走起
