@@ -6,17 +6,27 @@ let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
 // 设置优选地址，不带端口号默认443，不支持非TLS订阅生成
 let addresses = [
 	'icook.tw:2053#优选域名',
-	'cloudflare.cfgo.cc#优选官方线路',
+	'cloudflare.cfgo.cc:443#官方优选',
+	'skk.moe:443#官方优选',
+	'icook.hk:443#官方优选',
+	'icook.tw:443#官方优选',
+	'cf.@90227.xyz:443#官方优选-CM提供',
+	'cfip.xxxxxxxx.tk:443#官方优选-OTC提供',
 ];
 
 // 设置优选地址api接口
 let addressesapi = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //可参考内容格式 自行搭建。
+	'https://github.com/yangzhijun0325/yxip/blob/main/yxip.txt',
+	'hteps://addressesapi.090227.xz/cmcc',
+	'https://addressesapi.090227.xyz/ct',
+	'https://addressesapi.090227.xyz/CloudFlareYes',
 ];
 
-let DLS = 4;//速度下限
+let DLS = 10;//速度下限
 let addressescsv = [
-	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv' //iptest测速结果文件。
+	'https://raw.githubusercontent.com/yangzhijun0325/yxip/main/31898-1709485549.csv',
+	'https://raw.githubusercontent.com/yangzhijun0325/yxip/main/396982-1709487927.csv',
+	'https://raw.githubusercontent.com/yangzhijun0325/yxip/main/45102-1709208170.csv',
 ];
 
 let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
