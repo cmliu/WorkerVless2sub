@@ -1,4 +1,4 @@
-# 优选订阅生成器_WorkerVless2sub
+# 优选订阅生成器 WorkerVless2sub
 
 ### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器
 
@@ -40,7 +40,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
 
 <details>
-<summary><code><strong>「 我不是小白！我知道IPtest是什么！我有IP库！我也有csv测速文件！ 」</strong></code></summary>
+<summary><code><strong>「 我不是小白！我有IP库！我知道IPtest是什么！我也有csv测速文件！ 」</strong></code></summary>
 
  
   **2.3 修改 addressescsv 参数示例**
@@ -72,18 +72,39 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
   例如您的workers项目域名为：`sub.cmliussss.workers.dev`；
   
-### 1. 自定义订阅 
+### 1. 快速订阅
+
+   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如：
+     ```url
+     https://sub.cmliussss.workers.dev/auto
+     ```
+     
+### 2. 自定义订阅 
 
    - **自定义订阅格式** `https://[你的Workers域名]/sub?host=[你的Vless域名]&uuid=[你的UUID]&path=[你的ws路径]`
    - **host**：您的 VLESS 伪装域名，例如 `edgetunnel-2z2.pages.dev`；
    - **uuid**：您的 VLESS 客户端 UUID，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
    - **path**（可选）：您的 VLESS 的 WS 路径（没有可留空不填），例如 `/?ed=2048`。
-   - 自定义订阅地址如下：`https://sub.cmliussss.workers.dev/sub?host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048`
+   - 自定义订阅地址如下：
+     ```url
+     https://sub.cmliussss.workers.dev/sub?host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
+     ```
    - 注意路径必须包含 "/sub"。
 
-### 2. 快速订阅
+### 3. 指定 clash、singbox 配置文件
 
-   - 添加 `TOKEN` 变量，快速订阅访问入口，默认值为: `auto` ，获取订阅器默认节点订阅地址即 `/auto` ，例如 `https://sub.cmliussss.workers.dev/auto`
+   - 添加 `format=clash` 键值，获取 clash 订阅配置，例如：
+     ```url
+     https://sub.cmliussss.workers.dev/auto?format=clash
+     https://sub.cmliussss.workers.dev/sub?format=clash&host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
+     ```
+     
+   - 添加 `format=singbox` 键值，获取 singbox 订阅配置，例如：
+     ```url
+     https://sub.cmliussss.workers.dev/auto?format=singbox
+     https://sub.cmliussss.workers.dev/sub?format=singbox&host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
+     ```
+     
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
