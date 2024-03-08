@@ -41,6 +41,12 @@ let proxyhosts = [//本地代理域名池
 let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
 let EndPS = '';//节点名备注内容
 
+let FileName = 'WorkerVless2sub';
+let SUBUpdateTime = 6; 
+let total = 99;//PB
+//let timestamp = now;
+let timestamp = 4102329600000;//2099-12-31
+
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
@@ -170,6 +176,9 @@ export default {
 		let host = "";
 		let uuid = "";
 		let path = "";
+		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
+		total = total * 1099511627776 * 1024;
+		let expire= Math.floor(timestamp / 1000) ;
 
 		if (mytoken !== '' && url.pathname.includes(mytoken)) {
 			host = env.HOST || "edgetunnel-2z2.pages.dev";
@@ -258,7 +267,7 @@ export default {
 		if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
 			return new Response('Hello World!');
 		} else if (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) {
-			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 
 			try {
 				const subconverterResponse = await fetch(subconverterUrl);
@@ -270,7 +279,12 @@ export default {
 				const subconverterContent = await subconverterResponse.text();
 				
 				return new Response(subconverterContent, {
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
+					headers: { 
+						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+						"content-type": "text/plain; charset=utf-8",
+						"Profile-Update-Interval": `${SUBUpdateTime}`,
+						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+					},
 				});
 			} catch (error) {
 				return new Response(`Error: ${error.message}`, {
@@ -279,7 +293,7 @@ export default {
 				});
 			}
 		} else if (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter'))){
-			const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+			const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 
 			try {
 			const subconverterResponse = await fetch(subconverterUrl);
@@ -291,7 +305,12 @@ export default {
 				const subconverterContent = await subconverterResponse.text();
 				
 				return new Response(subconverterContent, {
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
+					headers: { 
+						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+						"content-type": "text/plain; charset=utf-8",
+						"Profile-Update-Interval": `${SUBUpdateTime}`,
+						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+					},
 				});
 			} catch (error) {
 				return new Response(`Error: ${error.message}`, {
@@ -398,8 +417,14 @@ export default {
 			const combinedContent = responseBody + '\n' + link; // 合并内容
 			const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
 
+
 			const response = new Response(base64Response, {
-			headers: { 'content-type': 'text/plain' },
+				headers: { 
+					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+					"content-type": "text/plain; charset=utf-8",
+					"Profile-Update-Interval": `${SUBUpdateTime}`,
+					"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+				},
 			});
 
 			return response;
