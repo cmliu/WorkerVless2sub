@@ -209,6 +209,8 @@ export default {
 			host = url.searchParams.get('host');
 			uuid = url.searchParams.get('uuid');
 			path = url.searchParams.get('path');
+			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
+			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 			
 			if (!url.pathname.includes("/sub")) {
 				const responseText = `
@@ -375,8 +377,6 @@ export default {
 					addressid = addressid.split(':')[0];
 				}
 				
-				edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
-				RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 				if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
 					// 将addressid转换为小写
 					let lowerAddressid = addressid.toLowerCase();
