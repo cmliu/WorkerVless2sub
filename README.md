@@ -105,6 +105,17 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
      https://sub.cmliussss.workers.dev/sub?format=singbox&host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
      ```
      
+### 变量说明
+| 变量名 | 示例 | 备注 | 
+|--------|---------|-----|
+| TOKEN | auto | 快速订阅内置节点的订阅路径地址 /auto | 
+| HOST | edgetunnel-2z2.pages.dev | 快速订阅内置节点的伪装域名 | 
+| UUID | 30e9c5c8-ed28-4cd9-b008-dc67277f8b02 | 快速订阅内置节点的UUID | 
+| PATH | /?ed=2048 | 快速订阅内置节点的路径信息 | 
+| TGTOKEN | 6894123456:XXXXXXXXXX0qExVsBPUhHDAbXXXXXqWXgBA | 发送TG通知的机器人token | 
+| TGID | 6946912345 | 接收TG通知的账户数字ID | 
+| SUBAPI | api.v1.mk | clash、singbox等 订阅转换后端 | 
+| SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
