@@ -87,7 +87,12 @@ async function getAddressesapi() {
 			}
 		
 			const text = await response.text();
-			const lines = text.split('\n');
+			let lines;
+			if (text.includes('\r\n')){
+				lines = text.split('\r\n');
+			} else {
+				lines = text.split('\n');
+			}
 			const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#.*)?$/;
 		
 			const apiAddresses = lines.map(line => {
@@ -122,7 +127,12 @@ async function getAddressescsv() {
 			}
 		
 			const text = await response.text();// 使用正确的字符编码解析文本内容
-			const lines = text.split('\n');
+			let lines;
+			if (text.includes('\r\n')){
+				lines = text.split('\r\n');
+			} else {
+				lines = text.split('\n');
+			}
 		
 			// 检查CSV头部是否包含必需字段
 			const header = lines[0].split(',');
