@@ -11,17 +11,20 @@ let addresses = [
 
 // 设置优选地址api接口
 let addressesapi = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt' //可参考内容格式 自行搭建。
+	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 ];
 
 let DLS = 4;//速度下限
 let addressescsv = [
-	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv' //iptest测速结果文件。
+	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
 
 let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
 let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
-
+let addressesnotls = [];
+let addressesnotlsapi = [
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
+];
 let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
@@ -70,14 +73,14 @@ async function sendMessage(type, ip, add_data = "") {
 	}
 }
 
-async function getAddressesapi() {
-	if (!addressesapi || addressesapi.length === 0) {
+async function getAddressesapi(api) {
+	if (!api || api.length === 0) {
 		return [];
 	}
 	
 	let newAddressesapi = [];
 	
-	for (const apiUrl of addressesapi) {
+	for (const apiUrl of api) {
 		try {
 			const response = await fetch(apiUrl);
 		
@@ -110,7 +113,7 @@ async function getAddressesapi() {
 	return newAddressesapi;
 }
 
-async function getAddressescsv() {
+async function getAddressescsv(tls) {
 	if (!addressescsv || addressescsv.length === 0) {
 		return [];
 	}
@@ -153,7 +156,7 @@ async function getAddressescsv() {
 				const columns = lines[i].split(',');
 		
 				// 检查TLS是否为"TRUE"且速度大于DLS
-				if (columns[tlsIndex].toUpperCase() === 'TRUE' && parseFloat(columns[speedIndex]) > DLS) {
+				if (columns[tlsIndex].toUpperCase() === tls && parseFloat(columns[speedIndex]) > DLS) {
 					const ipAddress = columns[ipAddressIndex];
 					const port = columns[portIndex];
 					const dataCenter = columns[dataCenterIndex];
@@ -355,14 +358,76 @@ export default {
 				proxyhosts = [...new Set(proxyhosts)];
 			}
 			
-			const newAddressesapi = await getAddressesapi();
-			const newAddressescsv = await getAddressescsv();
+			const newAddressesapi = await getAddressesapi(addressesapi);
+			const newAddressescsv = await getAddressescsv('TRUE');
 			addresses = addresses.concat(newAddressesapi);
 			addresses = addresses.concat(newAddressescsv);
 			
 			// 使用Set对象去重
 			const uniqueAddresses = [...new Set(addresses)];
 			
+			let notlsresponseBody;
+			if(host.includes('worker')){
+				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
+				const newAddressesnotlscsv = await getAddressescsv('FALSE');
+				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
+				addressesnotls = addressesnotls.concat(newAddressesnotlscsv);
+				const uniqueAddressesnotls = [...new Set(addressesnotls)];
+
+				notlsresponseBody = uniqueAddressesnotls.map(address => {
+					let port = "80";
+					let addressid = address;
+				
+					if (address.includes(':') && address.includes('#')) {
+						const parts = address.split(':');
+						address = parts[0];
+						const subParts = parts[1].split('#');
+						port = subParts[0];
+						addressid = subParts[1];
+					} else if (address.includes(':')) {
+						const parts = address.split(':');
+						address = parts[0];
+						port = parts[1];
+					} else if (address.includes('#')) {
+						const parts = address.split('#');
+						address = parts[0];
+						addressid = parts[1];
+					}
+				
+					if (addressid.includes(':')) {
+						addressid = addressid.split(':')[0];
+					}
+
+					if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
+					// 将addressid转换为小写
+					let lowerAddressid = addressid.toLowerCase();
+					// 初始化找到的proxyIP为null
+					let foundProxyIP = null;
+						
+					// 遍历CMproxyIPs数组查找匹配项
+					for (let item of CMproxyIPs) {
+						if (lowerAddressid.includes(item.type.toLowerCase())) {
+							foundProxyIP = item.proxyIP;
+							break; // 找到匹配项，跳出循环
+						}
+					}
+						
+					if (foundProxyIP) {
+						// 如果找到匹配的proxyIP，赋值给path
+						path = `/proxyIP=${foundProxyIP}`;
+					} else {
+						// 如果没有找到匹配项，随机选择一个proxyIP
+						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+						path = `/proxyIP=${randomProxyIP}`;
+					}
+				}
+
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=none&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid)}`;
+			
+					return vlessLink;
+				}).join('\n');
+			}
+
 			const responseBody = uniqueAddresses.map(address => {
 				let port = "443";
 				let addressid = address;
@@ -414,7 +479,7 @@ export default {
 				let 伪装域名 = host ;
 				let 最终路径 = path ;
 				let 节点备注 = EndPS ;
-				if(proxyhosts && (host.includes('workers.dev') || host.includes('pages.dev'))) {
+				if(proxyhosts && (host.includes('.workers.dev') || host.includes('pages.dev'))) {
 					最终路径 = `/${host}${path}`;
 					伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
 					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
@@ -424,9 +489,8 @@ export default {
 				return vlessLink;
 			}).join('\n');
 			
-			const combinedContent = responseBody + '\n' + link; // 合并内容
+			const combinedContent = responseBody + '\n' + notlsresponseBody + '\n' + link; // 合并内容
 			const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
-
 
 			const response = new Response(base64Response, {
 				headers: { 
