@@ -211,7 +211,7 @@ export default {
 					}
 	
 					const base64Text = await subconverterResponse.text();
-					link = atob(base64Text); // 进行 Base64 解码
+					link += '\n' + atob(base64Text); // 进行 Base64 解码
 	
 				} catch (error) {
 					// 错误处理
