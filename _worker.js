@@ -489,8 +489,18 @@ export default {
 				return vlessLink;
 			}).join('\n');
 			
-			let combinedContent = responseBody + '\n' + link; // 合并内容
-			if (notlsresponseBody) combinedContent += '\n' + notlsresponseBody;
+			let combinedContent = responseBody; // 合并内容
+			
+			if (link) {
+				combinedContent += '\n' + link;
+				console.log("link: " + link)
+			}
+			
+			if (notlsresponseBody) {
+				combinedContent += '\n' + notlsresponseBody;
+				console.log("notlsresponseBody: " + notlsresponseBody);
+			}
+			
 			const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
 
 			const response = new Response(base64Response, {
