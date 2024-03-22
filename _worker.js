@@ -195,7 +195,7 @@ export default {
 
 		if (mytoken !== '' && url.pathname.includes(mytoken)) {
 			host = env.HOST || "edgetunnel-2z2.pages.dev";
-			uuid = env.UUID || "30e9c5c8-ed28-4cd9-b008-dc67277f8b02";
+			uuid = env.UUID || "b7a392e2-4ef0-4496-90bc-1c37bb234904";
 			path = env.PATH || "/?ed=2048";
 			edgetunnel = env.ED || edgetunnel;
 			RproxyIP = env.RPROXYIP || RproxyIP;
