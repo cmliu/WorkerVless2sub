@@ -281,7 +281,7 @@ export default {
 
 		if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
 			return new Response('Hello World!');
-		} else if (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) {
+		} else if ((userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) && !userAgent.includes('nekobox')) {
 			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 
 			try {
@@ -422,7 +422,7 @@ export default {
 					}
 				}
 
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=none&sni=${host}&fp=random&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid)}`;
 			
 					return vlessLink;
 				}).join('\n');
