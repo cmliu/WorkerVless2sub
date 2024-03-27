@@ -402,7 +402,7 @@ export default {
 						}
 					} else {
 						address = match[1];
-						port = match[2];
+						port = match[2] || port;
 						addressid = match[3];
 					}
 	
@@ -465,7 +465,7 @@ export default {
 					}
 				} else {
 					address = match[1];
-					port = match[2];
+					port = match[2] || port;
 					addressid = match[3];
 				}
 
