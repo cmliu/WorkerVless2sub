@@ -403,7 +403,7 @@ export default {
 					} else {
 						address = match[1];
 						port = match[2] || port;
-						addressid = match[3];
+						addressid = match[3] || address;
 					}
 	
 					//console.log(address, port, addressid);
@@ -466,7 +466,7 @@ export default {
 				} else {
 					address = match[1];
 					port = match[2] || port;
-					addressid = match[3];
+					addressid = match[3] || address;
 				}
 
 				//console.log(address, port, addressid);
