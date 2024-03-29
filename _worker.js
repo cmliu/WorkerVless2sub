@@ -3,9 +3,9 @@
 
 let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
 
-// 设置优选地址，不带端口号默认443，不支持非TLS订阅生成
+// 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-	'icook.tw:2053#优选域名',
+	'icook.tw:2053#官方优选域名'',
 	'cloudflare.cfgo.cc#优选官方线路',
 ];
 
@@ -15,17 +15,26 @@ let addressesapi = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
 ];
 
+// 设置优选地址，不带端口号默认80，noTLS订阅生成
+let addressesnotls = [
+	'www.visa.com.sg#官方优选域名',
+	'www.wto.org:8080#官方优选域名',
+	'www.who.int:8880#官方优选域名',
+];
+
+// 设置优选noTLS地址api接口
+let addressesnotlsapi = [
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
+];
+
 let DLS = 4;//速度下限
 let addressescsv = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
 
-let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
-let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
-let addressesnotls = [];
-let addressesnotlsapi = [
-	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
-];
+let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
+let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
+let noTLS = false; //改为 true , 将不做域名判断 始终返回noTLS节点
 let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
@@ -225,6 +234,7 @@ export default {
 			path = url.searchParams.get('path');
 			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
+			noTLS = env.NOTLS || host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
 			
 			if (!url.pathname.includes("/sub")) {
 				const responseText = `
@@ -368,7 +378,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if(host.includes('notls') || host.includes('trycloudflare')){
+			if(noTLS == true){
 				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
 				const newAddressesnotlscsv = await getAddressescsv('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
