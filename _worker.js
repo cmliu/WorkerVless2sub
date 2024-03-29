@@ -234,7 +234,6 @@ export default {
 			path = url.searchParams.get('path');
 			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
-			noTLS = env.NOTLS || host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
 			
 			if (!url.pathname.includes("/sub")) {
 				const responseText = `
@@ -289,7 +288,9 @@ export default {
 				path = (path[0] === '/') ? path : '/' + path;
 			}
 		}
-
+		
+		noTLS = env.NOTLS || host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
+		
 		if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
 			return new Response('Hello World!');
 		} else if ((userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) && !userAgent.includes('nekobox')) {
