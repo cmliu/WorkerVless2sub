@@ -4,6 +4,10 @@
 
 Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
+# Pages 部署方法 [视频教程](https://youtu.be/zckWQW-C39k)
+
+**Pages部署方式不做文字说明，请自行观看视频教程**
+
 # Workers 部署方法 [视频教程](https://youtu.be/AtCF7eq0hcE)
 
 ### 1. 部署 Cloudflare Worker：
@@ -65,7 +69,6 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
    - 添加 `HOST` 变量，例如 `edgetunnel-2z2.pages.dev`；
    - 添加 `UUID` 变量，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
    - 添加 `PATH` 变量，例如 `/?ed=2048`；
-
 
 
 # 订阅生成器 使用方法 [视频教程](https://youtu.be/OjqCKeEY7DQ)
