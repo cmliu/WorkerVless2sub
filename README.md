@@ -119,6 +119,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 | TGID | 6946912345 | 接收TG通知的账户数字ID | 
 | SUBAPI | api.v1.mk | clash、singbox等 订阅转换后端 | 
 | SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
+| NOTLS | false | 改为 true , 将不做域名判断 始终返回noTLS节点 | 
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
