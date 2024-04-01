@@ -44,7 +44,7 @@ let proxyIPs = [
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
+	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
 ];
 let BotToken ='';
 let ChatID =''; 
@@ -228,6 +228,9 @@ export default {
 			addressescsv: ${addressescsv}
 			DLS: ${DLS}
 		`);
+
+		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
+		console.log(proxyIPs);
 		
 		if (mytoken !== '' && url.pathname.includes(mytoken)) {
 			host = env.HOST || "edgetunnel-2z2.pages.dev";
