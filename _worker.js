@@ -184,6 +184,16 @@ async function getAddressescsv(tls) {
 	return newAddressescsv;
 }
 
+async function ADD(envadd) {
+	var addtext = envadd.replace(/[	 "'\r\n]+/g, ',').replace(/,+/g, ',');  // 将空格、双引号、单引号和换行符替换为逗号
+	//console.log(addtext);
+	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
+	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
+	const add = addtext.split(',');
+	//console.log(add);
+	return add ;
+}
+
 let protocol;
 export default {
 	async fetch (request, env) {
@@ -203,6 +213,22 @@ export default {
 		total = total * 1099511627776 * 1024;
 		let expire= Math.floor(timestamp / 1000) ;
 
+		if (env.ADD) addresses = await ADD(env.ADD);
+		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
+		if (env.ADDNOTLS) addressesnotls = await ADD(env.ADDNOTLS);
+		if (env.ADDNOTLSAPI) addressesnotlsapi = await ADD(env.ADDNOTLSAPI);
+		if (env.ADDCSV) addressescsv = await ADD(env.ADDCSV);
+		DLS = env.DLS || DLS;
+
+		console.log(`
+			addresses: ${addresses}
+			addressesapi: ${addressesapi}
+			addressesnotls: ${addressesnotls}
+			addressesnotlsapi: ${addressesnotlsapi}
+			addressescsv: ${addressescsv}
+			DLS: ${DLS}
+		`);
+		
 		if (mytoken !== '' && url.pathname.includes(mytoken)) {
 			host = env.HOST || "edgetunnel-2z2.pages.dev";
 			uuid = env.UUID || "b7a392e2-4ef0-4496-90bc-1c37bb234904";
