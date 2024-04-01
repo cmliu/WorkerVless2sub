@@ -70,9 +70,24 @@ let addressesnotlsapi = [
 
 let DLS = -1;//速度下限
 let addressescsv = [
-	'https://text2kv-d8k.pages.dev/result_2096.csv?token=yhxyhx', 
-	'https://text2kv-d8k.pages.dev/JP_2096.csv?token=yhxyhx', 
-	'https://text2kv-d8k.pages.dev/US_2096.csv?token=yhxyhx', 
+	'https://text2kv-d8k.pages.dev/allworld_8443.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/allworld_2096.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/allworld_2087.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/allworld_2083.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/allworld_2053.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/allworld_443.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_8443.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_2096.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_2087.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_2083.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_2053.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/JP_443.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_8443.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_2096.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_2087.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_2083.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_2053.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/US_443.csv?token=yhxyhx',
 ];
 
 let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
