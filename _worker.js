@@ -19,7 +19,7 @@ let addressesnotls = [
 let addressesnotlsapi = [
 ];
 
-let DLS = -1;//速度下限
+let DLS =0;//速度下限
 let addressescsv = [
 	'https://text2kv-d8k.pages.dev/allworld_8443.csv?token=yhxyhx',
 	'https://text2kv-d8k.pages.dev/allworld_2096.csv?token=yhxyhx',
