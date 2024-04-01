@@ -5,31 +5,31 @@ let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-	'127.0.0.1:40000#WARP', 
+	'icook.tw:2053#官方优选域名',
+	'cloudflare.cfgo.cc#优选官方线路',
 ];
 
 // 设置优选地址api接口
-let addressesapi = [ 
+let addressesapi = [
+	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
 ];
 
 // 设置优选地址，不带端口号默认80，noTLS订阅生成
-let addressesnotls = [ 
+let addressesnotls = [
+	'www.visa.com.sg#官方优选域名',
+	'www.wto.org:8080#官方优选域名',
+	'www.who.int:8880#官方优选域名',
 ];
 
 // 设置优选noTLS地址api接口
-let addressesnotlsapi = [ 
+let addressesnotlsapi = [
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
 ];
 
 let DLS = 1;//速度下限
 let addressescsv = [
-	'https://text2kv-d8k.pages.dev/result_2053.csv?token=yhxyhx',
-	'https://text2kv-d8k.pages.dev/result_2096.csv?token=yhxyhx',
-	
-	'https://text2kv-d8k.pages.dev/result_8443.csv?token=yhxyhx',
-	'https://text2kv-d8k.pages.dev/result_443.csv?token=yhxyhx',
-	
-	'https://text2kv-d8k.pages.dev/result_8080.csv?token=yhxyhx',
-	'https://text2kv-d8k.pages.dev/result_80.csv?token=yhxyhx',
+	'https://text2kv-d8k.pages.dev/result_2096.csv?token=yhxyhx', 
 ];
 
 let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
@@ -148,20 +148,25 @@ async function getAddressescsv(tls) {
 			}
 		
 			// 检查CSV头部是否包含必需字段
-			const header = lines[0].split(','); 
+			const header = lines[0].split(',');
+			const tlsIndex = header.indexOf('TLS');
 			const speedIndex = header.length - 1; // 最后一个字段
 		
 			const ipAddressIndex = 0;// IP地址在 CSV 头部的位置
 			const portIndex = 1;// 端口在 CSV 头部的位置
-			const dataCenterIndex = portIndex + 1; // 数据中心是 TLS 的后一个字段
-		 
+			const dataCenterIndex = tlsIndex + 1; // 数据中心是 TLS 的后一个字段
+		
+			if (tlsIndex === -1) {
+				console.error('CSV文件缺少必需的字段');
+				continue;
+			}
 		
 			// 从第二行开始遍历CSV行
 			for (let i = 1; i < lines.length; i++) {
 				const columns = lines[i].split(',');
 		
 				// 检查TLS是否为"TRUE"且速度大于DLS
-				if (  parseFloat(columns[speedIndex]) > DLS) {
+				if (columns[tlsIndex].toUpperCase() === tls && parseFloat(columns[speedIndex]) > DLS) {
 					const ipAddress = columns[ipAddressIndex];
 					const port = columns[portIndex];
 					const dataCenter = columns[dataCenterIndex];
