@@ -187,7 +187,7 @@ async function getAddressescsv(tls) {
 let protocol;
 export default {
 	async fetch (request, env) {
-		mytoken = env.TOKEN || mytoken;
+		mytoken = env.TOKEN.split(',') || mytoken;
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
