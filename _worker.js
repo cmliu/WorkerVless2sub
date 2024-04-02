@@ -203,6 +203,7 @@ export default {
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
 		subconfig = env.SUBCONFIG || subconfig;
+		FileName = env.SUBNAME || FileName;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
