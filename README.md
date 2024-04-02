@@ -111,15 +111,21 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 ### 变量说明
 | 变量名 | 示例 | 备注 | 
 |--------|---------|-----|
-| TOKEN | auto | 快速订阅内置节点的订阅路径地址 /auto | 
+| TOKEN | auto | 快速订阅内置节点的订阅路径地址 /auto (支持多元素, 元素之间使用`,`作间隔)| 
 | HOST | edgetunnel-2z2.pages.dev | 快速订阅内置节点的伪装域名 | 
-| UUID | 30e9c5c8-ed28-4cd9-b008-dc67277f8b02 | 快速订阅内置节点的UUID | 
-| PATH | /?ed=2048 | 快速订阅内置节点的路径信息 | 
+| UUID | b7a392e2-4ef0-4496-90bc-1c37bb234904 | 快速订阅内置节点的UUID | 
+| PATH | /?ed=2560 | 快速订阅内置节点的路径信息 | 
+| ADD | icook.tw:2053#官方优选域名 | 对应 addresses 字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| ADDAPI | [https://raw.github.../addressesapi.txt](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt) | 对应 addressesapi 字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| ADDNOTLS | icook.hk:8080#官方优选域名 | 对应 addressesnotls 字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| ADDAPI | [https://raw.github.../addressesapi.txt](https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt) | 对应 addressesnotlsapi 字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| ADDCSV | [https://raw.github.../addressescsv.csv](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv) | 对应 addressescsv 字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| DLS | 8 | addressescsv 测速结果满足速度下限 | 
+| NOTLS | false | 改为 true , 将不做域名判断 始终返回noTLS节点 | 
 | TGTOKEN | 6894123456:XXXXXXXXXX0qExVsBPUhHDAbXXXXXqWXgBA | 发送TG通知的机器人token | 
 | TGID | 6946912345 | 接收TG通知的账户数字ID | 
 | SUBAPI | api.v1.mk | clash、singbox等 订阅转换后端 | 
 | SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
-| NOTLS | false | 改为 true , 将不做域名判断 始终返回noTLS节点 | 
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
