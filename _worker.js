@@ -24,7 +24,7 @@ let addressesnotls = [
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
-	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 ];
 
 let DLS = 8;//速度下限
@@ -234,7 +234,11 @@ export default {
 		console.log(proxyIPs);
 
 		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
-			host = env.HOST || "null";
+			host = "null";
+			if (env.HOST) {
+				const hosts = await ADD(env.HOST);
+				host = hosts[Math.floor(Math.random() * hosts.length)];
+			}
 			uuid = env.UUID || "null";
 			path = env.PATH || "/?ed=2560";
 			edgetunnel = env.ED || edgetunnel;
@@ -245,7 +249,7 @@ export default {
 				if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
 				else if (host == "null") 空字段 = "HOST";
 				else if (uuid == "null") 空字段 = "UUID";
-				EndPS = ` 订阅器内置节点 ${空字段} 未设置！！！`;
+				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
 			}
 
 			const hasSos = url.searchParams.has('sos');
