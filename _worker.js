@@ -1,7 +1,7 @@
 
 // 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
 
-let mytoken= ['auto', 'auto2'];//快速订阅访问入口, 留空则不启动快速订阅
+let mytoken= ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
@@ -24,10 +24,10 @@ let addressesnotls = [
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
-	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 ];
 
-let DLS = 7;//速度下限
+let DLS = 8;//速度下限
 let addressescsv = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
@@ -44,7 +44,7 @@ let proxyIPs = [
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
+	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
 ];
 let BotToken ='';
 let ChatID =''; 
@@ -184,14 +184,26 @@ async function getAddressescsv(tls) {
 	return newAddressescsv;
 }
 
+async function ADD(envadd) {
+	var addtext = envadd.replace(/[	 "'\r\n]+/g, ',').replace(/,+/g, ',');  // 将空格、双引号、单引号和换行符替换为逗号
+	//console.log(addtext);
+	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
+	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
+	const add = addtext.split(',');
+	//console.log(add);
+	return add ;
+}
+
 let protocol;
 export default {
 	async fetch (request, env) {
-		mytoken = env.TOKEN.split(',') || mytoken;
+		if (env.TOKEN) mytoken = await ADD(env.TOKEN);
+		//mytoken = env.TOKEN.split(',') || mytoken;
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
 		subconfig = env.SUBCONFIG || subconfig;
+		FileName = env.SUBNAME || FileName;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
@@ -203,12 +215,45 @@ export default {
 		total = total * 1099511627776 * 1024;
 		let expire= Math.floor(timestamp / 1000) ;
 
+		if (env.ADD) addresses = await ADD(env.ADD);
+		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
+		if (env.ADDNOTLS) addressesnotls = await ADD(env.ADDNOTLS);
+		if (env.ADDNOTLSAPI) addressesnotlsapi = await ADD(env.ADDNOTLSAPI);
+		if (env.ADDCSV) addressescsv = await ADD(env.ADDCSV);
+		DLS = env.DLS || DLS;
+
+		/*
+		console.log(`
+			addresses: ${addresses}
+			addressesapi: ${addressesapi}
+			addressesnotls: ${addressesnotls}
+			addressesnotlsapi: ${addressesnotlsapi}
+			addressescsv: ${addressescsv}
+			DLS: ${DLS}
+		`);
+		*/
+		
+		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
+		//console.log(proxyIPs);
+
 		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
-			host = env.HOST || "edgetunnel-2z2.pages.dev";
-			uuid = env.UUID || "b7a392e2-4ef0-4496-90bc-1c37bb234904";
-			path = env.PATH || "/?ed=2048";
+			host = "null";
+			if (env.HOST) {
+				const hosts = await ADD(env.HOST);
+				host = hosts[Math.floor(Math.random() * hosts.length)];
+			}
+			uuid = env.UUID || "null";
+			path = env.PATH || "/?ed=2560";
 			edgetunnel = env.ED || edgetunnel;
 			RproxyIP = env.RPROXYIP || RproxyIP;
+
+			if (host == "null" || uuid == "null" ){
+				let 空字段;
+				if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
+				else if (host == "null") 空字段 = "HOST";
+				else if (uuid == "null") 空字段 = "UUID";
+				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
+			}
 
 			const hasSos = url.searchParams.has('sos');
 			if (hasSos) {
@@ -282,7 +327,7 @@ export default {
 			}
 			
 			if (!path || path.trim() === '') {
-				path = '/?ed=2048';
+				path = '/?ed=2560';
 			} else {
 				// 如果第一个字符不是斜杠，则在前面添加一个斜杠
 				path = (path[0] === '/') ? path : '/' + path;
