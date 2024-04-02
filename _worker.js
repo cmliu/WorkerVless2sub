@@ -1,7 +1,7 @@
 
 // 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
 
-let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
+let mytoken= ['auto1', 'auto2'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
@@ -187,7 +187,7 @@ async function getAddressescsv(tls) {
 let protocol;
 export default {
 	async fetch (request, env) {
-		mytoken = env.TOKEN || mytoken;
+		mytoken = env.TOKEN.split(',') || mytoken;
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
@@ -203,7 +203,7 @@ export default {
 		total = total * 1099511627776 * 1024;
 		let expire= Math.floor(timestamp / 1000) ;
 
-		if (mytoken !== '' && url.pathname.includes(mytoken)) {
+		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
 			host = env.HOST || "edgetunnel-2z2.pages.dev";
 			uuid = env.UUID || "b7a392e2-4ef0-4496-90bc-1c37bb234904";
 			path = env.PATH || "/?ed=2048";
