@@ -1,7 +1,7 @@
 
 // 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
 
-let mytoken= 'auto';//快速订阅访问入口, 留空则不启动快速订阅
+let mytoken= ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
@@ -27,7 +27,7 @@ let addressesnotlsapi = [
 	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
 ];
 
-let DLS = 7;//速度下限
+let DLS = 8;//速度下限
 let addressescsv = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
@@ -44,7 +44,7 @@ let proxyIPs = [
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
+	{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
 ];
 let BotToken ='';
 let ChatID =''; 
@@ -197,7 +197,8 @@ async function ADD(envadd) {
 let protocol;
 export default {
 	async fetch (request, env) {
-		mytoken = env.TOKEN || mytoken;
+		if (env.TOKEN) mytoken = await ADD(env.TOKEN);
+		//mytoken = env.TOKEN.split(',') || mytoken;
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
@@ -231,13 +232,21 @@ export default {
 
 		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
 		console.log(proxyIPs);
-		
-		if (mytoken !== '' && url.pathname.includes(mytoken)) {
-			host = env.HOST || "edgetunnel-2z2.pages.dev";
-			uuid = env.UUID || "b7a392e2-4ef0-4496-90bc-1c37bb234904";
-			path = env.PATH || "/?ed=2048";
+
+		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
+			host = env.HOST || "null";
+			uuid = env.UUID || "null";
+			path = env.PATH || "/?ed=2560";
 			edgetunnel = env.ED || edgetunnel;
 			RproxyIP = env.RPROXYIP || RproxyIP;
+
+			if (host == "null" || uuid == "null" ){
+				let 空字段;
+				if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
+				else if (host == "null") 空字段 = "HOST";
+				else if (uuid == "null") 空字段 = "UUID";
+				EndPS = ` 订阅器内置节点 ${空字段} 未设置！！！`;
+			}
 
 			const hasSos = url.searchParams.has('sos');
 			if (hasSos) {
@@ -311,7 +320,7 @@ export default {
 			}
 			
 			if (!path || path.trim() === '') {
-				path = '/?ed=2048';
+				path = '/?ed=2560';
 			} else {
 				// 如果第一个字符不是斜杠，则在前面添加一个斜杠
 				path = (path[0] === '/') ? path : '/' + path;
