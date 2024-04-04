@@ -222,6 +222,7 @@ export default {
 		if (env.ADDCSV) addressescsv = await ADD(env.ADDCSV);
 		DLS = env.DLS || DLS;
 
+		/*
 		console.log(`
 			addresses: ${addresses}
 			addressesapi: ${addressesapi}
@@ -230,9 +231,10 @@ export default {
 			addressescsv: ${addressescsv}
 			DLS: ${DLS}
 		`);
-
+		*/
+		
 		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
-		console.log(proxyIPs);
+		//console.log(proxyIPs);
 
 		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
 			host = "null";
