@@ -341,7 +341,8 @@ export default {
 			}
 		}
 		
-		noTLS = env.NOTLS || host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
+		noTLS = host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
+		if(env.NOTLS == 'true')noTLS = true;
 		
 		if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
 			return new Response('Hello World!');
@@ -431,7 +432,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if(noTLS == true || noTLS == 'NOTLS'){
+			if(noTLS == true){
 				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
 				const newAddressesnotlscsv = await getAddressescsv('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
