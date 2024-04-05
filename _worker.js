@@ -211,10 +211,15 @@ export default {
 		let host = "";
 		let uuid = "";
 		let path = "";
+		let sni = "";
 		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
 		total = total * 1099511627776 * 1024;
 		let expire= Math.floor(timestamp / 1000) ;
 
+		link = env.LINK || link;
+		const links = await ADD(link);
+		link = links.join('\n');
+		
 		if (env.ADD) addresses = await ADD(env.ADD);
 		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
 		if (env.ADDNOTLS) addressesnotls = await ADD(env.ADDNOTLS);
@@ -244,6 +249,7 @@ export default {
 			}
 			uuid = env.UUID || "null";
 			path = env.PATH || "/?ed=2560";
+			sni = env.SNI || host;
 			edgetunnel = env.ED || edgetunnel;
 			RproxyIP = env.RPROXYIP || RproxyIP;
 
@@ -277,6 +283,7 @@ export default {
 			host = url.searchParams.get('host');
 			uuid = url.searchParams.get('uuid');
 			path = url.searchParams.get('path');
+			sni = url.searchParams.get('sni') || host;
 			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 			
@@ -424,7 +431,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if(noTLS == true){
+			if(noTLS == true || noTLS == 'NOTLS'){
 				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
 				const newAddressesnotlscsv = await getAddressescsv('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
@@ -488,7 +495,7 @@ export default {
 					}
 				}
 
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
 			
 					return vlessLink;
 				}).join('\n');
@@ -558,8 +565,9 @@ export default {
 					最终路径 = `/${host}${path}`;
 					伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
 					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
+					sni = 伪装域名;
 				}
-				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${伪装域名}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 			
 				return vlessLink;
 			}).join('\n');
