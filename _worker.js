@@ -87,7 +87,28 @@ async function getAddressesapi(api) {
 	if (!api || api.length === 0) {
 		return [];
 	}
-	
+
+	let newapi = "";
+	try {
+		const responses = await Promise.allSettled(api.map(apiUrl => fetch(apiUrl,{
+			method: 'get',
+			headers: {
+				'Accept': 'text/html,application/xhtml+xml,application/xml;',
+				'User-Agent': 'cmliu/WorkerVless2sub'
+			}
+		}).then(response => response.ok ? response.text() : Promise.reject())));
+			
+		for (const response of responses) {
+			if (response.status === 'fulfilled') {
+				const content = await response.value;
+				newapi += content + '\n';
+			}
+		}
+	} catch (error) {
+		console.error(error);
+	}
+	const newAddressesapi = await ADD(newapi);
+/*
 	let newAddressesapi = [];
 	
 	for (const apiUrl of api) {
@@ -119,6 +140,7 @@ async function getAddressesapi(api) {
 			continue;
 		}
 	}
+*/
 	
 	return newAddressesapi;
 }
