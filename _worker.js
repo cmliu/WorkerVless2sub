@@ -24,7 +24,7 @@ let addressesnotls = [
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
-	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt',
 ];
 
 let DLS = 8;//速度下限
@@ -33,52 +33,49 @@ let addressescsv = [
 ];
 
 let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
-let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
-let noTLS = false; //改为 true , 将不做域名判断 始终返回noTLS节点
-let link = '';
-let edgetunnel = 'ed';
-let RproxyIP = 'false';
-let proxyIPs = [
-	'proxyip.aliyun.fxxk.dedyn.io',
-	'proxyip.multacom.fxxk.dedyn.io',
-	'proxyip.vultr.fxxk.dedyn.io',
+let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅配置文件
+let noTLS = true; // false
+let BotToken =''; //可以为空，或者@BotFather中输入/start，/newbot，并关注机器人
+let ChatID =''; //可以为空，或者@userinfobot中获取，/start
+let vmessLinks = [ //本地CFcdnVmess节点池
+	//'vmess://ew0KICAidiI6ICIyIiwNCiAgInBzIjogIk5MIiwNCiAgImFkZCI6ICJjZi4wOTAyMjcueHl6IiwNCiAgInBvcnQiOiAiNDQzIiwNCiAgImlkIjogIjA2MTk1YjViLTM4MTUtNGEwNy05NmY3LTQ3ZWVmYmIxYjE0MyIsDQogICJhaWQiOiAiMCIsDQogICJzY3kiOiAiYXV0byIsDQogICJuZXQiOiAid3MiLA0KICAidHlwZSI6ICJub25lIiwNCiAgImhvc3QiOiAidXJueGV3enZoLnNpdGUiLA0KICAicGF0aCI6ICIva3dobXZ3cyIsDQogICJ0bHMiOiAidGxzIiwNCiAgInNuaSI6ICJ1cm54ZXd6dmguc2l0ZSIsDQogICJhbHBuIjogIiIsDQogICJmcCI6ICIiDQp9',
 ];
-let CMproxyIPs = [
-	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
-];
-let BotToken ='';
-let ChatID =''; 
+let vmessLinksURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/vmesslinks';//CFcdnVmess节点池URL
 let proxyhosts = [//本地代理域名池
 	//'ppfv2tl9veojd-maillazy.pages.dev',
 ];
 let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
-let EndPS = '';//节点名备注内容
-
-let FileName = 'WorkerVless2sub';
+let FileName = 'CFcdnVmess2sub';
 let SUBUpdateTime = 6; 
 let total = 99;//PB
 //let timestamp = now;
 let timestamp = 4102329600000;//2099-12-31
 const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
+
+function utf8ToBase64(str) {
+	return btoa(unescape(encodeURIComponent(str)));
+}
+
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
 		const response = await fetch(`http://ip-api.com/json/${ip}?lang=zh-CN`);
-		if (response.status == 200) {
-			const ipInfo = await response.json();
-			msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n<tg-spoiler>城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
+		if (response.status == 200) { 
+		const ipInfo = await response.json();
+		msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n<tg-spoiler>城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
 		} else {
-			msg = `${type}\nIP: ${ip}\n<tg-spoiler>${add_data}`;
+		msg = `${type}\nIP: ${ip}\n<tg-spoiler>${add_data}`;
 		}
-	
+		
 		let url = "https://api.telegram.org/bot"+ BotToken +"/sendMessage?chat_id=" + ChatID + "&parse_mode=HTML&text=" + encodeURIComponent(msg);
+		
 		return fetch(url, {
-			method: 'get',
-			headers: {
-				'Accept': 'text/html,application/xhtml+xml,application/xml;',
-				'Accept-Encoding': 'gzip, deflate, br',
-				'User-Agent': 'Mozilla/5.0 Chrome/90.0.4430.72'
-			}
+		method: 'get',
+		headers: {
+		'Accept': 'text/html,application/xhtml+xml,application/xml;',
+		'Accept-Encoding': 'gzip, deflate, br',
+		'User-Agent': 'Mozilla/5.0 Chrome/90.0.4430.72'
+		}
 		});
 	}
 }
@@ -94,7 +91,7 @@ async function getAddressesapi(api) {
 			method: 'get',
 			headers: {
 				'Accept': 'text/html,application/xhtml+xml,application/xml;',
-				'User-Agent': 'cmliu/WorkerVless2sub'
+				'User-Agent': 'cmliu/CFcdnVmess2sub'
 			}
 		}).then(response => response.ok ? response.text() : Promise.reject())));
 			
@@ -216,33 +213,33 @@ async function ADD(envadd) {
 	return add ;
 }
 
-let protocol;
 export default {
-	async fetch (request, env) {
+	async fetch(request, env) {
 		if (env.TOKEN) mytoken = await ADD(env.TOKEN);
-		//mytoken = env.TOKEN.split(',') || mytoken;
+		//mytoken = env.TOKEN || mytoken;
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
 		subconverter = env.SUBAPI || subconverter;
 		subconfig = env.SUBCONFIG || subconfig;
 		FileName = env.SUBNAME || FileName;
-		EndPS = env.PS || EndPS;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
-		const format = url.searchParams.get('format') ? url.searchParams.get('format').toLowerCase() : "null";
+		let cc = "";
 		let host = "";
 		let uuid = "";
 		let path = "";
+		let alterid = "";
+		let security = "";
 		let sni = "";
 		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
 		total = total * 1099511627776 * 1024;
 		let expire= Math.floor(timestamp / 1000) ;
-
-		link = env.LINK || link;
-		const links = await ADD(link);
-		link = links.join('\n');
 		
+		if(env.LINK)vmessLinks = await ADD(env.LINK);
+		else if (env.VMESS)vmessLinks = await ADD(env.VMESS);
+		//console.log(vmessLinks);
+
 		if (env.ADD) addresses = await ADD(env.ADD);
 		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
 		if (env.ADDNOTLS) addressesnotls = await ADD(env.ADDNOTLS);
@@ -250,67 +247,108 @@ export default {
 		if (env.ADDCSV) addressescsv = await ADD(env.ADDCSV);
 		DLS = env.DLS || DLS;
 
-		/*
-		console.log(`
-			addresses: ${addresses}
-			addressesapi: ${addressesapi}
-			addressesnotls: ${addressesnotls}
-			addressesnotlsapi: ${addressesnotlsapi}
-			addressescsv: ${addressescsv}
-			DLS: ${DLS}
-		`);
-		*/
-		
-		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
-		//console.log(proxyIPs);
-
 		if (mytoken.length > 0 && mytoken.some(token => url.pathname.includes(token))) {
-			host = "null";
-			if (env.HOST) {
-				const hosts = await ADD(env.HOST);
-				host = hosts[Math.floor(Math.random() * hosts.length)];
-			}
-			uuid = env.UUID || "null";
-			path = env.PATH || "/?ed=2560";
-			sni = env.SNI || host;
-			edgetunnel = env.ED || edgetunnel;
-			RproxyIP = env.RPROXYIP || RproxyIP;
-
-			if (host == "null" || uuid == "null" ){
-				let 空字段;
-				if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
-				else if (host == "null") 空字段 = "HOST";
-				else if (uuid == "null") 空字段 = "UUID";
-				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
-			}
-
-			const hasSos = url.searchParams.has('sos');
-			if (hasSos) {
-				const hy2Url = "https://hy2sub.pages.dev";
+			if (vmessLinksURL && vmessLinks.length == 0) {
 				try {
-					const subconverterResponse = await fetch(hy2Url);
-	
-					if (!subconverterResponse.ok) {
-						throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+					const response = await fetch(vmessLinksURL); // 直接使用vmessLinksURL
+				
+					if (!response.ok) {
+						console.error('获取地址时出错:', response.status, response.statusText);
+						return; // 如果有错误，直接返回
 					}
-	
-					const base64Text = await subconverterResponse.text();
-					link += '\n' + atob(base64Text); // 进行 Base64 解码
-	
+				
+					const text = await response.text();
+					const lines = text.split('\n');
+					// 使用startsWith或者正则表达式检查每行
+					const vmessLinksTest = lines.filter(line => line.startsWith('vmess://'));
+				
+					vmessLinks = vmessLinks.concat(vmessLinksTest);
 				} catch (error) {
-					// 错误处理
-				}	
+					console.error('获取地址时出错:', error);
+				}
 			}
-		await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
+
+		// 使用Set对象去重
+		const uniquevmessLinks = [...new Set(vmessLinks)];
+		const vmessLink = uniquevmessLinks[Math.floor(Math.random() * uniquevmessLinks.length)];
+		noTLS = false;
+		//console.log(vmessLinks);
+		// 移除开头的"vmess://"并解码
+		const base64Content = vmessLink.slice(8);
+		const decodedString = atob(base64Content);
+
+		// 将解码后的字符串转换为对象
+		const obj = JSON.parse(decodedString);
+
+		// 读取并赋值对应字段
+		uuid = obj.id;
+		path = '/'+ obj.host +':'+ obj.port + obj.path;
+		//host = proxyhosts[Math.floor(Math.random() * proxyhosts.length)] ;
+		alterid = obj.aid;
+		security = obj.scy;
+
+		// IPv4 正则表达式
+		const ipv4Pattern = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+		cc = '未知';
+		let ipapiurl = 'http://ip-api.com/json/';
+
+		// 根据 obj.ps 是否符合 IPv4 判断调用哪个 API
+		if (ipv4Pattern.test(obj.ps)) {
+			ipapiurl += obj.ps;
+		} else {
+			ipapiurl += obj.host;
+		}
+		ipapiurl += '?lang=zh-CN';
+
+		// 发起请求
+		const response = await fetch(ipapiurl);
+		if(response.status == 200) {
+			const ipInfo = await response.json();
+			cc = ipInfo.country + " " + ipInfo.city;
+		}
+
+		if (proxyhostsURL) {
+			try {
+				const response = await fetch(proxyhostsURL); 
+		
+				if (!response.ok) {
+					console.error('获取地址时出错:', response.status, response.statusText);
+					return; // 如果有错误，直接返回
+				}
+		
+				const text = await response.text();
+				const lines = text.split('\n');
+				// 过滤掉空行或只包含空白字符的行
+				const nonEmptyLines = lines.filter(line => line.trim() !== '');
+		
+				proxyhosts = proxyhosts.concat(nonEmptyLines);
+			} catch (error) {
+				console.error('获取地址时出错:', error);
+			}
+		}
+		
+		// 使用Set对象去重
+		const uniqueproxyhosts = [...new Set(proxyhosts)];
+		host = uniqueproxyhosts[Math.floor(Math.random() * uniqueproxyhosts.length)];
+		sni = host;
+
+		await sendMessage("#Vmess订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgent}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
 		} else {
 			host = url.searchParams.get('host');
 			uuid = url.searchParams.get('uuid');
 			path = url.searchParams.get('path');
+			alterid = url.searchParams.get('alterid');
+			security = url.searchParams.get('security');
 			sni = url.searchParams.get('sni') || host;
-			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
-			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
-			
-			if (!url.pathname.includes("/sub")) {
+			cc = url.searchParams.get('cc');
+			const pathp = url.pathname.replace(/^\/|\/$/g, "");
+			if(pathp && !url.pathname.includes("/sub"))
+			{
+				const addrPath = url.pathname.replace(/^\/|\/$/g, "");
+				const newUrl = new URL("https://" + addrPath);
+				return fetch(new Request(newUrl, request));
+			} else if (!url.pathname.includes("/sub")) {
 				//首页改成一个nginx伪装页
 				return new Response(`
 				<!DOCTYPE html>
@@ -343,15 +381,17 @@ export default {
 						'Content-Type': 'text/html; charset=UTF-8',
 					},
 				});
+			
 			}
 			
 			if (!host || !uuid) {
+				const workerUrl = url.origin + url.pathname;
 				const responseText = `
 			缺少必填参数：host 和 uuid
 			Missing required parameters: host and uuid
 			پارامترهای ضروری وارد نشده: هاست و یوآی‌دی
 			
-			${url.origin}/sub?host=[your host]&uuid=[your uuid]&path=[your path]
+			${workerUrl}?cc=[vmess name]&host=[your host]&uuid=[your uuid]&path=[your path]
 			
 			
 			
@@ -359,66 +399,49 @@ export default {
 			
 			
 				
-				https://github.com/cmliu/WorkerVless2sub
+				https://github.com/cmliu/CFcdnVmess2sub
 				`;
 			
 				return new Response(responseText, {
 				status: 400,
 				headers: { 'content-type': 'text/plain; charset=utf-8' },
 				});
-			}
+				}
 			
-			if (!path || path.trim() === '') {
-				path = '/?ed=2560';
-			} else {
+				if (!path || path.trim() === '') {
+				path = '/?ed=2048';
+				} else {
 				// 如果第一个字符不是斜杠，则在前面添加一个斜杠
 				path = (path[0] === '/') ? path : '/' + path;
+				}
+
+				if (!alterid || alterid.trim() === '') {
+				alterid = "0";
+				}
+
+				if (!security || security.trim() === '') {
+				security = "auto";
+				}
+
+				if (!cc || cc.trim() === '') {
+				cc = "US";
+				}
 			}
-		}
-		
-		noTLS = host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
-		if(env.NOTLS == 'true')noTLS = true;
-		
-		if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
+
+			if (userAgent.includes('telegram') || userAgent.includes('twitter') || userAgent.includes('miaoko')) {
 			return new Response('Hello World!');
-		} else if ((userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) && !userAgent.includes('nekobox')) {
-			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+			} else if (userAgent.includes('clash')) {
+			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
 
 			try {
 				const subconverterResponse = await fetch(subconverterUrl);
-				
-				if (!subconverterResponse.ok) {
-					throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
-				}
-				
-				const subconverterContent = await subconverterResponse.text();
-				
-				return new Response(subconverterContent, {
-					headers: { 
-						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-						"content-type": "text/plain; charset=utf-8",
-						"Profile-Update-Interval": `${SUBUpdateTime}`,
-						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-					},
-				});
-			} catch (error) {
-				return new Response(`Error: ${error.message}`, {
-					status: 500,
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
-				});
-			}
-		} else if (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter'))){
-			const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-
-			try {
-			const subconverterResponse = await fetch(subconverterUrl);
 			
 				if (!subconverterResponse.ok) {
-					throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+				throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
 				}
-				
+			
 				const subconverterContent = await subconverterResponse.text();
-				
+			
 				return new Response(subconverterContent, {
 					headers: { 
 						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
@@ -429,51 +452,46 @@ export default {
 				});
 			} catch (error) {
 				return new Response(`Error: ${error.message}`, {
-					status: 500,
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
+				status: 500,
+				headers: { 'content-type': 'text/plain; charset=utf-8' },
+				});
+			}
+			} else if (userAgent.includes('sing-box') || userAgent.includes('singbox')){
+			const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true`;
+
+			try {
+				const subconverterResponse = await fetch(subconverterUrl);
+			
+				if (!subconverterResponse.ok) {
+				throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+				}
+			
+				const subconverterContent = await subconverterResponse.text();
+			
+				return new Response(subconverterContent, {
+					headers: { 
+						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+						"content-type": "text/plain; charset=utf-8",
+						"Profile-Update-Interval": `${SUBUpdateTime}`,
+						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+					},
+				});
+			} catch (error) {
+				return new Response(`Error: ${error.message}`, {
+				status: 500,
+				headers: { 'content-type': 'text/plain; charset=utf-8' },
 				});
 			}
 		} else {
-			if(host.includes('workers.dev') || host.includes('pages.dev')) {
-				if (proxyhostsURL) {
-					try {
-						const response = await fetch(proxyhostsURL); 
-					
-						if (!response.ok) {
-							console.error('获取地址时出错:', response.status, response.statusText);
-							return; // 如果有错误，直接返回
-						}
-					
-						const text = await response.text();
-						const lines = text.split('\n');
-						// 过滤掉空行或只包含空白字符的行
-						const nonEmptyLines = lines.filter(line => line.trim() !== '');
-					
-						proxyhosts = proxyhosts.concat(nonEmptyLines);
-					} catch (error) {
-						console.error('获取地址时出错:', error);
-					}
-				}
-				// 使用Set对象去重
-				proxyhosts = [...new Set(proxyhosts)];
-			}
-			
-			const newAddressesapi = await getAddressesapi(addressesapi);
-			const newAddressescsv = await getAddressescsv('TRUE');
-			addresses = addresses.concat(newAddressesapi);
-			addresses = addresses.concat(newAddressescsv);
-			
-			// 使用Set对象去重
-			const uniqueAddresses = [...new Set(addresses)];
-			
 			let notlsresponseBody;
 			if(noTLS == true){
 				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
 				const newAddressesnotlscsv = await getAddressescsv('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
 				addressesnotls = addressesnotls.concat(newAddressesnotlscsv);
+	
 				const uniqueAddressesnotls = [...new Set(addressesnotls)];
-
+	
 				notlsresponseBody = uniqueAddressesnotls.map(address => {
 					let port = "80";
 					let addressid = address;
@@ -504,134 +522,110 @@ export default {
 						port = match[2] || port;
 						addressid = match[3] || address;
 					}
-	
-					//console.log(address, port, addressid);
-
-					if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
-					// 将addressid转换为小写
-					let lowerAddressid = addressid.toLowerCase();
-					// 初始化找到的proxyIP为null
-					let foundProxyIP = null;
-						
-					// 遍历CMproxyIPs数组查找匹配项
-					for (let item of CMproxyIPs) {
-						if (lowerAddressid.includes(item.type.toLowerCase())) {
-							foundProxyIP = item.proxyIP;
-							break; // 找到匹配项，跳出循环
-						}
-					}
-						
-					if (foundProxyIP) {
-						// 如果找到匹配的proxyIP，赋值给path
-						path = `/proxyIP=${foundProxyIP}`;
-					} else {
-						// 如果没有找到匹配项，随机选择一个proxyIP
-						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-						path = `/proxyIP=${randomProxyIP}`;
-					}
-				}
-
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
-			
-					return vlessLink;
+				
+					const vmess = `{
+"v": "2",
+"ps": "${addressid}>${cc}",
+"add": "${address}",
+"port": "${port}",
+"id": "${uuid}",
+"aid": "${alterid}",
+"scy": "${security}",
+"net": "ws",
+"type": "none",
+"host": "${host}",
+"path": "${path}",
+"tls": "",
+"sni": "",
+"alpn": "",
+"fp": ""
+}`;
+				
+					const base64Encoded = utf8ToBase64(vmess);
+					const vmessLink = `vmess://${base64Encoded}`;
+				
+					return vmessLink;
 				}).join('\n');
 			}
 
-			const responseBody = uniqueAddresses.map(address => {
-				let port = "443";
-				let addressid = address;
-			
-				const match = addressid.match(regex);
-				if (!match) {
-					if (address.includes(':') && address.includes('#')) {
-						const parts = address.split(':');
-						address = parts[0];
-						const subParts = parts[1].split('#');
-						port = subParts[0];
-						addressid = subParts[1];
-					} else if (address.includes(':')) {
-						const parts = address.split(':');
-						address = parts[0];
-						port = parts[1];
-					} else if (address.includes('#')) {
-						const parts = address.split('#');
-						address = parts[0];
-						addressid = parts[1];
-					}
-				
-					if (addressid.includes(':')) {
-						addressid = addressid.split(':')[0];
-					}
-				} else {
-					address = match[1];
-					port = match[2] || port;
-					addressid = match[3] || address;
+		const newAddressesapi = await getAddressesapi(addressesapi);
+		const newAddressescsv = await getAddressescsv('TRUE');
+		addresses = addresses.concat(newAddressesapi);
+		addresses = addresses.concat(newAddressescsv);
+		
+		// 使用Set对象去重
+		const uniqueAddresses = [...new Set(addresses)];
+		
+		const responseBody = uniqueAddresses.map(address => {
+			let port = "443";
+			let addressid = address;
+		
+			const match = addressid.match(regex);
+			if (!match) {
+				if (address.includes(':') && address.includes('#')) {
+					const parts = address.split(':');
+					address = parts[0];
+					const subParts = parts[1].split('#');
+					port = subParts[0];
+					addressid = subParts[1];
+				} else if (address.includes(':')) {
+					const parts = address.split(':');
+					address = parts[0];
+					port = parts[1];
+				} else if (address.includes('#')) {
+					const parts = address.split('#');
+					address = parts[0];
+					addressid = parts[1];
 				}
-
-				//console.log(address, port, addressid);
-        
-				if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
-					// 将addressid转换为小写
-					let lowerAddressid = addressid.toLowerCase();
-					// 初始化找到的proxyIP为null
-					let foundProxyIP = null;
-				
-					// 遍历CMproxyIPs数组查找匹配项
-					for (let item of CMproxyIPs) {
-						if (lowerAddressid.includes(item.type.toLowerCase())) {
-							foundProxyIP = item.proxyIP;
-							break; // 找到匹配项，跳出循环
-						}
-					}
-				
-					if (foundProxyIP) {
-						// 如果找到匹配的proxyIP，赋值给path
-						path = `/proxyIP=${foundProxyIP}`;
-					} else {
-						// 如果没有找到匹配项，随机选择一个proxyIP
-						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-						path = `/proxyIP=${randomProxyIP}`;
-					}
+			
+				if (addressid.includes(':')) {
+					addressid = addressid.split(':')[0];
 				}
-				
-				let 伪装域名 = host ;
-				let 最终路径 = path ;
-				let 节点备注 = EndPS ;
-				if(proxyhosts && (host.includes('.workers.dev') || host.includes('pages.dev'))) {
-					最终路径 = `/${host}${path}`;
-					伪装域名 = proxyhosts[Math.floor(Math.random() * proxyhosts.length)];
-					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
-					sni = 伪装域名;
-				}
-				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
-			
-				return vlessLink;
-			}).join('\n');
-			
-			let combinedContent = responseBody; // 合并内容
-			
-			if (link) {
-				combinedContent += '\n' + link;
-				console.log("link: " + link)
+			} else {
+				address = match[1];
+				port = match[2] || port;
+				addressid = match[3] || address;
 			}
-			
-			if (notlsresponseBody) {
-				combinedContent += '\n' + notlsresponseBody;
-				console.log("notlsresponseBody: " + notlsresponseBody);
-			}
-			
-			const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
+		
+			const vmess = `{
+"v": "2",
+"ps": "${addressid}>${cc}",
+"add": "${address}",
+"port": "${port}",
+"id": "${uuid}",
+"aid": "${alterid}",
+"scy": "${security}",
+"net": "ws",
+"type": "none",
+"host": "${host}",
+"path": "${path}",
+"tls": "tls",
+"sni": "${sni}",
+"alpn": "",
+"fp": ""
+}`;
+		
+			const base64Encoded = utf8ToBase64(vmess);
+			const vmessLink = `vmess://${base64Encoded}`;
+		
+			return vmessLink;
+		}).join('\n');
+		
+		let 汇总 = responseBody;
+		if (noTLS == true) 汇总 += '\n' + notlsresponseBody;
+		const base64Response = btoa(汇总) ;
+		
+		const response = new Response(base64Response, {
+			headers: { 
+				//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+				"content-type": "text/plain; charset=utf-8",
+				"Profile-Update-Interval": `${SUBUpdateTime}`,
+				"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+			},
+		});
 
-			const response = new Response(base64Response, {
-				headers: { 
-					//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-					"content-type": "text/plain; charset=utf-8",
-					"Profile-Update-Interval": `${SUBUpdateTime}`,
-					"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-				},
-			});
-
-			return response;
+		return response;
 		}
+
 	}
 };
