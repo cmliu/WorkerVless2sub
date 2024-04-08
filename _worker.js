@@ -311,25 +311,37 @@ export default {
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 			
 			if (!url.pathname.includes("/sub")) {
-				const responseText = `
-			路径必须包含 "/sub"
-			The path must contain "/sub"
-			مسیر باید شامل "/sub" باشد
-			
-			${url.origin}/sub?host=[your host]&uuid=[your uuid]&path=[your path]
-			
-			
-			
-			
-			
-			
+				//首页改成一个nginx伪装页
+				return new Response(`
+				<!DOCTYPE html>
+				<html>
+				<head>
+				<title>Welcome to nginx!</title>
+				<style>
+					body {
+						width: 35em;
+						margin: 0 auto;
+						font-family: Tahoma, Verdana, Arial, sans-serif;
+					}
+				</style>
+				</head>
+				<body>
+				<h1>Welcome to nginx!</h1>
+				<p>If you see this page, the nginx web server is successfully installed and
+				working. Further configuration is required.</p>
 				
-				https://github.com/cmliu/WorkerVless2sub
-				`;
-			
-				return new Response(responseText, {
-				status: 400,
-				headers: { 'content-type': 'text/plain; charset=utf-8' },
+				<p>For online documentation and support please refer to
+				<a href="http://nginx.org/">nginx.org</a>.<br/>
+				Commercial support is available at
+				<a href="http://nginx.com/">nginx.com</a>.</p>
+				
+				<p><em>Thank you for using nginx.</em></p>
+				</body>
+				</html>
+				`, {
+					headers: {
+						'Content-Type': 'text/html; charset=UTF-8',
+					},
 				});
 			}
 			
