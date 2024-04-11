@@ -90,62 +90,47 @@ async function getAddressesapi(api) {
 	}
 
 	let newapi = "";
+
+	// 创建一个AbortController对象，用于控制fetch请求的取消
+	const controller = new AbortController();
+
+	const timeout = setTimeout(() => {
+		controller.abort(); // 取消所有请求
+	}, 2000); // 2秒后触发
+
 	try {
-		const responses = await Promise.allSettled(api.map(apiUrl => fetch(apiUrl,{
-			method: 'get',
+		// 使用Promise.allSettled等待所有API请求完成，无论成功或失败
+		// 对api数组进行遍历，对每个API地址发起fetch请求
+		const responses = await Promise.allSettled(api.map(apiUrl => fetch(apiUrl, {
+			method: 'get', 
 			headers: {
 				'Accept': 'text/html,application/xhtml+xml,application/xml;',
 				'User-Agent': 'cmliu/WorkerVless2sub'
-			}
+			},
+			signal: controller.signal // 将AbortController的信号量添加到fetch请求中，以便于需要时可以取消请求
 		}).then(response => response.ok ? response.text() : Promise.reject())));
-			
+
+		// 遍历所有响应
 		for (const response of responses) {
+			// 检查响应状态是否为'fulfilled'，即请求成功完成
 			if (response.status === 'fulfilled') {
+				// 获取响应的内容
 				const content = await response.value;
 				newapi += content + '\n';
 			}
 		}
 	} catch (error) {
 		console.error(error);
+	} finally {
+		// 无论成功或失败，最后都清除设置的超时定时器
+		clearTimeout(timeout);
 	}
+
 	const newAddressesapi = await ADD(newapi);
-/*
-	let newAddressesapi = [];
-	
-	for (const apiUrl of api) {
-		try {
-			const response = await fetch(apiUrl);
-		
-			if (!response.ok) {
-				console.error('获取地址时出错:', response.status, response.statusText);
-				continue;
-			}
-		
-			const text = await response.text();
-			let lines;
-			if (text.includes('\r\n')){
-				lines = text.split('\r\n');
-			} else {
-				lines = text.split('\n');
-			}
-			//const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d+)?(#.*)?$/;
-		
-			const apiAddresses = lines.map(line => {
-				const match = line.match(regex);
-				return match ? match[0] : null;
-			}).filter(Boolean);
-		
-			newAddressesapi = newAddressesapi.concat(apiAddresses);
-		} catch (error) {
-			console.error('获取地址时出错:', error);
-			continue;
-		}
-	}
-*/
-	
+
+	// 返回处理后的结果
 	return newAddressesapi;
 }
-
 
 async function getAddressescsv(tls) {
 	if (!addressescsv || addressescsv.length === 0) {
@@ -209,7 +194,7 @@ async function getAddressescsv(tls) {
 }
 
 async function ADD(envadd) {
-	var addtext = envadd.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');  // 将空格、双引号、单引号和换行符替换为逗号
+	var addtext = envadd.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');	// 将空格、双引号、单引号和换行符替换为逗号
 	//console.log(addtext);
 	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
 	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
@@ -582,7 +567,7 @@ export default {
 				}
 
 				//console.log(address, port, addressid);
-        
+		
 				if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
 					// 将addressid转换为小写
 					let lowerAddressid = addressid.toLowerCase();
