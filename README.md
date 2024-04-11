@@ -1,6 +1,6 @@
 # 优选订阅生成器 WorkerVless2sub
 
-### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器 [[实现原理 视频讲解]](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=70s)
+### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器 [[实现原理]](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=70s)
 
 Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 
@@ -178,6 +178,6 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
 
 # 感谢
-我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)
+我自己的脑洞，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)、[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)、[肥羊](https://github.com/youshandefeiyang/sub-web-modify)
 
 
