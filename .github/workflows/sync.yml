@@ -1,0 +1,15 @@
+# .github/workflows/sync.yml
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '*/3 * * * *' # 每3小时触发, 对于一些更新不那么频繁的项目可以设置为每天一次, 低碳一点
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: sky2016cn/fork-sync@v1.8
+        with:
+          owner: cmliu # fork 的上游仓库 user
+          head: main # fork 的上游仓库 branch
+          base: main # 本地仓库 branch
