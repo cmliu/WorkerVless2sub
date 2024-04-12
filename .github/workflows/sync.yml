@@ -10,6 +10,7 @@ jobs:
     steps:
       - uses: sky2016cn/fork-sync@v1.8
         with:
+          token: ${{ secrets.PERSONAL_TOKEN }}        
           owner: cmliu # fork 的上游仓库 user
           head: main # fork 的上游仓库 branch
           base: main # 本地仓库 branch
