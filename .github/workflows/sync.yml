@@ -1,19 +1,17 @@
+# .github/workflows/sync.yml
 name: Sync Fork
 
 on:
+  push: # push 时触发, 主要是为了测试配置有没有问题
   schedule:
-    - cron: '*/5 * * * *' # every 30 minutes
-  workflow_dispatch: # on button click
-
+    - cron: '*/5 * * * *' # 每3小时触发, 对于一些更新不那么频繁的项目可以设置为每天一次, 低碳一点
 jobs:
-  sync:
-
+  repo-sync:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: sky2016cn/fork-sync@v1.8
+      - uses: sky2016cn/fork-sync@v1.6.3
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          owner: cmliu
-          base: main
-          head: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          owner: cmliu # fork 的上游仓库 user
+          head: main # fork 的上游仓库 branch
+          base: main # 本地仓库 branch
