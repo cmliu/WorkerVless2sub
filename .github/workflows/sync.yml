@@ -2,16 +2,18 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '*/6 * * * *'
-  workflow_dispatch:
-  
+    - cron: '*/3 * * * *' # every 30 minutes
+  workflow_dispatch: # on button click
+
 jobs:
-  repo-sync:
+  sync:
+
     runs-on: ubuntu-latest
+
     steps:
       - uses: sky2016cn/fork-sync@v1.8
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}        
+          token: ${{ secrets.PERSONAL_TOKEN }}
           owner: cmliu
-          head: main
           base: main
+          head: main
