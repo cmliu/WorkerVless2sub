@@ -3,4 +3,5 @@
 DOMAIN-SUFFIX,vless2sub.opwsos.eu.org
 # 国外常见域名关键词代理
 DOMAIN-KEYWORD,opwsos
+DOMAIN-KEYWORD,cloudflare
 
