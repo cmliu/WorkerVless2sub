@@ -1,7 +1,7 @@
 # 代理列表
 # MyList
-DOMAIN-SUFFIX,vless2sub.opwsos.eu.org
+#DOMAIN-SUFFIX,vless2sub.opwsos.eu.org
 # 国外常见域名关键词代理
-DOMAIN-KEYWORD,opwsos
-DOMAIN-KEYWORD,cloudflare
+#DOMAIN-KEYWORD,opwsos
+#DOMAIN-KEYWORD,cloudflare
 
