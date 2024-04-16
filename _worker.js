@@ -5,14 +5,24 @@ let mytoken= ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-	'icook.tw:2053#官方优选域名',
-	'cloudflare.cfgo.cc#优选官方线路',
+	'icook.tw:2053#『icook.tw』官方优选域名',
+	'cloudflare.cfgo.cc#『cloudflare』优选官方线路',
+	'cf.090227.xyz#『cf』优选官方线路',
 ];
 
 // 设置优选地址api接口
 let addressesapi = [
 	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
+'https://cn.xxxxxxxx.tk',
+'https://ct.xxxxxxxx.tk',
+'https://cm.xxxxxxxx.tk',
+'https://cu.xxxxxxxx.tk',
+'https://cnv6.xxxxxxxx.tk',
+
+'https://cuv6.xxxxxxxx.tk',
+'https://cmv6.xxxxxxxx.tk',
+'https://ctv6.xxxxxxxx.tk',
 ];
 
 // 设置优选地址，不带端口号默认80，noTLS订阅生成
@@ -20,11 +30,66 @@ let addressesnotls = [
 	'www.visa.com.sg#官方优选域名',
 	'www.wto.org:8080#官方优选域名',
 	'www.who.int:8880#官方优选域名',
+'bestcf.onecf.eu.org#官方优选域名-Mingyu大佬提供维护',
+'bestproxy.onecf.eu.org#反代优选域名-Mingyu大佬提供维护',
+'cfip.xxxxxxxx.tk#官方优选域名-OTC大佬提供维护',
+'proxy.xxxxxxxx.tk#反代优选域名-OTC大佬提供维护',
+'acjp2.cloudflarest.link:2052#反代优选域名-KJKKK大佬提供维护',
+'acsg.cloudflarest.link:2052#反代优选域名-KJKKK大佬提供维护',
+'acsg3.cloudflarest.link:2052#反代优选域名-KJKKK大佬提供维护',
+'xn--b6gac.eu.org#xn.eu.org官方优选域名',
+'cdn-all.xn--b6gac.eu.org#cdn-all.cdn.eu.org官方优选域名',
+'cdn-b100.xn--b6gac.eu.org#cdn-b100.xn.eu.org反代优选域名',
+'time.cloudflare.com#time.cloud优选域名',
+'shopify.com',
+'time.is',
+'icook.hk',
+'icook.tw',
+'ip.sb',
+'japan.com',
+'malaysia.com',
+'russia.com',
+'singapore.com',
+'skk.moe',
+'www.visa.com',
+'www.visa.com.sg',
+'www.visa.com.hk',
+'www.visa.com.tw',
+'www.visa.co.jp',
+'www.visakorea.com',
+'www.gco.gov.qa',
+'www.gov.se',
+'www.gov.ua',
+'www.digitalocean.com',
+'www.csgo.com',
+'www.shopify.com',
+'www.whoer.net',
+'www.whatismyip.com',
+'www.ipget.net',
+'www.hugedomains.com',
+'www.udacity.com',
+'www.4chan.org',
+'www.okcupid.com',
+'www.glassdoor.com',
+'www.udemy.com',
+'alejandracaiccedo.com',
+'nc.gocada.co',
+'log.bpminecraft.com'/
+'www.boba88slot.com'/
+'gur.gov.ua',
+'www.zsu.gov.ua'/
+'www.iakeys.com',
+'www.d-555.com',
+'fbi.gov',
 ];
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
 	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
+'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+'https://addressesapi.090227.xyz/CloudFlareYes',
+'https://addressesapi.090227.xyz/cmcc-ipv6',
 ];
 
 let DLS = 8;//速度下限
@@ -34,7 +99,7 @@ let addressescsv = [
 
 let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
 let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
-let noTLS = false; //改为 true , 将不做域名判断 始终返回noTLS节点
+let noTLS = true; //改为 true , 将不做域名判断 始终返回noTLS节点
 let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
