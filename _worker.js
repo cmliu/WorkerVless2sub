@@ -330,6 +330,12 @@ export default {
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 			
 			if (!url.pathname.includes("/sub")) {
+				const envKey = env.URL302 ? 'URL302' : (env.URL ? 'URL' : null);
+				if (envKey) {
+					const URLs = await ADD(env[envKey]);
+					const URL = URLs[Math.floor(Math.random() * URLs.length)];
+					return envKey === 'URL302' ? Response.redirect(URL, 302) : fetch(new Request(URL, request));
+				}
 				//首页改成一个nginx伪装页
 				return new Response(await nginx(), {
 					headers: {
