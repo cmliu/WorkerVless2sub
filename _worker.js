@@ -39,13 +39,12 @@ let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
 let proxyIPs = [
-	'proxyip.aliyun.fxxk.dedyn.io',
 	'proxyip.multacom.fxxk.dedyn.io',
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	//{ proxyIP: "proxyip.fxxk.dedyn.io", type: "HK" },
-];
+	'proxyip.aliyun.fxxk.dedyn.io:HK',
+]
 let BotToken ='';
 let ChatID =''; 
 let proxyhosts = [//本地代理域名池
@@ -53,7 +52,7 @@ let proxyhosts = [//本地代理域名池
 ];
 let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
 let EndPS = '';//节点名备注内容
-
+let 协议类型 = 'VLESS';
 let FileName = 'WorkerVless2sub';
 let SUBUpdateTime = 6; 
 let total = 99;//PB
@@ -244,6 +243,8 @@ export default {
 		subconverter = env.SUBAPI || subconverter;
 		subconfig = env.SUBCONFIG || subconfig;
 		FileName = env.SUBNAME || FileName;
+		if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);;
+		//console.log(CMproxyIPs);
 		EndPS = env.PS || EndPS;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
@@ -289,7 +290,15 @@ export default {
 				const hosts = await ADD(env.HOST);
 				host = hosts[Math.floor(Math.random() * hosts.length)];
 			}
-			uuid = env.UUID || "null";
+			
+			if (env.PASSWORD){
+				协议类型 = 'Trojan';
+				uuid = env.PASSWORD
+			} else {
+				协议类型 = 'VLESS';
+				uuid = env.UUID || "null";
+			}
+			
 			path = env.PATH || "/?ed=2560";
 			sni = env.SNI || host;
 			edgetunnel = env.ED || edgetunnel;
@@ -323,12 +332,18 @@ export default {
 		await sendMessage("#获取订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgentHeader}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
 		} else {
 			host = url.searchParams.get('host');
-			uuid = url.searchParams.get('uuid');
+			uuid = url.searchParams.get('uuid') || url.searchParams.get('password') || url.searchParams.get('pw');
 			path = url.searchParams.get('path');
 			sni = url.searchParams.get('sni') || host;
-			edgetunnel = url.searchParams.get('edgetunnel') || edgetunnel;
+			edgetunnel = url.searchParams.get('edgetunnel') || url.searchParams.get('epeius') || edgetunnel;
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
-			
+
+			if (url.searchParams.has('edgetunnel') || url.searchParams.has('uuid')){
+				协议类型 = 'VLESS';
+			} else if (url.searchParams.has('epeius') || url.searchParams.has('password') || url.searchParams.has('pw')){
+				协议类型 = 'Trojan';
+			}
+
 			if (!url.pathname.includes("/sub")) {
 				const envKey = env.URL302 ? 'URL302' : (env.URL ? 'URL' : null);
 				if (envKey) {
@@ -377,7 +392,8 @@ export default {
 		
 		noTLS = host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare') || noTLS;
 		if(env.NOTLS == 'true')noTLS = true;
-		
+		let subconverterUrl = '';
+
 		if (!userAgent.includes('subconverter') && MamaJustKilledAMan.some(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead => userAgent.includes(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead)) && MamaJustKilledAMan.length > 0) {
 			//首页改成一个nginx伪装页
 			return new Response(await nginx(), {
@@ -386,57 +402,9 @@ export default {
 				},
 			});
 		} else if ( (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter')) ) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
-			const subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-
-			try {
-				const subconverterResponse = await fetch(subconverterUrl);
-				
-				if (!subconverterResponse.ok) {
-					throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
-				}
-				
-				const subconverterContent = await subconverterResponse.text();
-				
-				return new Response(subconverterContent, {
-					headers: { 
-						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-						"content-type": "text/plain; charset=utf-8",
-						"Profile-Update-Interval": `${SUBUpdateTime}`,
-						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-					},
-				});
-			} catch (error) {
-				return new Response(`Error: ${error.message}`, {
-					status: 500,
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
-				});
-			}
+			subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		} else if ( (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
-			const subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-
-			try {
-			const subconverterResponse = await fetch(subconverterUrl);
-			
-				if (!subconverterResponse.ok) {
-					throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
-				}
-				
-				const subconverterContent = await subconverterResponse.text();
-				
-				return new Response(subconverterContent, {
-					headers: { 
-						"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-						"content-type": "text/plain; charset=utf-8",
-						"Profile-Update-Interval": `${SUBUpdateTime}`,
-						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-					},
-				});
-			} catch (error) {
-				return new Response(`Error: ${error.message}`, {
-					status: 500,
-					headers: { 'content-type': 'text/plain; charset=utf-8' },
-				});
-			}
+			subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(request.url)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		} else {
 			if(host.includes('workers.dev') || host.includes('pages.dev')) {
 				if (proxyhostsURL) {
@@ -471,7 +439,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if(noTLS == true){
+			if(noTLS == true && 协议类型 == 'VLESS'){
 				const newAddressesnotlsapi = await getAddressesapi(addressesnotlsapi);
 				const newAddressesnotlscsv = await getAddressescsv('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
@@ -512,32 +480,33 @@ export default {
 					//console.log(address, port, addressid);
 
 					if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
-					// 将addressid转换为小写
-					let lowerAddressid = addressid.toLowerCase();
-					// 初始化找到的proxyIP为null
-					let foundProxyIP = null;
-						
-					// 遍历CMproxyIPs数组查找匹配项
-					for (let item of CMproxyIPs) {
-						if (lowerAddressid.includes(item.type.toLowerCase())) {
-							foundProxyIP = item.proxyIP;
-							break; // 找到匹配项，跳出循环
+						// 将addressid转换为小写
+						let lowerAddressid = addressid.toLowerCase();
+						// 初始化找到的proxyIP为null
+						let foundProxyIP = null;
+							
+						// 遍历CMproxyIPs数组查找匹配项
+						for (let item of CMproxyIPs) {
+							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								foundProxyIP = item.split(':')[0];
+								break; // 找到匹配项，跳出循环
+							}
 						}
-					}
-						
-					if (foundProxyIP) {
-						// 如果找到匹配的proxyIP，赋值给path
-						path = `/proxyIP=${foundProxyIP}`;
-					} else {
-						// 如果没有找到匹配项，随机选择一个proxyIP
-						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-						path = `/proxyIP=${randomProxyIP}`;
-					}
-				}
+							
+						if (foundProxyIP) {
+							// 如果找到匹配的proxyIP，赋值给path
+							path = `/proxyIP=${foundProxyIP}`;
+						} else {
+							// 如果没有找到匹配项，随机选择一个proxyIP
+							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+							path = `/proxyIP=${randomProxyIP}`;
+						}
+					}	
 
 					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
 			
 					return vlessLink;
+
 				}).join('\n');
 			}
 
@@ -582,8 +551,8 @@ export default {
 				
 					// 遍历CMproxyIPs数组查找匹配项
 					for (let item of CMproxyIPs) {
-						if (lowerAddressid.includes(item.type.toLowerCase())) {
-							foundProxyIP = item.proxyIP;
+						if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+							foundProxyIP = item.split(':')[0];
 							break; // 找到匹配项，跳出循环
 						}
 					}
@@ -596,6 +565,7 @@ export default {
 						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 						path = `/proxyIP=${randomProxyIP}`;
 					}
+					
 				}
 				
 				let 伪装域名 = host ;
@@ -607,9 +577,17 @@ export default {
 					节点备注 = `${EndPS} 已启用临时域名中转服务，请尽快绑定自定义域！`;
 					sni = 伪装域名;
 				}
-				const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+
+				if (协议类型 == 'Trojan'){
+					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+
+					return trojanLink;
+				} else {
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 			
-				return vlessLink;
+					return vlessLink;
+				}
+
 			}).join('\n');
 			
 			let combinedContent = responseBody; // 合并内容
@@ -624,18 +602,60 @@ export default {
 				console.log("notlsresponseBody: " + notlsresponseBody);
 			}
 			
-			const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
+			if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')) {
+				const TrojanLinks = combinedContent.split('\n');
+				subconverterUrl =  `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinks.join('|'))}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
+			} else {
+				const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
 
-			const response = new Response(base64Response, {
+				const response = new Response(base64Response, {
+					headers: { 
+						//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+						"content-type": "text/plain; charset=utf-8",
+						"Profile-Update-Interval": `${SUBUpdateTime}`,
+						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+					},
+				});
+	
+				return response;
+			}
+
+		}
+
+		try {
+			const subconverterResponse = await fetch(subconverterUrl);
+			
+			if (!subconverterResponse.ok) {
+				throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+			}
+				
+			let subconverterContent = await subconverterResponse.text();
+
+			if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+				subconverterContent = surge(subconverterContent, host);
+			}
+
+			return new Response(subconverterContent, {
 				headers: { 
-					//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
+					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 					"content-type": "text/plain; charset=utf-8",
 					"Profile-Update-Interval": `${SUBUpdateTime}`,
 					"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
 				},
 			});
-
-			return response;
+		} catch (error) {
+			return new Response(`Error: ${error.message}`, {
+				status: 500,
+				headers: { 'content-type': 'text/plain; charset=utf-8' },
+			});
 		}
 	}
 };
+
+function surge(content, host) {
+	const 备改内容 = `skip-cert-verify=true, tfo=false, udp-relay=false`;
+	const 正确内容 = `skip-cert-verify=true, ws=true, ws-path=/?ed=2560, ws-headers=Host:"${host}", tfo=false, udp-relay=false`;
+	content = content.replace(new RegExp(备改内容, 'g'), 正确内容)
+
+	return content;
+}
