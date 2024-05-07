@@ -43,7 +43,7 @@ let proxyIPs = [
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	'proxyip.aliyun.fxxk.dedyn.io:HK',
+	//'proxyip.aliyun.fxxk.dedyn.io:HK',
 ]
 let BotToken ='';
 let ChatID =''; 
