@@ -173,6 +173,8 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 | SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
 | SUBNAME | WorkerVless2sub | 订阅生成器名称 | 
 | PS | 【请勿测速】 | 节点名备注消息 | 
+| PROXYIP | proxyip.fxxk.dedyn.io | 默认分配的ProxyIP, 多ProxyIP将随机分配(支持多元素, 元素之间使用`,`作间隔) | 
+| CMPROXYIPS | proxyip.aliyun.fxxk.dedyn.io:HK | 识别HK后分配对应的ProxyIP(支持多元素, 元素之间使用`,`作间隔) | 
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
