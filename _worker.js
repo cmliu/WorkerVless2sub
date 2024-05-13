@@ -32,7 +32,7 @@ let addressescsv = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
 
-let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
+let subconverter = "url.v1.mk"; //在线订阅转换后端，目前使用肥羊的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
 let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
 let noTLS = 'false'; //改为 true , 将不做域名判断 始终返回noTLS节点
 let link = '';
@@ -314,7 +314,7 @@ export default {
 
 			const hasSos = url.searchParams.has('sos');
 			if (hasSos) {
-				const hy2Url = "https://hy2sub.pages.dev";
+				const hy2Url = "https://hy2sub.pages.dev/auto";
 				try {
 					const subconverterResponse = await fetch(hy2Url);
 	
