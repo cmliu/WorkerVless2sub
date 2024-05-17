@@ -38,13 +38,14 @@ let noTLS = 'false'; //改为 true , 将不做域名判断 始终返回noTLS节�
 let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
-let proxyIPs = [
+let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
 	'proxyip.multacom.fxxk.dedyn.io',
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	//'proxyip.aliyun.fxxk.dedyn.io:HK',
+	//'proxyip.aliyun.fxxk.dedyn.io:HK',//匹配节点名, 有HK就分配该ProxyIP域名
 ]
+let socks5DataURL = '';//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data'
 let BotToken ='';
 let ChatID =''; 
 let proxyhosts = [//本地代理域名池
@@ -234,6 +235,7 @@ async function nginx() {
 }
 
 let protocol;
+let socks5Data;
 export default {
 	async fetch (request, env) {
 		if (env.TOKEN) mytoken = await ADD(env.TOKEN);
@@ -243,6 +245,7 @@ export default {
 		subconverter = env.SUBAPI || subconverter;
 		subconfig = env.SUBCONFIG || subconfig;
 		FileName = env.SUBNAME || FileName;
+		socks5DataURL = env.SOCKS5DATA || socks5DataURL;
 		if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);;
 		//console.log(CMproxyIPs);
 		EndPS = env.PS || EndPS;
@@ -280,6 +283,20 @@ export default {
 			DLS: ${DLS}
 		`);
 		*/
+		
+		if (socks5DataURL) {
+			try {
+				const response = await fetch(socks5DataURL);
+				const socks5DataText = await response.text();
+				if (socks5DataText.includes('\r\n')){
+					socks5Data = socks5DataText.split('\r\n').filter(line => line.trim() !== '');
+				} else {
+					socks5Data = socks5DataText.split('\n').filter(line => line.trim() !== '');
+				}
+			} catch {
+				socks5Data = null ;
+			}
+		}
 		
 		if (env.PROXYIP) proxyIPs = await ADD(env.PROXYIP);
 		//console.log(proxyIPs);
@@ -490,24 +507,29 @@ export default {
 						let lowerAddressid = addressid.toLowerCase();
 						// 初始化找到的proxyIP为null
 						let foundProxyIP = null;
-							
-						// 遍历CMproxyIPs数组查找匹配项
-						for (let item of CMproxyIPs) {
-							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
-								foundProxyIP = item.split(':')[0];
-								break; // 找到匹配项，跳出循环
+					
+						if (socks5Data) {
+							const socks5 = getRandomProxyByMatch(lowerAddressid, socks5Data);
+							path = `/${socks5}`;
+						} else {
+							// 遍历CMproxyIPs数组查找匹配项
+							for (let item of CMproxyIPs) {
+								if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+									foundProxyIP = item.split(':')[0];
+									break; // 找到匹配项，跳出循环
+								}
+							}
+						
+							if (foundProxyIP) {
+								// 如果找到匹配的proxyIP，赋值给path
+								path = `/proxyIP=${foundProxyIP}`;
+							} else {
+								// 如果没有找到匹配项，随机选择一个proxyIP
+								const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+								path = `/proxyIP=${randomProxyIP}`;
 							}
 						}
-							
-						if (foundProxyIP) {
-							// 如果找到匹配的proxyIP，赋值给path
-							path = `/proxyIP=${foundProxyIP}`;
-						} else {
-							// 如果没有找到匹配项，随机选择一个proxyIP
-							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-							path = `/proxyIP=${randomProxyIP}`;
-						}
-					}	
+					}
 
 					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
 			
@@ -555,23 +577,27 @@ export default {
 					// 初始化找到的proxyIP为null
 					let foundProxyIP = null;
 				
-					// 遍历CMproxyIPs数组查找匹配项
-					for (let item of CMproxyIPs) {
-						if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
-							foundProxyIP = item.split(':')[0];
-							break; // 找到匹配项，跳出循环
+					if (socks5Data) {
+						const socks5 = getRandomProxyByMatch(lowerAddressid, socks5Data);
+						path = `/${socks5}`;
+					} else {
+						// 遍历CMproxyIPs数组查找匹配项
+						for (let item of CMproxyIPs) {
+							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								foundProxyIP = item.split(':')[0];
+								break; // 找到匹配项，跳出循环
+							}
+						}
+					
+						if (foundProxyIP) {
+							// 如果找到匹配的proxyIP，赋值给path
+							path = `/proxyIP=${foundProxyIP}`;
+						} else {
+							// 如果没有找到匹配项，随机选择一个proxyIP
+							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+							path = `/proxyIP=${randomProxyIP}`;
 						}
 					}
-				
-					if (foundProxyIP) {
-						// 如果找到匹配的proxyIP，赋值给path
-						path = `/proxyIP=${foundProxyIP}`;
-					} else {
-						// 如果没有找到匹配项，随机选择一个proxyIP
-						const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-						path = `/proxyIP=${randomProxyIP}`;
-					}
-					
 				}
 				
 				let 伪装域名 = host ;
@@ -658,10 +684,48 @@ export default {
 	}
 };
 
-function surge(content, host) {
-	const 备改内容 = `skip-cert-verify=true, tfo=false, udp-relay=false`;
-	const 正确内容 = `skip-cert-verify=true, ws=true, ws-path=/?ed=2560, ws-headers=Host:"${host}", tfo=false, udp-relay=false`;
-	content = content.replace(new RegExp(备改内容, 'g'), 正确内容)
+function surge(content, url) {
+	let 每行内容;
+	if (content.includes('\r\n')){
+		每行内容 = content.split('\r\n');
+	} else {
+		每行内容 = content.split('\n');
+	}
 
-	return content;
+	let 输出内容 = "";
+	for (let x of 每行内容) {
+		if (x.includes('= trojan,')) {
+			const host = x.split("sni=")[1].split(",")[0];
+			const 备改内容 = `skip-cert-verify=true, tfo=false, udp-relay=false`;
+			const 正确内容 = `skip-cert-verify=true, ws=true, ws-path=/?ed=2560, ws-headers=Host:"${host}", tfo=false, udp-relay=false`;
+			输出内容 += x.replace(new RegExp(备改内容, 'g'), 正确内容).replace("[", "").replace("]", "") + '\n';
+		} else {
+			输出内容 += x + '\n';
+		}
+	}
+
+	输出内容 = `#!MANAGED-CONFIG ${url.href} interval=86400 strict=false` + 输出内容.substring(输出内容.indexOf('\n'));
+	return 输出内容;
+}
+
+function getRandomProxyByMatch(CC, socks5Data) {
+	// 将匹配字符串转换为小写
+	const lowerCaseMatch = CC.toLowerCase();
+	
+	// 过滤出所有以指定匹配字符串结尾的代理字符串
+	let filteredProxies = socks5Data.filter(proxy => proxy.toLowerCase().endsWith(`#${lowerCaseMatch}`));
+	
+	// 如果没有匹配的代理，尝试匹配 "US"
+	if (filteredProxies.length === 0) {
+		filteredProxies = socks5Data.filter(proxy => proxy.toLowerCase().endsWith(`#us`));
+	}
+	
+	// 如果还是没有匹配的代理，从整个代理列表中随机选择一个
+	if (filteredProxies.length === 0) {
+		return socks5Data[Math.floor(Math.random() * socks5Data.length)];
+	}
+	
+	// 从匹配的代理中随机选择一个并返回
+	const randomProxy = filteredProxies[Math.floor(Math.random() * filteredProxies.length)];
+	return randomProxy;
 }
