@@ -419,7 +419,7 @@ export default {
 		
 		if (host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare')) noTLS = 'true';
 		noTLS = env.NOTLS || noTLS;
-		let subconverterUrl = generateFakeInfo(url.href, uuid, host)
+		let subconverterUrl = generateFakeInfo(url.href, uuid, host);
 
 		if (!userAgent.includes('subconverter') && MamaJustKilledAMan.some(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead => userAgent.includes(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead)) && MamaJustKilledAMan.length > 0) {
 			const envKey = env.URL302 ? 'URL302' : (env.URL ? 'URL' : null);
