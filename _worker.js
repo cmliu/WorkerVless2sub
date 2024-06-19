@@ -509,7 +509,16 @@ export default {
 						port = match[2] || port;
 						addressid = match[3] || address;
 					}
-	
+
+					const httpPorts = ["8080","8880","2052","2082","2086","2095"];
+					if (!isValidIPv4(address) && port == "80") {
+						for (let httpPort of httpPorts) {
+							if (address.includes(httpPort)) {
+								port = httpPort;
+								break;
+							}
+						}
+					}
 					//console.log(address, port, addressid);
 
 					if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
@@ -579,6 +588,15 @@ export default {
 					addressid = match[3] || address;
 				}
 
+				const httpsPorts = ["2053","2083","2087","2096","8443"];
+				if (!isValidIPv4(address) && port == "443") {
+					for (let httpsPort of httpsPorts) {
+						if (address.includes(httpsPort)) {
+							port = httpsPort;
+							break;
+						}
+					}
+				}
 				//console.log(address, port, addressid);
 		
 				if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
@@ -763,4 +781,9 @@ function revertFakeInfo(content, userID, hostName) {
 function generateFakeInfo(content, userID, hostName) {
 	content = content.replace(new RegExp(userID, 'g'), fakeUserID).replace(new RegExp(hostName, 'g'), fakeHostName);
 	return content;
+}
+
+function isValidIPv4(address) {
+	const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+	return ipv4Regex.test(address);
 }
