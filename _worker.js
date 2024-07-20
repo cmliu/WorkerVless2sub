@@ -260,6 +260,7 @@ export default {
 		let uuid = "";
 		let path = "";
 		let sni = "";
+		let type = "ws";
 		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
 		if (env.UA) MamaJustKilledAMan = MamaJustKilledAMan.concat(await ADD(env.UA));
 
@@ -328,6 +329,7 @@ export default {
 			
 			path = env.PATH || "/?ed=2560";
 			sni = env.SNI || host;
+			type = env.TYPE || type;
 			edgetunnel = env.ED || edgetunnel;
 			RproxyIP = env.RPROXYIP || RproxyIP;
 
@@ -362,6 +364,7 @@ export default {
 			uuid = url.searchParams.get('uuid') || url.searchParams.get('password') || url.searchParams.get('pw');
 			path = url.searchParams.get('path');
 			sni = url.searchParams.get('sni') || host;
+			type = url.searchParams.get('type') || type;
 			edgetunnel = url.searchParams.get('edgetunnel') || url.searchParams.get('epeius') || edgetunnel;
 			RproxyIP = url.searchParams.get('proxyip') || RproxyIP;
 
@@ -550,7 +553,7 @@ export default {
 						}
 					}
 
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=ws&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=${type}&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
 			
 					return vlessLink;
 
@@ -639,11 +642,11 @@ export default {
 				}
 
 				if (协议类型 == 'Trojan'){
-					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=http%2F1.1&fp=randomized&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=http%2F1.1&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 
 					return trojanLink;
 				} else {
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=ws&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 			
 					return vlessLink;
 				}
