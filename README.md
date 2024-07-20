@@ -2,7 +2,7 @@
 
 ### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS 节点订阅内容生成器 [[实现原理]](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=70s)
 
-Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networks](https://alicenetworks.net/)提供的云服务器维持[CM订阅转换服务](https://sub.fxxk.dedyn.io/)！**
+Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networks](https://alice.ws/aff.php?aff=15)提供的云服务器维持[CM订阅转换服务](https://sub.fxxk.dedyn.io/)！**
 
 # Pages 部署方法 [视频教程](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=509s)
 
@@ -132,10 +132,12 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
    - **自定义订阅格式** `https://[你的Workers域名]/sub?host=[你的Vless域名]&uuid=[你的UUID]&path=[你的ws路径]`
    - **host**：您的 VLESS 伪装域名，例如 `edgetunnel-2z2.pages.dev`；
    - **uuid**：您的 VLESS 客户端 UUID，例如 `30e9c5c8-ed28-4cd9-b008-dc67277f8b02`；
-   - **path**（可选）：您的 VLESS 的 WS 路径（没有可留空不填），例如 `/?ed=2048`。
+   - **path**（可选）：您的 VLESS 路径（没有可留空不填），例如 `/?ed=2560`。
+   - **sni**（可选）：您的 VLESS 的SNI（留空则默认同`host`），例如 `www.10068.cn`。
+   - **type**（可选）：您的 VLESS 的传输协议（留空则默认为`ws`），例如 `splithttp`。
    - 自定义订阅地址如下：
      ```url
-     https://sub.cmliussss.workers.dev/sub?host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
+     https://sub.cmliussss.workers.dev/sub?host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048&sni=www.10068.cn&type=splithttp
      ```
    - 注意路径必须包含 "/sub"。
 
@@ -156,30 +158,32 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 ### 变量说明
 | 变量名 | 示例 | 备注 | 
 |--------|---------|-----|
-| TOKEN | auto | 快速订阅内置节点的订阅路径地址 /auto (支持多元素, 元素之间使用`,`作间隔)| 
-| HOST | edgetunnel-2z2.pages.dev | 快速订阅内置节点的伪装域名 | 
-| UUID | b7a392e2-4ef0-4496-90bc-1c37bb234904 | 快速订阅内置节点的UUID | 
-| PATH | /?ed=2560 | 快速订阅内置节点的路径信息 | 
-| ADD | icook.tw:2053#官方优选域名 | 对应`addresses`字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| TOKEN | `auto` | 快速订阅内置节点的订阅路径地址 /auto (支持多元素, 元素之间使用`,`作间隔)| 
+| HOST | `edgetunnel-2z2.pages.dev` | 快速订阅内置节点的伪装域名 | 
+| UUID | `b7a392e2-4ef0-4496-90bc-1c37bb234904` | 快速订阅内置节点的UUID | 
+| PATH | `/?ed=256` | 快速订阅内置节点的路径信息 | 
+| SNI | `www.10068.cn` | 快速订阅内置节点的SNI信息（留空则默认同`host`） | 
+| TYPE | `splithttp` | 快速订阅内置节点的传输协议信息（留空则默认为`ws`） | 
+| ADD | `icook.tw:2053#官方优选域名` | 对应`addresses`字段 (支持多元素, 元素之间使用`,`作间隔) | 
 | ADDAPI | [https://raw.github.../addressesapi.txt](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt) | 对应`addressesapi`字段 (支持多元素, 元素之间使用`,`作间隔) | 
-| ADDNOTLS | icook.hk:8080#官方优选域名 | 对应`addressesnotls`字段 (支持多元素, 元素之间使用`,`作间隔) | 
+| ADDNOTLS | `icook.hk:8080#官方优选域名` | 对应`addressesnotls`字段 (支持多元素, 元素之间使用`,`作间隔) | 
 | ADDNOTLSAPI | [https://raw.github.../addressesapi.txt](https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt) | 对应`addressesnotlsapi`字段 (支持多元素, 元素之间使用`,`作间隔) | 
 | ADDCSV | [https://raw.github.../addressescsv.csv](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv) | 对应`addressescsv`字段 (支持多元素, 元素之间使用`,`作间隔) | 
-| DLS | 8 |`addressescsv`测速结果满足速度下限 | 
-| NOTLS | false | 改为`true`, 将不做域名判断 始终返回noTLS节点 | 
-| TGTOKEN | 6894123456:XXXXXXXXXX0qExVsBPUhHDAbXXXXXqWXgBA | 发送TG通知的机器人token | 
-| TGID | 6946912345 | 接收TG通知的账户数字ID | 
-| SUBAPI | subapi.fxxk.dedyn.io | clash、singbox等 订阅转换后端 | 
+| DLS | `8` |`addressescsv`测速结果满足速度下限 | 
+| NOTLS | `false` | 改为`true`, 将不做域名判断 始终返回noTLS节点 | 
+| TGTOKEN | `6894123456:XXXXXXXXXX0qExVsBPUhHDAbXXXXXqWXgBA` | 发送TG通知的机器人token | 
+| TGID | `6946912345` | 接收TG通知的账户数字ID | 
+| SUBAPI | `subapi.fxxk.dedyn.io` | clash、singbox等 订阅转换后端 | 
 | SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
-| SUBNAME | WorkerVless2sub | 订阅生成器名称 | 
-| PS | 【请勿测速】 | 节点名备注消息 | 
-| PROXYIP | proxyip.fxxk.dedyn.io | 默认分配的ProxyIP, 多ProxyIP将随机分配(支持多元素, 元素之间使用`,`作间隔) | 
-| CMPROXYIPS | proxyip.aliyun.fxxk.dedyn.io:HK | 识别HK后分配对应的ProxyIP(支持多元素, 元素之间使用`,`作间隔) | 
+| SUBNAME | `WorkerVless2sub` | 订阅生成器名称 | 
+| PS | `【请勿测速】` | 节点名备注消息 | 
+| PROXYIP | `proxyip.fxxk.dedyn.io` | 默认分配的ProxyIP, 多ProxyIP将随机分配(支持多元素, 元素之间使用`,`作间隔) | 
+| CMPROXYIPS | `proxyip.aliyun.fxxk.dedyn.io:HK` | 识别HK后分配对应的ProxyIP(支持多元素, 元素之间使用`,`作间隔) | 
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
 
 # 致谢
-<a href="https://alicenetworks.net/"><img src="https://alicenetworks.net/templates/lagom2/assets/img/logo/logo_big.194980063.png" width="150" height="75" alt="Alice Networks LTD"/></a>，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)、[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)、
+<a href="https://alice.ws/aff.php?aff=15"><img src="https://alicenetworks.net/templates/lagom2/assets/img/logo/logo_big.194980063.png" width="150" height="75" alt="Alice Networks LTD"/></a>，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)、[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)、
 
 
