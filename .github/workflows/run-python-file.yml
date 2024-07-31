@@ -32,6 +32,7 @@ jobs:
     - name: Run Python script
       run: |
         python CatchIP.py
+        pwd
         ls -l addressesapi.txt  # 检查文件是否存在
 
     - name: Check branch status
@@ -44,6 +45,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add /github/workspace/${FILE_NAME}
+        git add /home/runner/work/WorkerVless2sub/WorkerVless2sub
         git commit -m "Add addressesapi file from Python script" || echo "No changes to commit"
         git push origin HEAD:main
