@@ -31,7 +31,7 @@ jobs:
 
     - name: Run Python script
       run: |
-        python path_to_your_script.py
+        python CatchIP.py
         # 假设脚本执行后会在当前目录生成一个 output.txt 文件
 
     - name: Upload addressesapi file to repository
