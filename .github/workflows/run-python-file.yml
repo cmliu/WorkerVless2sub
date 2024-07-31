@@ -22,7 +22,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x' # 可以根据需要设置Python版本
+        python-version: '3.12' # 可以根据需要设置Python版本
 
     - name: Install dependencies
       run: |
