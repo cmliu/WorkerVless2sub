@@ -1,0 +1,38 @@
+name: Run Python Script and Upload Output
+
+on:
+  schedule:
+    # 每天定时执行的时间，使用UTC时间。这里设置为每天的0点（24:00）
+    - cron: '0 0 * * *'
+
+jobs:
+  run-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # 可以根据需要设置Python版本
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run Python script
+      run: |
+        python path_to_your_script.py
+        # 假设脚本执行后会在当前目录生成一个 output.txt 文件
+
+    - name: Upload addressesapi file to repository
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add addressesapi.txt
+        git commit -m "Add addressesapi file from Python script"
+        git push origin HEAD:main
+      # 假设你的默认分支是 main，如果不是，请替换为相应的分支名
