@@ -4,6 +4,12 @@ on:
   schedule:
     # 每天定时执行的时间，使用UTC时间。这里设置为每天的0点（24:00）
     - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      scriptArgs:
+        description: 'Arguments to pass to the Python script'
+        required: false
+        default: ''
 
 jobs:
   run-and-upload:
