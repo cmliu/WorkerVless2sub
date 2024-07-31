@@ -32,13 +32,18 @@ jobs:
     - name: Run Python script
       run: |
         python CatchIP.py
-        # 假设脚本执行后会在当前目录生成一个 output.txt 文件
+        ls -l addressesapi.txt  # 检查文件是否存在
 
-    - name: Upload addressesapi file to repository
+    - name: Check branch status
+      run: |
+        git status
+
+    - name: Upload output file to repository
+      env:
+        FILE_NAME: addressesapi.txt
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add addressesapi.txt
-        git commit -m "Add addressesapi file from Python script"
+        git add /github/workspace/${FILE_NAME}
+        git commit -m "Add addressesapi file from Python script" || echo "No changes to commit"
         git push origin HEAD:main
-      # 假设你的默认分支是 main，如果不是，请替换为相应的分支名
