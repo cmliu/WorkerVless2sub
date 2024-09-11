@@ -520,9 +520,8 @@ export default {
 								break;
 							}
 						}
-					} else if (port == "-1") {
-						port = "80";
 					}
+					if (port == "-1") port = "80";
 					//console.log(address, port, addressid);
 
 					if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
@@ -600,9 +599,9 @@ export default {
 							break;
 						}
 					}
-				} else if (port == "-1") {
-					port = "443";
 				}
+				if (port == "-1") port = "443";
+				
 				//console.log(address, port, addressid);
 		
 				if (edgetunnel.trim() === 'cmliu' && RproxyIP.trim() === 'true') {
