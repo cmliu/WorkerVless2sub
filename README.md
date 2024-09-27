@@ -177,7 +177,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 | HOST | `edgetunnel-2z2.pages.dev` | 快速订阅内置节点的伪装域名 (支持多元素, 订阅时随机获取, 元素之间使用`,`或`换行`作间隔) | 
 | UUID | `b7a392e2-4ef0-4496-90bc-1c37bb234904` | 快速订阅内置VLESS节点的UUID (与变量`PASSWORD`冲突, 共存时优先使用`PASSWORD`) | 
 | PASSWORD | `bpb-trojan` | 快速订阅内置Trojan节点的password (与变量`UUID`冲突, 共存时优先使用`PASSWORD`) | 
-| PATH | `/?ed=256` | 快速订阅内置节点的路径信息 | 
+| PATH | `/?ed=2560` | 快速订阅内置节点的路径信息 | 
 | SNI | `www.10068.cn` | 快速订阅内置节点的SNI信息（留空则默认同`host`） | 
 | TYPE | `splithttp` | 快速订阅内置节点的传输协议信息（留空则默认为`ws`） | 
 | ADD | `icook.tw:2053#官方优选域名` | 对应`addresses`字段 (支持多元素, 元素之间使用`,`或`换行`作间隔) | 
