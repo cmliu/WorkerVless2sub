@@ -167,8 +167,10 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
      https://sub.cmliussss.workers.dev/auto?format=singbox
      https://sub.cmliussss.workers.dev/sub?format=singbox&host=edgetunnel-2z2.pages.dev&uuid=30e9c5c8-ed28-4cd9-b008-dc67277f8b02&path=/?ed=2048
      ```
-     
-## 变量说明
+
+----
+
+# 变量说明
 | 变量名 | 示例 | 备注 | 
 |--------|---------|-----|
 | TOKEN | `auto` | 快速订阅内置节点的订阅路径地址 /auto (支持多元素, 元素之间使用`,`或`换行`作间隔)| 
@@ -194,6 +196,8 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 | PS | `【请勿测速】` | 节点名备注消息 | 
 | PROXYIP | `proxyip.fxxk.dedyn.io` | 默认分配的ProxyIP, 多ProxyIP将随机分配(支持多元素, 元素之间使用`,`或`换行`作间隔) | 
 | CMPROXYIPS | `proxyip.aliyun.fxxk.dedyn.io:HK` | 识别HK后分配对应的ProxyIP(支持多元素, 元素之间使用`,`或`换行`作间隔) | 
+
+----
 
 ## Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
