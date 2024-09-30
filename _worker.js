@@ -122,7 +122,7 @@ async function getAddressesapi(api) {
 				// 验证当前apiUrl是否带有'proxyip=true'
 				if (api[index].includes('proxyip=true')) {
 					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
-					proxyIPPool = (await ADD(content)).map(item => item.split('#')[0]);
+					proxyIPPool = proxyIPPool.concat((await ADD(content)).map(item => item.split('#')[0]));
 				}
 				// 将内容添加到newapi中
 				newapi += content + '\n';
