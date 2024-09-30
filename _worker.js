@@ -11,7 +11,7 @@ let addresses = [
 
 // 设置优选地址api接口
 let addressesapi = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt?proxyip=true', //可参考内容格式 自行搭建。
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
 ];
 
@@ -87,10 +87,9 @@ async function sendMessage(type, ip, add_data = "") {
 }
 
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
+let proxyIPPool = [];
 async function getAddressesapi(api) {
-	if (!api || api.length === 0) {
-		return [];
-	}
+	if (!api || api.length === 0) return [];
 
 	let newapi = "";
 
@@ -114,11 +113,18 @@ async function getAddressesapi(api) {
 		}).then(response => response.ok ? response.text() : Promise.reject())));
 
 		// 遍历所有响应
-		for (const response of responses) {
+		for (const [index, response] of responses.entries()) {
 			// 检查响应状态是否为'fulfilled'，即请求成功完成
 			if (response.status === 'fulfilled') {
 				// 获取响应的内容
 				const content = await response.value;
+
+				// 验证当前apiUrl是否带有'proxyip=true'
+				if (api[index].includes('proxyip=true')) {
+					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
+					proxyIPPool = (await ADD(content)).map(item => item.split('#')[0]);
+				}
+				// 将内容添加到newapi中
 				newapi += content + '\n';
 			}
 		}
@@ -621,8 +627,10 @@ export default {
 								break; // 找到匹配项，跳出循环
 							}
 						}
-					
-						if (foundProxyIP) {
+						
+						if (proxyIPPool.includes(`${address}:${port}`) && !httpsPorts.includes(port)){
+							path = `/?proxyip=${address}:${port}`;
+						} else if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
 							path = `/?proxyip=${foundProxyIP}`;
 						} else {
