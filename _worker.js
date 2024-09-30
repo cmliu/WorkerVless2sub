@@ -554,11 +554,11 @@ export default {
 						
 							if (foundProxyIP) {
 								// 如果找到匹配的proxyIP，赋值给path
-								path = `/?proxyip=${foundProxyIP}`;
+								path = `/?ed=2560&proxyip=${foundProxyIP}`;
 							} else {
 								// 如果没有找到匹配项，随机选择一个proxyIP
 								const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-								path = `/?proxyip=${randomProxyIP}`;
+								path = `/?ed=2560&proxyip=${randomProxyIP}`;
 							}
 						}
 					}
@@ -633,14 +633,14 @@ export default {
 						}
 						
 						if (proxyIPPool.includes(`${address}:${port}`) && !httpsPorts.includes(port)){
-							path = `/?proxyip=${address}:${port}`;
+							path = `/?ed=2560&proxyip=${address}:${port}`;
 						} else if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
-							path = `/?proxyip=${foundProxyIP}`;
+							path = `/?ed=2560&proxyip=${foundProxyIP}`;
 						} else {
 							// 如果没有找到匹配项，随机选择一个proxyIP
 							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-							path = `/?proxyip=${randomProxyIP}`;
+							path = `/?ed=2560&proxyip=${randomProxyIP}`;
 						}
 					}
 				}
