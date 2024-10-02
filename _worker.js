@@ -122,7 +122,10 @@ async function getAddressesapi(api) {
 				// 验证当前apiUrl是否带有'proxyip=true'
 				if (api[index].includes('proxyip=true')) {
 					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
-					proxyIPPool = proxyIPPool.concat((await ADD(content)).map(item => item.split('#')[0]));
+					proxyIPPool = proxyIPPool.concat((await ADD(content)).map(item => {
+						const baseItem = item.split('#')[0] || item;
+						return baseItem.includes(':') ? baseItem : `${baseItem}:443`;
+					}));
 				}
 				// 将内容添加到newapi中
 				newapi += content + '\n';
@@ -554,11 +557,11 @@ export default {
 						
 							if (foundProxyIP) {
 								// 如果找到匹配的proxyIP，赋值给path
-								path = `/?proxyip=${foundProxyIP}`;
+								path = `/?ed=2560&proxyip=${foundProxyIP}`;
 							} else {
 								// 如果没有找到匹配项，随机选择一个proxyIP
 								const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-								path = `/?proxyip=${randomProxyIP}`;
+								path = `/?ed=2560&proxyip=${randomProxyIP}`;
 							}
 						}
 					}
@@ -633,14 +636,14 @@ export default {
 						}
 						
 						if (proxyIPPool.includes(`${address}:${port}`) && !httpsPorts.includes(port)){
-							path = `/?proxyip=${address}:${port}`;
+							path = `/?ed=2560&proxyip=${address}:${port}`;
 						} else if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
-							path = `/?proxyip=${foundProxyIP}`;
+							path = `/?ed=2560&proxyip=${foundProxyIP}`;
 						} else {
 							// 如果没有找到匹配项，随机选择一个proxyIP
 							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-							path = `/?proxyip=${randomProxyIP}`;
+							path = `/?ed=2560&proxyip=${randomProxyIP}`;
 						}
 					}
 				}
