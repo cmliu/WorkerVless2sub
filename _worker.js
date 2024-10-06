@@ -63,6 +63,7 @@ const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 // 虚假uuid和hostname，用于发送给配置生成服务
 let fakeUserID ;
 let fakeHostName ;
+let httpsPorts = ["2053","2083","2087","2096","8443"];
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
@@ -124,8 +125,16 @@ async function getAddressesapi(api) {
 					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
 					proxyIPPool = proxyIPPool.concat((await ADD(content)).map(item => {
 						const baseItem = item.split('#')[0] || item;
-						return baseItem.includes(':') ? baseItem : `${baseItem}:443`;
-					}));
+						if (baseItem.includes(':')) {
+							const port = baseItem.split(':')[1];
+							if (!httpsPorts.includes(port)) {
+								return baseItem;
+							}
+						} else {
+							return `${baseItem}:443`;
+						}
+						return null; // 不符合条件时返回 null
+					}).filter(Boolean)); // 过滤掉 null 值
 				}
 				// 将内容添加到newapi中
 				newapi += content + '\n';
@@ -193,7 +202,7 @@ async function getAddressescsv(tls) {
 			
 					const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
 					newAddressescsv.push(formattedAddress);
-					if (csvUrl.includes('proxyip=true') && columns[tlsIndex].toUpperCase() == 'true') {
+					if (csvUrl.includes('proxyip=true') && columns[tlsIndex].toUpperCase() == 'true' && !httpsPorts.includes(port)) {
 						// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
 						proxyIPPool.push(`${ipAddress}:${port}`);
 					}
@@ -262,6 +271,7 @@ export default {
 		FileName = env.SUBNAME || FileName;
 		socks5DataURL = env.SOCKS5DATA || socks5DataURL;
 		if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);;
+		if (env.CFPORTS) httpsPorts = await ADD(env.CFPORTS);
 		//console.log(CMproxyIPs);
 		EndPS = env.PS || EndPS;
 		const userAgentHeader = request.headers.get('User-Agent');
@@ -353,23 +363,6 @@ export default {
 				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
 			}
 
-			const hasSos = url.searchParams.has('sos');
-			if (hasSos) {
-				const hy2Url = "https://hy2sub.pages.dev/auto";
-				try {
-					const subconverterResponse = await fetch(hy2Url);
-	
-					if (!subconverterResponse.ok) {
-						throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
-					}
-	
-					const base64Text = await subconverterResponse.text();
-					link += '\n' + atob(base64Text); // 进行 Base64 解码
-	
-				} catch (error) {
-					// 错误处理
-				}	
-			}
 		await sendMessage("#VLESS订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgentHeader}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
 		} else {
 			host = url.searchParams.get('host');
@@ -604,7 +597,6 @@ export default {
 					addressid = match[3] || address;
 				}
 
-				const httpsPorts = ["2053","2083","2087","2096","8443"];
 				if (!isValidIPv4(address) && port == "-1") {
 					for (let httpsPort of httpsPorts) {
 						if (address.includes(httpsPort)) {
@@ -635,8 +627,9 @@ export default {
 							}
 						}
 						
-						if (proxyIPPool.includes(`${address}:${port}`) && !httpsPorts.includes(port)){
-							path = `/?ed=2560&proxyip=${address}:${port}`;
+						const matchingProxyIP = proxyIPPool.find(proxyIP => proxyIP.includes(address));
+						if (matchingProxyIP) {
+							path = `/?ed=2560&proxyip=${matchingProxyIP}`;
 						} else if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
 							path = `/?ed=2560&proxyip=${foundProxyIP}`;
