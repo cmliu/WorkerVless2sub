@@ -196,6 +196,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 | PS | `【请勿测速】` | 节点名备注消息 | 
 | PROXYIP | `proxyip.fxxk.dedyn.io` | 默认分配的ProxyIP, 多ProxyIP将随机分配(支持多元素, 元素之间使用`,`或`换行`作间隔) | 
 | CMPROXYIPS | `proxyip.aliyun.fxxk.dedyn.io:HK` | 识别HK后分配对应的ProxyIP(支持多元素, 元素之间使用`,`或`换行`作间隔) | 
+| CFPORTS | `2053`,`2096`,`8443` | CF账户标准端口列表 |
 
 ----
 
