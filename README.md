@@ -1,4 +1,4 @@
-# 优选订阅生成器 WorkerVless2sub
+# 优选订阅生成器 WorkerVless2sub -   [آموزش به زبان فارسی کلیک کنید](README-FA.md)
 
 ### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS / Trojan 节点订阅内容生成器 [[实现原理]](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=70s)
 
