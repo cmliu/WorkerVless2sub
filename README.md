@@ -176,6 +176,9 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 | TOKEN | `auto` | 快速订阅内置节点的订阅路径地址 /auto (支持多元素, 元素之间使用`,`或`换行`作间隔)| 
 | HOST | `edgetunnel-2z2.pages.dev` | 快速订阅内置节点的伪装域名 (支持多元素, 订阅时随机获取, 元素之间使用`,`或`换行`作间隔) | 
 | UUID | `b7a392e2-4ef0-4496-90bc-1c37bb234904` | 快速订阅内置VLESS节点的UUID (与变量`PASSWORD`冲突, 共存时优先使用`PASSWORD`) | 
+| KEY | `token` | 动态UUID秘钥，使用变量`KEY`的时候，将不再启用变量`UUID`|
+| TIME | `7` | 动态UUID有效时间(单位:天)|
+| UPTIME | `3` | 动态UUID更新时间(默认:北京时间`3`点更新) |
 | PASSWORD | `bpb-trojan` | 快速订阅内置Trojan节点的password (与变量`UUID`冲突, 共存时优先使用`PASSWORD`) | 
 | PATH | `/?ed=2560` | 快速订阅内置节点的路径信息 | 
 | SNI | `www.10068.cn` | 快速订阅内置节点的SNI信息（留空则默认同`host`） | 

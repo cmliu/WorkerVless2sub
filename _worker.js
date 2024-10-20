@@ -64,6 +64,8 @@ const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 let fakeUserID ;
 let fakeHostName ;
 let httpsPorts = ["2053","2083","2087","2096","8443"];
+let effectiveTime = 7;//有效时间 单位:天
+let updateTime = 3;//更新时间
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
@@ -346,7 +348,14 @@ export default {
 				uuid = env.PASSWORD
 			} else {
 				协议类型 = 'VLESS';
-				uuid = env.UUID || "null";
+				if (env.KEY) {
+					const userIDs = await generateDynamicUUID(env.KEY);
+					uuid = userIDs[0];
+					effectiveTime = env.TIME || effectiveTime;
+					updateTime = env.UPTIME || updateTime;
+				} else {
+					uuid = env.UUID || "null";
+				}
 			}
 			
 			path = env.PATH || "/?ed=2560";
@@ -799,4 +808,41 @@ function generateFakeInfo(content, userID, hostName) {
 function isValidIPv4(address) {
 	const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 	return ipv4Regex.test(address);
+}
+
+function generateDynamicUUID(key) {
+    function getWeekOfYear() {
+        const now = new Date();
+        const timezoneOffset = 8; // 北京时间相对于UTC的时区偏移+8小时
+        const adjustedNow = new Date(now.getTime() + timezoneOffset * 60 * 60 * 1000);
+        const start = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
+        const diff = adjustedNow - start;
+        const oneWeek = 1000 * 60 * 60 * 24 * effectiveTime;
+        return Math.ceil(diff / oneWeek);
+    }
+    
+    const passwdTime = getWeekOfYear(); // 获取当前周数
+    const endTime = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期
+    endTime.setMilliseconds(endTime.getMilliseconds() + passwdTime * 1000 * 60 * 60 * 24 * effectiveTime);
+
+    // 生成 UUID 的辅助函数
+    function generateUUID(baseString) {
+        const hashBuffer = new TextEncoder().encode(baseString);
+        return crypto.subtle.digest('SHA-256', hashBuffer).then((hash) => {
+            const hashArray = Array.from(new Uint8Array(hash));
+            const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            let uuid = hexHash.substr(0, 8) + '-' + hexHash.substr(8, 4) + '-4' + hexHash.substr(13, 3) + '-' + (parseInt(hexHash.substr(16, 2), 16) & 0x3f | 0x80).toString(16) + hexHash.substr(18, 2) + '-' + hexHash.substr(20, 12);
+            return uuid;
+        });
+    }
+    
+    // 生成两个 UUID
+    const currentUUIDPromise = generateUUID(key + passwdTime);
+    const previousUUIDPromise = generateUUID(key + (passwdTime - 1));
+
+    // 格式化到期时间
+    const expirationDateUTC = new Date(endTime.getTime() - 8 * 60 * 60 * 1000); // UTC时间
+    const expirationDateString = `到期时间(UTC): ${expirationDateUTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${endTime.toISOString().slice(0, 19).replace('T', ' ')}\n`;
+
+    return Promise.all([currentUUIDPromise, previousUUIDPromise, expirationDateString]);
 }
