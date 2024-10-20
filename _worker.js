@@ -811,23 +811,20 @@ function isValidIPv4(address) {
 }
 
 function generateDynamicUUID(key) {
-	// 获取当前时间是当年的第几周（以北京时间凌晨3点为界）
-	function getWeekOfYear() {
-		const now = new Date();
-		const timezoneOffset = 8; // 北京时间相对于UTC的时区偏移+8小时
-		const adjustedNow = new Date(now.getTime() + timezoneOffset * 60 * 60 * 1000);
-		const start = new Date(2007, 6, 7, 3, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
-		// 计算当前时间与今年1月1日凌晨3点的差距
-		const diff = adjustedNow - start;
-		// 一周的毫秒数（7天）
-		const oneWeek = 1000 * 60 * 60 * 24 * effectiveTime;
-		// 返回当前是第几周，向上取整
-		return [Math.ceil(diff / oneWeek), Math.ceil((diff / oneWeek)- 1)];
-	}
-	
-    const passwdTimes = getWeekOfYear(); // 获取当前周数并存储
-    const passwdTime = passwdTimes[0];
-    const passwdTimeLow = passwdTimes[1];
+    function getWeekOfYear() {
+        const now = new Date();
+        const timezoneOffset = 8; // 北京时间相对于UTC的时区偏移+8小时
+        const adjustedNow = new Date(now.getTime() + timezoneOffset * 60 * 60 * 1000);
+        const start = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
+        const diff = adjustedNow - start;
+        const oneWeek = 1000 * 60 * 60 * 24 * effectiveTime;
+        return Math.ceil(diff / oneWeek);
+    }
+    
+    const passwdTime = getWeekOfYear(); // 获取当前周数
+    const endTime = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期
+    endTime.setMilliseconds(endTime.getMilliseconds() + passwdTime * 1000 * 60 * 60 * 24 * effectiveTime);
+
     // 生成 UUID 的辅助函数
     function generateUUID(baseString) {
         const hashBuffer = new TextEncoder().encode(baseString);
@@ -838,9 +835,14 @@ function generateDynamicUUID(key) {
             return uuid;
         });
     }
-	// 生成两个 UUID
-	const currentUUIDPromise = generateUUID(key + passwdTime);
-	const previousUUIDPromise = generateUUID(key + passwdTimeLow);
-	
-	return Promise.all([currentUUIDPromise, previousUUIDPromise]);
+    
+    // 生成两个 UUID
+    const currentUUIDPromise = generateUUID(key + passwdTime);
+    const previousUUIDPromise = generateUUID(key + (passwdTime - 1));
+
+    // 格式化到期时间
+    const expirationDateUTC = new Date(endTime.getTime() - 8 * 60 * 60 * 1000); // UTC时间
+    const expirationDateString = `到期时间(UTC): ${expirationDateUTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${endTime.toISOString().slice(0, 19).replace('T', ' ')}\n`;
+
+    return Promise.all([currentUUIDPromise, previousUUIDPromise, expirationDateString]);
 }
