@@ -852,7 +852,7 @@ async function getLink(重新汇总所有链接) {
 	let 节点LINK = [];
 	let 订阅链接 = [];
 	for (let x of 重新汇总所有链接) {
-		if (x.toLowerCase().startsWith('http')) {
+		if (x.toLowerCase().startsWith('http://') || x.toLowerCase().startsWith('https://')) {
 			订阅链接.push(x);
 		} else {
 			节点LINK.push(x);
