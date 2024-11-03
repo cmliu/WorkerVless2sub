@@ -196,7 +196,7 @@ https://sub.cmliussss.workers.dev/sub?format=singbox&host=edgetunnel-2z2.pages.d
 | SOCKS5DATA | [https://raw.github.../socks5Data](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data) | پول پروکسی Socks5 | 
 | PS | `【لطفاً تست سرعت نکنید】` | پیام یادداشت واسه اسم گره | 
 | PROXYIP | `proxyip.fxxk.dedyn.io` | ProxyIP پیش‌فرض، اگه چندتا باشه یکی رندوم انتخاب میشه (می‌تونی چندتا بذاری، با `,` یا خط جدید جداشون کن) | 
-| CMPROXYIPS | `proxyip.aliyun.fxxk.dedyn.io:HK` | وقتی HK شناسایی بشه، ProxyIP مربوطه رو اختصاص میده (می‌تونی چندتا بذاری، با `,` یا خط جدید جداشون کن) | 
+| CMPROXYIPS | `proxyip.aliyun.fxxk.dedyn.io#HK` | وقتی HK شناسایی بشه، ProxyIP مربوطه رو اختصاص میده (می‌تونی چندتا بذاری، با `,` یا خط جدید جداشون کن) | 
 | CFPORTS | `2053`,`2096`,`8443` | لیست پورت‌های استاندارد حساب CF |
 
 خب، این بود همه چیزی که لازم داری بدونی. امیدوارم کمکت کرده باشه! اگه سوالی داری یا چیزی واست مبهمه، حتماً بپرس. خوشحال میشم کمکت کنم!
