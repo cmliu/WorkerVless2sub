@@ -11,7 +11,7 @@ let addresses = [
 
 // 设置优选地址api接口
 let addressesapi = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt?proxyip=true', //可参考内容格式 自行搭建。
+	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
 ];
 
@@ -32,10 +32,10 @@ let addressescsv = [
 	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
 ];
 
-let subconverter = "api.v1.mk"; //在线订阅转换后端，目前使用CM的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
+let subconverter = "apiurl.v1.mk"; //在线订阅转换后端，目前使用CM的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
 let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
 let noTLS = 'false'; //改为 true , 将不做域名判断 始终返回noTLS节点
-let link;
+let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
 let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
@@ -43,7 +43,7 @@ let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	//'proxyip.aliyun.fxxk.dedyn.io#HK',//匹配节点名, 有HK就分配该ProxyIP域名
+	//'proxyip.aliyun.fxxk.dedyn.io:HK',//匹配节点名, 有HK就分配该ProxyIP域名
 ]
 let socks5DataURL = '';//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data'
 let BotToken ='';
@@ -63,9 +63,6 @@ const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 // 虚假uuid和hostname，用于发送给配置生成服务
 let fakeUserID ;
 let fakeHostName ;
-let httpsPorts = ["2053","2083","2087","2096","8443"];
-let effectiveTime = 7;//有效时间 单位:天
-let updateTime = 3;//更新时间
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
@@ -90,9 +87,10 @@ async function sendMessage(type, ip, add_data = "") {
 }
 
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
-let proxyIPPool = [];
 async function getAddressesapi(api) {
-	if (!api || api.length === 0) return [];
+	if (!api || api.length === 0) {
+		return [];
+	}
 
 	let newapi = "";
 
@@ -110,35 +108,17 @@ async function getAddressesapi(api) {
 			method: 'get', 
 			headers: {
 				'Accept': 'text/html,application/xhtml+xml,application/xml;',
-				'User-Agent': `${FileName} cmliu/WorkerVless2sub`
+				'User-Agent': 'cmliu/WorkerVless2sub'
 			},
 			signal: controller.signal // 将AbortController的信号量添加到fetch请求中，以便于需要时可以取消请求
 		}).then(response => response.ok ? response.text() : Promise.reject())));
 
 		// 遍历所有响应
-		for (const [index, response] of responses.entries()) {
+		for (const response of responses) {
 			// 检查响应状态是否为'fulfilled'，即请求成功完成
 			if (response.status === 'fulfilled') {
 				// 获取响应的内容
 				const content = await response.value;
-
-				// 验证当前apiUrl是否带有'proxyip=true'
-				if (api[index].includes('proxyip=true')) {
-					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
-					proxyIPPool = proxyIPPool.concat((await ADD(content)).map(item => {
-						const baseItem = item.split('#')[0] || item;
-						if (baseItem.includes(':')) {
-							const port = baseItem.split(':')[1];
-							if (!httpsPorts.includes(port)) {
-								return baseItem;
-							}
-						} else {
-							return `${baseItem}:443`;
-						}
-						return null; // 不符合条件时返回 null
-					}).filter(Boolean)); // 过滤掉 null 值
-				}
-				// 将内容添加到newapi中
 				newapi += content + '\n';
 			}
 		}
@@ -204,10 +184,6 @@ async function getAddressescsv(tls) {
 			
 					const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
 					newAddressescsv.push(formattedAddress);
-					if (csvUrl.includes('proxyip=true') && columns[tlsIndex].toUpperCase() == 'true' && !httpsPorts.includes(port)) {
-						// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
-						proxyIPPool.push(`${ipAddress}:${port}`);
-					}
 				}
 			}
 		} catch (error) {
@@ -273,7 +249,6 @@ export default {
 		FileName = env.SUBNAME || FileName;
 		socks5DataURL = env.SOCKS5DATA || socks5DataURL;
 		if (env.CMPROXYIPS) CMproxyIPs = await ADD(env.CMPROXYIPS);;
-		if (env.CFPORTS) httpsPorts = await ADD(env.CFPORTS);
 		//console.log(CMproxyIPs);
 		EndPS = env.PS || EndPS;
 		const userAgentHeader = request.headers.get('User-Agent');
@@ -298,6 +273,8 @@ export default {
 		let expire= Math.floor(timestamp / 1000) ;
 
 		link = env.LINK || link;
+		const links = await ADD(link);
+		link = links.join('\n');
 		
 		if (env.ADD) addresses = await ADD(env.ADD);
 		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
@@ -346,14 +323,7 @@ export default {
 				uuid = env.PASSWORD
 			} else {
 				协议类型 = 'VLESS';
-				if (env.KEY) {
-					const userIDs = await generateDynamicUUID(env.KEY);
-					uuid = userIDs[0];
-					effectiveTime = env.TIME || effectiveTime;
-					updateTime = env.UPTIME || updateTime;
-				} else {
-					uuid = env.UUID || "null";
-				}
+				uuid = env.UUID || "null";
 			}
 			
 			path = env.PATH || "/?ed=2560";
@@ -370,6 +340,23 @@ export default {
 				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
 			}
 
+			const hasSos = url.searchParams.has('sos');
+			if (hasSos) {
+				const hy2Url = "https://hy2sub.pages.dev/auto";
+				try {
+					const subconverterResponse = await fetch(hy2Url);
+	
+					if (!subconverterResponse.ok) {
+						throw new Error(`Error fetching lzUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+					}
+	
+					const base64Text = await subconverterResponse.text();
+					link += '\n' + atob(base64Text); // 进行 Base64 解码
+	
+				} catch (error) {
+					// 错误处理
+				}	
+			}
 		await sendMessage("#VLESS订阅", request.headers.get('CF-Connecting-IP'), `UA: ${userAgentHeader}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
 		} else {
 			host = url.searchParams.get('host');
@@ -549,10 +536,7 @@ export default {
 						} else {
 							// 遍历CMproxyIPs数组查找匹配项
 							for (let item of CMproxyIPs) {
-								if (lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
-									foundProxyIP = item.split('#')[0];
-									break; // 找到匹配项，跳出循环
-								} else if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 									foundProxyIP = item.split(':')[0];
 									break; // 找到匹配项，跳出循环
 								}
@@ -560,11 +544,11 @@ export default {
 						
 							if (foundProxyIP) {
 								// 如果找到匹配的proxyIP，赋值给path
-								path = `/?ed=2560&proxyip=${foundProxyIP}`;
+								path = `/?proxyip=${foundProxyIP}`;
 							} else {
 								// 如果没有找到匹配项，随机选择一个proxyIP
 								const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-								path = `/?ed=2560&proxyip=${randomProxyIP}`;
+								path = `/?proxyip=${randomProxyIP}`;
 							}
 						}
 					}
@@ -607,6 +591,7 @@ export default {
 					addressid = match[3] || address;
 				}
 
+				const httpsPorts = ["2053","2083","2087","2096","8443"];
 				if (!isValidIPv4(address) && port == "-1") {
 					for (let httpsPort of httpsPorts) {
 						if (address.includes(httpsPort)) {
@@ -636,17 +621,14 @@ export default {
 								break; // 找到匹配项，跳出循环
 							}
 						}
-						
-						const matchingProxyIP = proxyIPPool.find(proxyIP => proxyIP.includes(address));
-						if (matchingProxyIP) {
-							path = `/?ed=2560&proxyip=${matchingProxyIP}`;
-						} else if (foundProxyIP) {
+					
+						if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
-							path = `/?ed=2560&proxyip=${foundProxyIP}`;
+							path = `/?proxyip=${foundProxyIP}`;
 						} else {
 							// 如果没有找到匹配项，随机选择一个proxyIP
 							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-							path = `/?ed=2560&proxyip=${randomProxyIP}`;
+							path = `/?proxyip=${randomProxyIP}`;
 						}
 					}
 				}
@@ -662,10 +644,12 @@ export default {
 				}
 
 				if (协议类型 == 'Trojan'){
-					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=http%2F1.1&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=h3&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+
 					return trojanLink;
 				} else {
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=h3&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+			
 					return vlessLink;
 				}
 
@@ -674,10 +658,8 @@ export default {
 			let combinedContent = responseBody; // 合并内容
 			
 			if (link) {
-				const links = await ADD(link);
-				const 整理节点LINK = (await getLink(links)).join('\n');
-				combinedContent += '\n' + 整理节点LINK;
-				console.log("link: " + 整理节点LINK)
+				combinedContent += '\n' + link;
+				console.log("link: " + link)
 			}
 			
 			if (notlsresponseBody && noTLS == 'true') {
@@ -809,113 +791,4 @@ function generateFakeInfo(content, userID, hostName) {
 function isValidIPv4(address) {
 	const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 	return ipv4Regex.test(address);
-}
-
-function generateDynamicUUID(key) {
-    function getWeekOfYear() {
-        const now = new Date();
-        const timezoneOffset = 8; // 北京时间相对于UTC的时区偏移+8小时
-        const adjustedNow = new Date(now.getTime() + timezoneOffset * 60 * 60 * 1000);
-        const start = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
-        const diff = adjustedNow - start;
-        const oneWeek = 1000 * 60 * 60 * 24 * effectiveTime;
-        return Math.ceil(diff / oneWeek);
-    }
-    
-    const passwdTime = getWeekOfYear(); // 获取当前周数
-    const endTime = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期
-    endTime.setMilliseconds(endTime.getMilliseconds() + passwdTime * 1000 * 60 * 60 * 24 * effectiveTime);
-
-    // 生成 UUID 的辅助函数
-    function generateUUID(baseString) {
-        const hashBuffer = new TextEncoder().encode(baseString);
-        return crypto.subtle.digest('SHA-256', hashBuffer).then((hash) => {
-            const hashArray = Array.from(new Uint8Array(hash));
-            const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            let uuid = hexHash.substr(0, 8) + '-' + hexHash.substr(8, 4) + '-4' + hexHash.substr(13, 3) + '-' + (parseInt(hexHash.substr(16, 2), 16) & 0x3f | 0x80).toString(16) + hexHash.substr(18, 2) + '-' + hexHash.substr(20, 12);
-            return uuid;
-        });
-    }
-    
-    // 生成两个 UUID
-    const currentUUIDPromise = generateUUID(key + passwdTime);
-    const previousUUIDPromise = generateUUID(key + (passwdTime - 1));
-
-    // 格式化到期时间
-    const expirationDateUTC = new Date(endTime.getTime() - 8 * 60 * 60 * 1000); // UTC时间
-    const expirationDateString = `到期时间(UTC): ${expirationDateUTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${endTime.toISOString().slice(0, 19).replace('T', ' ')}\n`;
-
-    return Promise.all([currentUUIDPromise, previousUUIDPromise, expirationDateString]);
-}
-
-async function getLink(重新汇总所有链接) {
-	let 节点LINK = [];
-	let 订阅链接 = [];
-	for (let x of 重新汇总所有链接) {
-		if (x.toLowerCase().startsWith('http')) {
-			订阅链接.push(x);
-		} else {
-			节点LINK.push(x);
-		}
-	}
-
-	if ( 订阅链接 && 订阅链接.length !== 0 ) {
-		function base64Decode(str) {
-			const bytes = new Uint8Array(atob(str).split('').map(c => c.charCodeAt(0)));
-			const decoder = new TextDecoder('utf-8');
-			return decoder.decode(bytes);
-		}
-		const controller = new AbortController(); // 创建一个AbortController实例，用于取消请求
-	
-		const timeout = setTimeout(() => {
-			controller.abort(); // 2秒后取消所有请求
-		}, 2000);
-		
-		try {
-			// 使用Promise.allSettled等待所有API请求完成，无论成功或失败
-			const responses = await Promise.allSettled(订阅链接.map(apiUrl => fetch(apiUrl, {
-				method: 'get', 
-				headers: {
-					'Accept': 'text/html,application/xhtml+xml,application/xml;',
-					'User-Agent': `v2rayN/${FileName} cmliu/WorkerVless2sub`
-				},
-				signal: controller.signal // 将AbortController的信号量添加到fetch请求中
-			}).then(response => response.ok ? response.text() : Promise.reject())));
-		
-			// 遍历所有响应
-			const modifiedResponses = responses.map((response, index) => {
-				// 检查是否请求成功
-				return {
-					status: response.status,
-					value: response.value,
-					apiUrl: 订阅链接[index] // 将原始的apiUrl添加到返回对象中
-				};
-			});
-		
-			console.log(modifiedResponses); // 输出修改后的响应数组
-		
-			for (const response of modifiedResponses) {
-				// 检查响应状态是否为'fulfilled'
-				if (response.status === 'fulfilled') {
-					const content = await response.value || 'null'; // 获取响应的内容
-					if (content.includes('://')) {
-						const lines = content.includes('\r\n') ? content.split('\r\n') : content.split('\n');
-						节点LINK = 节点LINK.concat(lines);
-					} else {
-						const 尝试base64解码内容 = base64Decode(content);
-						if (尝试base64解码内容.includes('://')) {
-							const lines = 尝试base64解码内容.includes('\r\n') ? 尝试base64解码内容.split('\r\n') : 尝试base64解码内容.split('\n');
-							节点LINK = 节点LINK.concat(lines);
-						}
-					}
-				}
-			}
-		} catch (error) {
-			console.error(error); // 捕获并输出错误信息
-		} finally {
-			clearTimeout(timeout); // 清除定时器
-		}
-	}
-
-	return 节点LINK;
 }
