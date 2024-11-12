@@ -225,7 +225,7 @@ async function ADD(envadd) {
 	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
 	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
 	let add = [];
-	if (add != '') add = addtext.split(',');
+	if (addtext != '') add = addtext.split(',');
 	//console.log(add);
 	return add ;
 }
