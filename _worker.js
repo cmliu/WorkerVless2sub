@@ -550,10 +550,10 @@ export default {
 						} else {
 							// 遍历CMproxyIPs数组查找匹配项
 							for (let item of CMproxyIPs) {
-								if (lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
+								if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
 									foundProxyIP = item.split('#')[0];
 									break; // 找到匹配项，跳出循环
-								} else if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 									foundProxyIP = item.split(':')[0];
 									break; // 找到匹配项，跳出循环
 								}
@@ -632,7 +632,7 @@ export default {
 					} else {
 						// 遍历CMproxyIPs数组查找匹配项
 						for (let item of CMproxyIPs) {
-							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+							if (item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 								foundProxyIP = item.split(':')[0];
 								break; // 找到匹配项，跳出循环
 							}
