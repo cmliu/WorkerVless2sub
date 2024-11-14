@@ -1,41 +1,88 @@
 
+
 // 部署完成后在网址后面加上这个，获取订阅器默认节点，/auto
 
 let mytoken= ['auto'];//快速订阅访问入口, 留空则不启动快速订阅
 
 // 设置优选地址，不带端口号默认443，TLS订阅生成
 let addresses = [
-	'icook.tw:2053#官方优选域名',
-	'cloudflare.cfgo.cc#优选官方线路',
+	'cf.090227.xyz:443#优选域名-CM',
+	'cfip.xxxxxxxx.tk:443#优选域名-OTC',
+	'time.cloudflare.com#官方优选',
+	'time.is#官方优选',
+	'icook.tw#tw-官方优选',
+	'ip.sb#官方优选',
+	'japan.com#JP-官方优选',
+	'malaysia.com#官方优选',
+	'russia.com#官方优选-',
+	'singapore.com#SG-官方优选',
+	'skk.moe#官方优选',
+	'www.visa.com#官方优选',
+	'www.visa.com.sg#SG-官方优选',
+	'www.visa.com.hk#HK-官方优选',
+	'www.visa.com.tw#TW-官方优选',
+	'www.visa.co.jp#JP-官方优选',
+	'www.visakorea.com#KOR-官方优选',
+	'www.gco.gov.qa#官方优选-',
+	'www.gov.se#官方优选-',
+	'www.gov.ua#官方优选',
+	'www.digitalocean.com#官方优选',
+	'www.csgo.com#官方优选',
+	'www.shopify.com#官方优选',
+	'www.whoer.net#官方优选',
+	'www.whatismyip.com#官方优选',
+	'www.hugedomains.com#官方优选-',
+	'www.udacity.com#官方优选-',
+	'www.okcupid.com#官方优选',
+	'www.glassdoor.com#官方优选',
+	'www.udemy.com#官方优选',
+	'alejandracaiccedo.com#官方优选',
+	'log.bpminecraft.com#官方优选',
+	'www.boba88slot.com#官方优选',
+	'gur.gov.ua#官方优选-',
+	'www.iakeys.com#官方优选',
+	'edtunnel-dgp.pages.dev#官方优选-',
+	'www.d-555.com#官方优选',
+	'fbi.gov#官方优选',
+	'www.baipiao.eu.org#官方优选',
+        '45.80.111.64:443#官方优选CT',
+        '45.133.247.80:443#官方优选CT-',
+        '185.238.228.33:443#官方优选CT-',
+	'aliyun.2096.us.kg:2096#优选域名-TC',
+
 ];
 
 // 设置优选地址api接口
 let addressesapi = [
-	'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt?proxyip=true', //可参考内容格式 自行搭建。
-	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesipv6api.txt', //IPv6优选内容格式 自行搭建。
+	'https://addressesapi.090227.xyz/cmcc',
+        'https://addressesapi.090227.xyz/ct',
+        'https://addressesapi.090227.xyz/CloudFlareYes',
+        'https://cf-workers-text2kv-d2d.pages.dev/ip.txt?token=qqqq1111',
+	'https://ct.xxxxxxxx.tk/',
+	//'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+	//'https://raw.githubusercontent.com/shii69/IPDB/main/bestproxy.txt'，
 ];
 
 // 设置优选地址，不带端口号默认80，noTLS订阅生成
 let addressesnotls = [
-	'www.visa.com.sg#官方优选域名',
-	'www.wto.org:8080#官方优选域名',
-	'www.who.int:8880#官方优选域名',
+	'malaysia.com:80#官方优选',
+	
 ];
 
 // 设置优选noTLS地址api接口
 let addressesnotlsapi = [
-	'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
+	//'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/addressesapi.txt', //可参考内容格式 自行搭建。
 ];
 
 let DLS = 8;//速度下限
 let addressescsv = [
-	//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressescsv.csv', //iptest测速结果文件。
+	//'https://raw.githubusercontent.com/dockkkk/CF-WORKERS/main/result.csv'， //iptest测速结果文件。
 ];
 
 let subconverter = "SUBAPI.fxxk.dedyn.io"; //在线订阅转换后端，目前使用CM的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
 let subconfig = "https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"; //订阅转换配置文件
 let noTLS = 'false'; //改为 true , 将不做域名判断 始终返回noTLS节点
-let link;
+let link = '';
 let edgetunnel = 'ed';
 let RproxyIP = 'false';
 let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
@@ -43,7 +90,7 @@ let proxyIPs = [//无法匹配到节点名就随机分配以下ProxyIP域名
 	'proxyip.vultr.fxxk.dedyn.io',
 ];
 let CMproxyIPs = [
-	//'proxyip.aliyun.fxxk.dedyn.io#HK',//匹配节点名, 有HK就分配该ProxyIP域名
+	//'proxyip.aliyun.fxxk.dedyn.io:HK',//匹配节点名, 有HK就分配该ProxyIP域名
 ]
 let socks5DataURL = '';//'https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data'
 let BotToken ='';
@@ -110,7 +157,7 @@ async function getAddressesapi(api) {
 			method: 'get', 
 			headers: {
 				'Accept': 'text/html,application/xhtml+xml,application/xml;',
-				'User-Agent': `${FileName} cmliu/WorkerVless2sub`
+				'User-Agent': 'cmliu/WorkerVless2sub'
 			},
 			signal: controller.signal // 将AbortController的信号量添加到fetch请求中，以便于需要时可以取消请求
 		}).then(response => response.ok ? response.text() : Promise.reject())));
@@ -224,8 +271,7 @@ async function ADD(envadd) {
 	//console.log(addtext);
 	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
 	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
-	let add = [];
-	if (addtext != '') add = addtext.split(',');
+	const add = addtext.split(',');
 	//console.log(add);
 	return add ;
 }
@@ -299,6 +345,8 @@ export default {
 		let expire= Math.floor(timestamp / 1000) ;
 
 		link = env.LINK || link;
+		const links = await ADD(link);
+		link = links.join('\n');
 		
 		if (env.ADD) addresses = await ADD(env.ADD);
 		if (env.ADDAPI) addressesapi = await ADD(env.ADDAPI);
@@ -550,10 +598,7 @@ export default {
 						} else {
 							// 遍历CMproxyIPs数组查找匹配项
 							for (let item of CMproxyIPs) {
-								if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
-									foundProxyIP = item.split('#')[0];
-									break; // 找到匹配项，跳出循环
-								} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 									foundProxyIP = item.split(':')[0];
 									break; // 找到匹配项，跳出循环
 								}
@@ -632,10 +677,7 @@ export default {
 					} else {
 						// 遍历CMproxyIPs数组查找匹配项
 						for (let item of CMproxyIPs) {
-							if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
-								foundProxyIP = item.split('#')[0];
-								break; // 找到匹配项，跳出循环
-							} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 								foundProxyIP = item.split(':')[0];
 								break; // 找到匹配项，跳出循环
 							}
@@ -666,10 +708,12 @@ export default {
 				}
 
 				if (协议类型 == 'Trojan'){
-					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=http%2F1.1&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=h3&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+
 					return trojanLink;
 				} else {
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=h3&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+			
 					return vlessLink;
 				}
 
@@ -678,10 +722,8 @@ export default {
 			let combinedContent = responseBody; // 合并内容
 			
 			if (link) {
-				const links = await ADD(link);
-				const 整理节点LINK = (await getLink(links)).join('\n');
-				combinedContent += '\n' + 整理节点LINK;
-				console.log("link: " + 整理节点LINK)
+				combinedContent += '\n' + link;
+				console.log("link: " + link)
 			}
 			
 			if (notlsresponseBody && noTLS == 'true') {
@@ -694,33 +736,7 @@ export default {
 				const TrojanLinksJ8 = generateFakeInfo(TrojanLinks.join('|'), uuid, host);
 				subconverterUrl =  `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinksJ8)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
 			} else {
-
-				let base64Response;
-				try {
-					base64Response = btoa(combinedContent); // 重新进行 Base64 编码
-				} catch (e) {
-					function encodeBase64(data) {
-						const binary = new TextEncoder().encode(data);
-						let base64 = '';
-						const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-					
-						for (let i = 0; i < binary.length; i += 3) {
-							const byte1 = binary[i];
-							const byte2 = binary[i + 1] || 0;
-							const byte3 = binary[i + 2] || 0;
-					
-							base64 += chars[byte1 >> 2];
-							base64 += chars[((byte1 & 3) << 4) | (byte2 >> 4)];
-							base64 += chars[((byte2 & 15) << 2) | (byte3 >> 6)];
-							base64 += chars[byte3 & 63];
-						}
-					
-						const padding = 3 - (binary.length % 3 || 3);
-						return base64.slice(0, base64.length - padding) + '=='.slice(0, padding);
-					}
-					
-					base64Response = encodeBase64(combinedContent);
-				}
+				const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
 
 				const response = new Response(base64Response, {
 					headers: { 
@@ -876,76 +892,4 @@ function generateDynamicUUID(key) {
     const expirationDateString = `到期时间(UTC): ${expirationDateUTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${endTime.toISOString().slice(0, 19).replace('T', ' ')}\n`;
 
     return Promise.all([currentUUIDPromise, previousUUIDPromise, expirationDateString]);
-}
-
-async function getLink(重新汇总所有链接) {
-	let 节点LINK = [];
-	let 订阅链接 = [];
-	for (let x of 重新汇总所有链接) {
-		if (x.toLowerCase().startsWith('http')) {
-			订阅链接.push(x);
-		} else {
-			节点LINK.push(x);
-		}
-	}
-
-	if ( 订阅链接 && 订阅链接.length !== 0 ) {
-		function base64Decode(str) {
-			const bytes = new Uint8Array(atob(str).split('').map(c => c.charCodeAt(0)));
-			const decoder = new TextDecoder('utf-8');
-			return decoder.decode(bytes);
-		}
-		const controller = new AbortController(); // 创建一个AbortController实例，用于取消请求
-	
-		const timeout = setTimeout(() => {
-			controller.abort(); // 2秒后取消所有请求
-		}, 2000);
-		
-		try {
-			// 使用Promise.allSettled等待所有API请求完成，无论成功或失败
-			const responses = await Promise.allSettled(订阅链接.map(apiUrl => fetch(apiUrl, {
-				method: 'get', 
-				headers: {
-					'Accept': 'text/html,application/xhtml+xml,application/xml;',
-					'User-Agent': `v2rayN/${FileName} cmliu/WorkerVless2sub`
-				},
-				signal: controller.signal // 将AbortController的信号量添加到fetch请求中
-			}).then(response => response.ok ? response.text() : Promise.reject())));
-		
-			// 遍历所有响应
-			const modifiedResponses = responses.map((response, index) => {
-				// 检查是否请求成功
-				return {
-					status: response.status,
-					value: response.value,
-					apiUrl: 订阅链接[index] // 将原始的apiUrl添加到返回对象中
-				};
-			});
-		
-			console.log(modifiedResponses); // 输出修改后的响应数组
-		
-			for (const response of modifiedResponses) {
-				// 检查响应状态是否为'fulfilled'
-				if (response.status === 'fulfilled') {
-					const content = await response.value || 'null'; // 获取响应的内容
-					if (content.includes('://')) {
-						const lines = content.includes('\r\n') ? content.split('\r\n') : content.split('\n');
-						节点LINK = 节点LINK.concat(lines);
-					} else {
-						const 尝试base64解码内容 = base64Decode(content);
-						if (尝试base64解码内容.includes('://')) {
-							const lines = 尝试base64解码内容.includes('\r\n') ? 尝试base64解码内容.split('\r\n') : 尝试base64解码内容.split('\n');
-							节点LINK = 节点LINK.concat(lines);
-						}
-					}
-				}
-			}
-		} catch (error) {
-			console.error(error); // 捕获并输出错误信息
-		} finally {
-			clearTimeout(timeout); // 清除定时器
-		}
-	}
-
-	return 节点LINK;
 }
