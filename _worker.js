@@ -224,7 +224,8 @@ async function ADD(envadd) {
 	//console.log(addtext);
 	if (addtext.charAt(0) == ',') addtext = addtext.slice(1);
 	if (addtext.charAt(addtext.length -1) == ',') addtext = addtext.slice(0, addtext.length - 1);
-	const add = addtext.split(',');
+	let add = [];
+	if (addtext != '') add = addtext.split(',');
 	//console.log(add);
 	return add ;
 }
@@ -549,10 +550,10 @@ export default {
 						} else {
 							// 遍历CMproxyIPs数组查找匹配项
 							for (let item of CMproxyIPs) {
-								if (lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
+								if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
 									foundProxyIP = item.split('#')[0];
 									break; // 找到匹配项，跳出循环
-								} else if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 									foundProxyIP = item.split(':')[0];
 									break; // 找到匹配项，跳出循环
 								}
@@ -631,7 +632,10 @@ export default {
 					} else {
 						// 遍历CMproxyIPs数组查找匹配项
 						for (let item of CMproxyIPs) {
-							if (lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+							if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
+								foundProxyIP = item.split('#')[0];
+								break; // 找到匹配项，跳出循环
+							} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 								foundProxyIP = item.split(':')[0];
 								break; // 找到匹配项，跳出循环
 							}
@@ -690,7 +694,33 @@ export default {
 				const TrojanLinksJ8 = generateFakeInfo(TrojanLinks.join('|'), uuid, host);
 				subconverterUrl =  `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinksJ8)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
 			} else {
-				const base64Response = btoa(combinedContent); // 重新进行 Base64 编码
+
+				let base64Response;
+				try {
+					base64Response = btoa(combinedContent); // 重新进行 Base64 编码
+				} catch (e) {
+					function encodeBase64(data) {
+						const binary = new TextEncoder().encode(data);
+						let base64 = '';
+						const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+					
+						for (let i = 0; i < binary.length; i += 3) {
+							const byte1 = binary[i];
+							const byte2 = binary[i + 1] || 0;
+							const byte3 = binary[i + 2] || 0;
+					
+							base64 += chars[byte1 >> 2];
+							base64 += chars[((byte1 & 3) << 4) | (byte2 >> 4)];
+							base64 += chars[((byte2 & 15) << 2) | (byte3 >> 6)];
+							base64 += chars[byte3 & 63];
+						}
+					
+						const padding = 3 - (binary.length % 3 || 3);
+						return base64.slice(0, base64.length - padding) + '=='.slice(0, padding);
+					}
+					
+					base64Response = encodeBase64(combinedContent);
+				}
 
 				const response = new Response(base64Response, {
 					headers: { 
