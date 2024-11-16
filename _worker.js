@@ -33,7 +33,7 @@ let addressescsv = [
 ];
 
 let subconverter = "suburl.v1.mk"; //在线订阅转换后端，目前使用CM的订阅转换功能。支持自建psub 可自行搭建https://github.com/bulianglin/psub
-let subconfig = "https://raw.githubusercontent.com/ayive/WorkerVless2sub/refs/heads/main/YuRule.ini"; //订阅转换配置文件
+let subconfig = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"; //订阅转换配置文件
 let noTLS = 'false'; //改为 true , 将不做域名判断 始终返回noTLS节点
 let link;
 let edgetunnel = 'ed';
