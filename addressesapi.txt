@@ -7,6 +7,9 @@ icook.hk:443
 www.visa.com.hk:443
 www.fortnite.com:443
 www.wto.org:443
+www.csgo.com:443
+time.cloudflare.com:443
+store.epicgames.com:443
 104.16.0.0:443
 104.17.0.0:443
 104.18.0.0:443
