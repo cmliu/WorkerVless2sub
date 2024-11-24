@@ -53,7 +53,7 @@ let proxyhosts = [//本地代理域名池
 ];
 let proxyhostsURL = 'https://raw.githubusercontent.com/cmliu/CFcdnVmess2sub/main/proxyhosts';//在线代理域名池URL
 let EndPS = '';//节点名备注内容
-let 协议类型 = 'VLESS';
+let 协议类型 = `\u0056\u004c\u0045\u0053\u0053`;
 let FileName = 'WorkerVless2sub';
 let SUBUpdateTime = 6; 
 let total = 99;//PB
@@ -66,6 +66,7 @@ let fakeHostName ;
 let httpsPorts = ["2053","2083","2087","2096","8443"];
 let effectiveTime = 7;//有效时间 单位:天
 let updateTime = 3;//更新时间
+/*Obfuscate-cmliu*/
 async function sendMessage(type, ip, add_data = "") {
 	if ( BotToken !== '' && ChatID !== ''){
 		let msg = "";
@@ -570,7 +571,7 @@ export default {
 						}
 					}
 
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=&type=${type}&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
+					const vlessLink = `\u0076\u006c\u0065\u0073\u0073\u003a\u002f\u002f${uuid}@${address}:${port}\u003f\u0065\u006e\u0063\u0072\u0079\u0070\u0074\u0069\u006f\u006e\u003dnone&security=&type=${type}&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
 			
 					return vlessLink;
 
@@ -669,7 +670,7 @@ export default {
 					const trojanLink = `trojan://${uuid}@${address}:${port}?security=tls&sni=${sni}&alpn=http%2F1.1&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return trojanLink;
 				} else {
-					const vlessLink = `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const vlessLink = `\u0076\u006c\u0065\u0073\u0073\u003a\u002f\u002f${uuid}@${address}:${port}\u003f\u0065\u006e\u0063\u0072\u0079\u0070\u0074\u0069\u006f\u006e\u003dnone&security=tls&sni=${sni}&alpn=http%2F1.1&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return vlessLink;
 				}
 
