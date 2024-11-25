@@ -349,10 +349,10 @@ export default {
 			} else {
 				协议类型 = 'VLESS';
 				if (env.KEY) {
-					const userIDs = await generateDynamicUUID(env.KEY);
-					uuid = userIDs[0];
 					effectiveTime = env.TIME || effectiveTime;
 					updateTime = env.UPTIME || updateTime;
+					const userIDs = await generateDynamicUUID(env.KEY);
+					uuid = userIDs[0];
 				} else {
 					uuid = env.UUID || "null";
 				}
