@@ -1,0 +1,72 @@
+name: Obfuscate and Commit
+
+on:
+    push:
+        paths:
+            - '_worker.src.js'
+    workflow_dispatch:
+
+jobs:
+  obfuscate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install -g javascript-obfuscator
+
+      - name: Prepare files for obfuscation
+        run: |
+          if grep -q "Obfuscate-cmliu" _worker.src.js; then
+            echo "检测到 Obfuscate 准备分段处理"
+            line_number=$(awk '/Obfuscate-cmliu/ {print NR; exit}' _worker.src.js)
+            echo "Obfuscate 分段处理行号为: $line_number"
+            head -n $line_number _worker.src.js > src.js
+            tail -n +$((line_number + 1)) _worker.src.js > obf.js
+          else
+            echo "未检测到 Obfuscate 执行全文件混淆"
+            cp _worker.src.js obf.js
+          fi
+
+      - name: Obfuscate code
+        run: |
+          javascript-obfuscator obf.js --output _worker.js \
+          --compact true \
+          --control-flow-flattening true \
+          --control-flow-flattening-threshold 1 \
+          --dead-code-injection true \
+          --dead-code-injection-threshold 1 \
+          --string-array true \
+          --string-array-encoding 'rc4' \
+          --string-array-threshold 1 \
+          --transform-object-keys true \
+          --unicode-escape-sequence true
+          
+      - name: Concatenate src.js if exists
+        run: |
+          if [ -f src.js ]; then
+            cat src.js _worker.js > temp && mv temp _worker.js
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add _worker.js
+          git commit -m "Obfuscate _worker.js" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
