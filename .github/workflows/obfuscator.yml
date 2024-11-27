@@ -58,6 +58,20 @@ jobs:
             cat src.js _worker.js > temp && mv temp _worker.js
           fi
 
+      - name: 修改版本信息 _worker.src.js
+        uses: jaywcjlove/github-action-modify-file-content@main
+        with:
+          path: _worker.src.js
+          body: "版本信息：基于提交哈希值 ${{ github.sha }}，生成时间为 {{date:YYYY-MM-DD HH:mm:ss}}（UTC 时间）"
+          message: "更新 _worker.src.js 的版本信息"
+
+      - name: 修改版本信息 _worker.js
+        uses: jaywcjlove/github-action-modify-file-content@main
+        with:
+          path: _worker.js
+          body: "版本信息：基于提交哈希值 ${{ github.sha }}，生成时间为 {{date:YYYY-MM-DD HH:mm:ss}}（UTC 时间）"
+          message: "更新 _worker.js 的版本信息"
+
       - name: Commit changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
