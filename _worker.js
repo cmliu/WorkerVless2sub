@@ -1,13 +1,9 @@
 
 let 快速订阅访问入口= ['auto'];
-let addresses = [
-	atob('aWNvb2sudHc6MjA1MyPlrpjmlrnkvJjpgInln5/lkI0='),
-];
-
+let addresses = [];
 let addressesapi = [];
-let addressesnotls = [
 
-];
+let addressesnotls = [];
 let addressesnotlsapi = [];
 
 let DLS = 7;
