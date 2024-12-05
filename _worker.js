@@ -6,8 +6,9 @@ let addressesapi = [];
 let addressesnotls = [];
 let addressesnotlsapi = [];
 
-let DLS = 7;
 let addressescsv = [];
+let DLS = 7;
+let remarkIndex = 1;//CSV备注所在列偏移量
 
 let subconverter = 'SUBAPI.fxxk.dedyn.io';
 let subconfig = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NtbGl1L0FDTDRTU1IvbWFpbi9DbGFzaC9jb25maWcvQUNMNFNTUl9PbmxpbmVfRnVsbF9NdWx0aU1vZGUuaW5p');
@@ -39,7 +40,7 @@ let updateTime = 3;
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
 let proxyIPPool = [];
 let socks5Data;
-
+/*Obfuscate-cmliu*/
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -71,24 +72,44 @@ async function 整理优选列表(api) {
 				// 获取响应的内容
 				const content = await response.value;
 
-				// 验证当前apiUrl是否带有'proxyip=true'
-				if (api[index].includes('proxyip=true')) {
-					// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
-					proxyIPPool = proxyIPPool.concat((await 整理(content)).map(item => {
-						const baseItem = item.split('#')[0] || item;
-						if (baseItem.includes(':')) {
-							const port = baseItem.split(':')[1];
-							if (!httpsPorts.includes(port)) {
-								return baseItem;
-							}
-						} else {
-							return `${baseItem}:443`;
+				const lines = content.split(/\r?\n/);
+				let 节点备注 = '';
+				let 测速端口 = '443';
+
+				if (lines[0].split(',').length > 3){
+					const idMatch = api[index].match(/id=([^&]*)/);
+					if (idMatch) 节点备注 = idMatch[1];
+
+					const portMatch = api[index].match(/port=([^&]*)/);
+					if (portMatch) 测速端口 = portMatch[1];
+					
+					for (let i = 1; i < lines.length; i++) {
+						const columns = lines[i].split(',')[0];
+						if(columns){
+							newapi += `${columns}:${测速端口}${节点备注 ? `#${节点备注}` : ''}\n`;
+							if (api[index].includes('proxyip=true')) proxyIPPool.push(`${columns}:${测速端口}`);
 						}
-						return null; // 不符合条件时返回 null
-					}).filter(Boolean)); // 过滤掉 null 值
+					}
+				} else {
+					// 验证当前apiUrl是否带有'proxyip=true'
+					if (api[index].includes('proxyip=true')) {
+						// 如果URL带有'proxyip=true'，则将内容添加到proxyIPPool
+						proxyIPPool = proxyIPPool.concat((await 整理(content)).map(item => {
+							const baseItem = item.split('#')[0] || item;
+							if (baseItem.includes(':')) {
+								const port = baseItem.split(':')[1];
+								if (!httpsPorts.includes(port)) {
+									return baseItem;
+								}
+							} else {
+								return `${baseItem}:443`;
+							}
+							return null; // 不符合条件时返回 null
+						}).filter(Boolean)); // 过滤掉 null 值
+					}
+					// 将内容添加到newapi中
+					newapi += content + '\n';
 				}
-				// 将内容添加到newapi中
-				newapi += content + '\n';
 			}
 		}
 	} catch (error) {
@@ -156,7 +177,7 @@ async function 整理测速结果(tls) {
                 .map(row => {
                     const ipAddress = row[0];
                     const port = row[1];
-                    const dataCenter = row[tlsIndex + 1];
+                    const dataCenter = row[tlsIndex + remarkIndex];
                     const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
                     
                     // 处理代理IP池
@@ -476,6 +497,7 @@ export default {
 		if (env.ADDNOTLSAPI) addressesnotlsapi = await 整理(env.ADDNOTLSAPI);
 		if (env.ADDCSV) addressescsv = await 整理(env.ADDCSV);
 		DLS = env.DLS || DLS;
+		remarkIndex = env.CSVREMARK || remarkIndex;
 		
 		if (socks5DataURL) {
 			try {
