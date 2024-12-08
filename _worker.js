@@ -40,7 +40,7 @@ let 更新时间 = 3;
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
 let proxyIPPool = [];
 let socks5Data;
-let alpn = 'http 1.1';
+let alpn = 'http/1.1';
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
