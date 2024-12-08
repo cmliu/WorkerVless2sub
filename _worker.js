@@ -10,8 +10,8 @@ let addressescsv = [];
 let DLS = 7;
 let remarkIndex = 1;//CSV备注所在列偏移量
 
-let subconverter = 'SUBAPI.fxxk.dedyn.io';
-let subconfig = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NtbGl1L0FDTDRTU1IvbWFpbi9DbGFzaC9jb25maWcvQUNMNFNTUl9PbmxpbmVfRnVsbF9NdWx0aU1vZGUuaW5p');
+let subConverter = 'SUBAPI.fxxk.dedyn.io';
+let subConfig = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NtbGl1L0FDTDRTU1IvbWFpbi9DbGFzaC9jb25maWcvQUNMNFNTUl9PbmxpbmVfRnVsbF9NdWx0aU1vZGUuaW5p');
 let noTLS = 'false';
 let link;
 let 隧道版本作者 = atob('ZWQ=');
@@ -35,12 +35,12 @@ const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 let fakeUserID ;
 let fakeHostName ;
 let httpsPorts = ["2053","2083","2087","2096","8443"];
-let effectiveTime = 7;
-let updateTime = 3;
+let 有效时间 = 7;
+let 更新时间 = 3;
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
 let proxyIPPool = [];
 let socks5Data;
-/*Obfuscate-cmliu*/
+let alpn = 'http 1.1';
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -85,7 +85,7 @@ async function 整理优选列表(api) {
 					
 					for (let i = 1; i < lines.length; i++) {
 						const columns = lines[i].split(',')[0];
-						if(columns){
+						if (columns){
 							newapi += `${columns}:${测速端口}${节点备注 ? `#${节点备注}` : ''}\n`;
 							if (api[index].includes('proxyip=true')) proxyIPPool.push(`${columns}:${测速端口}`);
 						}
@@ -126,120 +126,120 @@ async function 整理优选列表(api) {
 }
 
 async function 整理测速结果(tls) {
-    // 参数验证
-    if (!tls) {
-        console.error('TLS参数不能为空');
-        return [];
-    }
+	// 参数验证
+	if (!tls) {
+		console.error('TLS参数不能为空');
+		return [];
+	}
 
-    // 检查CSV地址列表
-    if (!Array.isArray(addressescsv) || addressescsv.length === 0) {
-        console.warn('没有可用的CSV地址列表');
-        return [];
-    }
+	// 检查CSV地址列表
+	if (!Array.isArray(addressescsv) || addressescsv.length === 0) {
+		console.warn('没有可用的CSV地址列表');
+		return [];
+	}
 
-    // CSV解析函数
-    function parseCSV(text) {
-        return text
-            .replace(/\r\n/g, '\n')   // 统一Windows换行
-            .replace(/\r/g, '\n')     // 处理老Mac换行
-            .split('\n')               // 按Unix/Linux风格分割
-            .filter(line => line.trim() !== '')  // 移除空行
-            .map(line => line.split(',').map(cell => cell.trim()));
-    }
+	// CSV解析函数
+	function parseCSV(text) {
+		return text
+			.replace(/\r\n/g, '\n')   // 统一Windows换行
+			.replace(/\r/g, '\n')	 // 处理老Mac换行
+			.split('\n')			   // 按Unix/Linux风格分割
+			.filter(line => line.trim() !== '')  // 移除空行
+			.map(line => line.split(',').map(cell => cell.trim()));
+	}
 
-    // 并行处理CSV
-    const csvPromises = addressescsv.map(async (csvUrl) => {
-        try {
-            const response = await fetch(csvUrl);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP错误 ${response.status}: ${response.statusText}`);
-            }
-            
-            const text = await response.text();
-            const rows = parseCSV(text);
-            
-            // 解构和验证CSV头部
-            const [header, ...dataRows] = rows;
-            const tlsIndex = header.findIndex(col => col.toUpperCase() === 'TLS');
-            
-            if (tlsIndex === -1) {
-                throw new Error('CSV文件缺少必需的字段');
-            }
-            
-            return dataRows
-                .filter(row => {
-                    const tlsValue = row[tlsIndex].toUpperCase();
-                    const speed = parseFloat(row[row.length - 1]);
-                    return tlsValue === tls.toUpperCase() && speed > DLS;
-                })
-                .map(row => {
-                    const ipAddress = row[0];
-                    const port = row[1];
-                    const dataCenter = row[tlsIndex + remarkIndex];
-                    const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
-                    
-                    // 处理代理IP池
-                    if (csvUrl.includes('proxyip=true') && 
-                        row[tlsIndex].toUpperCase() === 'TRUE' && 
-                        !httpsPorts.includes(port)) {
-                        proxyIPPool.push(`${ipAddress}:${port}`);
-                    }
-                    
-                    return formattedAddress;
-                });
-        } catch (error) {
-            console.error(`处理CSV ${csvUrl} 时出错:`, error);
-            return [];
-        }
-    });
-    
-    // 使用Promise.all并行处理并展平结果
-    const results = await Promise.all(csvPromises);
-    return results.flat();
+	// 并行处理CSV
+	const csvPromises = addressescsv.map(async (csvUrl) => {
+		try {
+			const response = await fetch(csvUrl);
+			
+			if (!response.ok) {
+				throw new Error(`HTTP错误 ${response.status}: ${response.statusText}`);
+			}
+			
+			const text = await response.text();
+			const rows = parseCSV(text);
+			
+			// 解构和验证CSV头部
+			const [header, ...dataRows] = rows;
+			const tlsIndex = header.findIndex(col => col.toUpperCase() === 'TLS');
+			
+			if (tlsIndex === -1) {
+				throw new Error('CSV文件缺少必需的字段');
+			}
+			
+			return dataRows
+				.filter(row => {
+					const tlsValue = row[tlsIndex].toUpperCase();
+					const speed = parseFloat(row[row.length - 1]);
+					return tlsValue === tls.toUpperCase() && speed > DLS;
+				})
+				.map(row => {
+					const ipAddress = row[0];
+					const port = row[1];
+					const dataCenter = row[tlsIndex + remarkIndex];
+					const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
+					
+					// 处理代理IP池
+					if (csvUrl.includes('proxyip=true') && 
+						row[tlsIndex].toUpperCase() === 'TRUE' && 
+						!httpsPorts.includes(port)) {
+						proxyIPPool.push(`${ipAddress}:${port}`);
+					}
+					
+					return formattedAddress;
+				});
+		} catch (error) {
+			console.error(`处理CSV ${csvUrl} 时出错:`, error);
+			return [];
+		}
+	});
+	
+	// 使用Promise.all并行处理并展平结果
+	const results = await Promise.all(csvPromises);
+	return results.flat();
 }
 
 async function 整理(内容) {
-    // 将制表符、双引号、单引号和换行符都替换为逗号
-    // 然后将连续的多个逗号替换为单个逗号
-    var 替换后的内容 = 内容.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');
-    
-    // 删除开头和结尾的逗号（如果有的话）
-    if (替换后的内容.charAt(0) == ',') 替换后的内容 = 替换后的内容.slice(1);
-    if (替换后的内容.charAt(替换后的内容.length - 1) == ',') 替换后的内容 = 替换后的内容.slice(0, 替换后的内容.length - 1);
-    
-    // 使用逗号分割字符串，得到地址数组
-    const 地址数组 = 替换后的内容.split(',');
-    
-    return 地址数组;
+	// 将制表符、双引号、单引号和换行符都替换为逗号
+	// 然后将连续的多个逗号替换为单个逗号
+	var 替换后的内容 = 内容.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');
+	
+	// 删除开头和结尾的逗号（如果有的话）
+	if (替换后的内容.charAt(0) == ',') 替换后的内容 = 替换后的内容.slice(1);
+	if (替换后的内容.charAt(替换后的内容.length - 1) == ',') 替换后的内容 = 替换后的内容.slice(0, 替换后的内容.length - 1);
+	
+	// 使用逗号分割字符串，得到地址数组
+	const 地址数组 = 替换后的内容.split(',');
+	
+	return 地址数组;
 }
 
 async function sendMessage(type, ip, add_data = "") {
-    if (!BotToken || !ChatID) return;
+	if (!BotToken || !ChatID) return;
 
-    try {
-        let msg = "";
-        const response = await fetch(`http://ip-api.com/json/${ip}?lang=zh-CN`);
-        if (response.ok) {
-            const ipInfo = await response.json();
-            msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n<tg-spoiler>城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
-        } else {
-            msg = `${type}\nIP: ${ip}\n<tg-spoiler>${add_data}`;
-        }
+	try {
+		let msg = "";
+		const response = await fetch(`http://ip-api.com/json/${ip}?lang=zh-CN`);
+		if (response.ok) {
+			const ipInfo = await response.json();
+			msg = `${type}\nIP: ${ip}\n国家: ${ipInfo.country}\n<tg-spoiler>城市: ${ipInfo.city}\n组织: ${ipInfo.org}\nASN: ${ipInfo.as}\n${add_data}`;
+		} else {
+			msg = `${type}\nIP: ${ip}\n<tg-spoiler>${add_data}`;
+		}
 
-        const url = `https://api.telegram.org/bot${BotToken}/sendMessage?chat_id=${ChatID}&parse_mode=HTML&text=${encodeURIComponent(msg)}`;
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'text/html,application/xhtml+xml,application/xml;',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'User-Agent': 'Mozilla/5.0 Chrome/90.0.4430.72'
-            }
-        });
-    } catch (error) {
-        console.error('Error sending message:', error);
-    }
+		const url = `https://api.telegram.org/bot${BotToken}/sendMessage?chat_id=${ChatID}&parse_mode=HTML&text=${encodeURIComponent(msg)}`;
+		return fetch(url, {
+			method: 'GET',
+			headers: {
+				'Accept': 'text/html,application/xhtml+xml,application/xml;',
+				'Accept-Encoding': 'gzip, deflate, br',
+				'User-Agent': 'Mozilla/5.0 Chrome/90.0.4430.72'
+			}
+		});
+	} catch (error) {
+		console.error('Error sending message:', error);
+	}
 }
 
 async function nginx() {
@@ -273,7 +273,7 @@ async function nginx() {
 	return text ;
 }
 
-function surge(content, url) {
+function surge(content, url, path) {
 	let 每行内容;
 	if (content.includes('\r\n')){
 		每行内容 = content.split('\r\n');
@@ -283,10 +283,10 @@ function surge(content, url) {
 
 	let 输出内容 = "";
 	for (let x of 每行内容) {
-		if (x.includes('= trojan,')) {
+		if (x.includes(atob('PSB0cm9qYW4s'))) {
 			const host = x.split("sni=")[1].split(",")[0];
 			const 备改内容 = `skip-cert-verify=true, tfo=false, udp-relay=false`;
-			const 正确内容 = `skip-cert-verify=true, ws=true, ws-path=/?ed=2560, ws-headers=Host:"${host}", tfo=false, udp-relay=false`;
+			const 正确内容 = `skip-cert-verify=true, ws=true, ws-path=${path}, ws-headers=Host:"${host}", tfo=false, udp-relay=false`;
 			输出内容 += x.replace(new RegExp(备改内容, 'g'), 正确内容).replace("[", "").replace("]", "") + '\n';
 		} else {
 			输出内容 += x + '\n';
@@ -348,41 +348,39 @@ function isValidIPv4(address) {
 	return ipv4Regex.test(address);
 }
 
-function generateDynamicUUID(key) {
-    function getWeekOfYear() {
-        const now = new Date();
-        const timezoneOffset = 8; // 北京时间相对于UTC的时区偏移+8小时
-        const adjustedNow = new Date(now.getTime() + timezoneOffset * 60 * 60 * 1000);
-        const start = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
-        const diff = adjustedNow - start;
-        const oneWeek = 1000 * 60 * 60 * 24 * effectiveTime;
-        return Math.ceil(diff / oneWeek);
-    }
-    
-    const passwdTime = getWeekOfYear(); // 获取当前周数
-    const endTime = new Date(2007, 6, 7, updateTime, 0, 0); // 固定起始日期
-    endTime.setMilliseconds(endTime.getMilliseconds() + passwdTime * 1000 * 60 * 60 * 24 * effectiveTime);
+function 生成动态UUID(密钥) {
+	const 时区偏移 = 8; // 北京时间相对于UTC的时区偏移+8小时
+	const 起始日期 = new Date(2007, 6, 7, 更新时间, 0, 0); // 固定起始日期为2007年7月7日的凌晨3点
+	const 一周的毫秒数 = 1000 * 60 * 60 * 24 * 有效时间;
 
-    // 生成 UUID 的辅助函数
-    function generateUUID(baseString) {
-        const hashBuffer = new TextEncoder().encode(baseString);
-        return crypto.subtle.digest('SHA-256', hashBuffer).then((hash) => {
-            const hashArray = Array.from(new Uint8Array(hash));
-            const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            let uuid = hexHash.substr(0, 8) + '-' + hexHash.substr(8, 4) + '-4' + hexHash.substr(13, 3) + '-' + (parseInt(hexHash.substr(16, 2), 16) & 0x3f | 0x80).toString(16) + hexHash.substr(18, 2) + '-' + hexHash.substr(20, 12);
-            return uuid;
-        });
-    }
-    
-    // 生成两个 UUID
-    const currentUUIDPromise = generateUUID(key + passwdTime);
-    const previousUUIDPromise = generateUUID(key + (passwdTime - 1));
+	function 获取当前周数() {
+		const 现在 = new Date();
+		const 调整后的现在 = new Date(现在.getTime() + 时区偏移 * 60 * 60 * 1000);
+		const 时间差 = Number(调整后的现在) - Number(起始日期);
+		return Math.ceil(时间差 / 一周的毫秒数);
+	}
 
-    // 格式化到期时间
-    const expirationDateUTC = new Date(endTime.getTime() - 8 * 60 * 60 * 1000); // UTC时间
-    const expirationDateString = `到期时间(UTC): ${expirationDateUTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${endTime.toISOString().slice(0, 19).replace('T', ' ')}\n`;
+	function 生成UUID(基础字符串) {
+		const 哈希缓冲区 = new TextEncoder().encode(基础字符串);
+		return crypto.subtle.digest('SHA-256', 哈希缓冲区).then((哈希) => {
+			const 哈希数组 = Array.from(new Uint8Array(哈希));
+			const 十六进制哈希 = 哈希数组.map(b => b.toString(16).padStart(2, '0')).join('');
+			return `${十六进制哈希.substr(0, 8)}-${十六进制哈希.substr(8, 4)}-4${十六进制哈希.substr(13, 3)}-${(parseInt(十六进制哈希.substr(16, 2), 16) & 0x3f | 0x80).toString(16)}${十六进制哈希.substr(18, 2)}-${十六进制哈希.substr(20, 12)}`;
+		});
+	}
 
-    return Promise.all([currentUUIDPromise, previousUUIDPromise, expirationDateString]);
+	const 当前周数 = 获取当前周数(); // 获取当前周数
+	const 结束时间 = new Date(起始日期.getTime() + 当前周数 * 一周的毫秒数);
+
+	// 生成两个 UUID
+	const 当前UUIDPromise = 生成UUID(密钥 + 当前周数);
+	const 上一个UUIDPromise = 生成UUID(密钥 + (当前周数 - 1));
+
+	// 格式化到期时间
+	const 到期时间UTC = new Date(结束时间.getTime() - 时区偏移 * 60 * 60 * 1000); // UTC时间
+	const 到期时间字符串 = `到期时间(UTC): ${到期时间UTC.toISOString().slice(0, 19).replace('T', ' ')} (UTC+8): ${结束时间.toISOString().slice(0, 19).replace('T', ' ')}\n`;
+
+	return Promise.all([当前UUIDPromise, 上一个UUIDPromise, 到期时间字符串]);
 }
 
 async function getLink(重新汇总所有链接) {
@@ -424,7 +422,7 @@ async function getLink(重新汇总所有链接) {
 				// 检查是否请求成功
 				return {
 					status: response.status,
-					value: response.value,
+					value: response.status === 'fulfilled' ? response.value : null,
 					apiUrl: 订阅链接[index] // 将原始的apiUrl添加到返回对象中
 				};
 			});
@@ -462,8 +460,8 @@ export default {
 		if (env.TOKEN) 快速订阅访问入口 = await 整理(env.TOKEN);
 		BotToken = env.TGTOKEN || BotToken;
 		ChatID = env.TGID || ChatID; 
-		subconverter = env.SUBAPI || subconverter;
-		subconfig = env.SUBCONFIG || subconfig;
+		subConverter = env.SUBAPI || subConverter;
+		subConfig = env.SUBCONFIG || subConfig;
 		FileName = env.SUBNAME || FileName;
 		socks5DataURL = env.SOCKS5DATA || socks5DataURL;
 		if (env.CMPROXYIPS) 匹配PROXYIP = await 整理(env.CMPROXYIPS);;
@@ -478,6 +476,7 @@ export default {
 		let path = "";
 		let sni = "";
 		let type = "ws";
+		alpn = env.ALPN || alpn;
 		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
 		if (env.UA) MamaJustKilledAMan = MamaJustKilledAMan.concat(await 整理(env.UA));
 
@@ -496,8 +495,8 @@ export default {
 		if (env.ADDNOTLS) addressesnotls = await 整理(env.ADDNOTLS);
 		if (env.ADDNOTLSAPI) addressesnotlsapi = await 整理(env.ADDNOTLSAPI);
 		if (env.ADDCSV) addressescsv = await 整理(env.ADDCSV);
-		DLS = env.DLS || DLS;
-		remarkIndex = env.CSVREMARK || remarkIndex;
+		DLS = Number(env.DLS) || DLS;
+		remarkIndex = Number(env.CSVREMARK) || remarkIndex;
 		
 		if (socks5DataURL) {
 			try {
@@ -524,14 +523,14 @@ export default {
 			}
 			
 			if (env.PASSWORD){
-				协议类型 = 'Trojan';
+				协议类型 = atob('VHJvamFu');
 				uuid = env.PASSWORD
 			} else {
 				协议类型 = atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`);
 				if (env.KEY) {
-					effectiveTime = env.TIME || effectiveTime;
-					updateTime = env.UPTIME || updateTime;
-					const userIDs = await generateDynamicUUID(env.KEY);
+					有效时间 = env.TIME || 有效时间;
+					更新时间 = env.UPTIME || 更新时间;
+					const userIDs = await 生成动态UUID(env.KEY);
 					uuid = userIDs[0];
 				} else {
 					uuid = env.UUID || "null";
@@ -559,13 +558,14 @@ export default {
 			path = url.searchParams.get('path');
 			sni = url.searchParams.get('sni') || host;
 			type = url.searchParams.get('type') || type;
-			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get('epeius') || 隧道版本作者;
+			alpn = url.searchParams.get('alpn') || alpn;
+			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get(atob('ZXBlaXVz')) || 隧道版本作者;
 			获取代理IP = url.searchParams.get('proxyip') || 获取代理IP;
 
 			if (url.searchParams.has(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.has('uuid')){
 				协议类型 = atob('VkxFU1M=');
-			} else if (url.searchParams.has('epeius') || url.searchParams.has('password') || url.searchParams.has('pw')){
-				协议类型 = 'Trojan';
+			} else if (url.searchParams.has(atob('ZXBlaXVz')) || url.searchParams.has('password') || url.searchParams.has('pw')){
+				协议类型 = atob('VHJvamFu');
 			}
 
 			if (!url.pathname.includes("/sub")) {
@@ -616,7 +616,7 @@ export default {
 		
 		if (host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare')) noTLS = 'true';
 		noTLS = env.NOTLS || noTLS;
-		let subconverterUrl = generateFakeInfo(url.href, uuid, host);
+		let subConverterUrl = generateFakeInfo(url.href, uuid, host);
 
 		if (!userAgent.includes('subconverter') && MamaJustKilledAMan.some(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead => userAgent.includes(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead)) && MamaJustKilledAMan.length > 0) {
 			const envKey = env.URL302 ? 'URL302' : (env.URL ? 'URL' : null);
@@ -632,11 +632,11 @@ export default {
 				},
 			});
 		} else if ( (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter')) ) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
-			subconverterUrl = `https://${subconverter}/sub?target=clash&url=${encodeURIComponent(subconverterUrl)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+			subConverterUrl = `https://${subConverter}/sub?target=clash&url=${encodeURIComponent(subConverterUrl)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		} else if ( (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
-			subconverterUrl = `https://${subconverter}/sub?target=singbox&url=${encodeURIComponent(subconverterUrl)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+			subConverterUrl = `https://${subConverter}/sub?target=singbox&url=${encodeURIComponent(subConverterUrl)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		} else {
-			if(host.includes('workers.dev')) {
+			if (host.includes('workers.dev')) {
 				if (临时中转域名接口) {
 					try {
 						const response = await fetch(临时中转域名接口); 
@@ -669,7 +669,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if(noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)){
+			if (noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)){
 				const newAddressesnotlsapi = await 整理优选列表(addressesnotlsapi);
 				const newAddressesnotlscsv = await 整理测速结果('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
@@ -839,18 +839,18 @@ export default {
 				let 伪装域名 = host ;
 				let 最终路径 = path ;
 				let 节点备注 = EndPS ;
-				if(临时中转域名.length > 0 && (host.includes('.workers.dev'))) {
+				if (临时中转域名.length > 0 && (host.includes('.workers.dev'))) {
 					最终路径 = `/${host}${path}`;
 					伪装域名 = 临时中转域名[Math.floor(Math.random() * 临时中转域名.length)];
 					节点备注 = EndPS + atob('IOW3suWQr+eUqOS4tOaXtuWfn+WQjeS4rei9rOacjeWKoe+8jOivt+WwveW/q+e7keWumuiHquWumuS5ieWfn++8gQ==');
 					sni = 伪装域名;
 				}
 
-				if (协议类型 == 'Trojan'){
-					const trojanLink = `${atob('dHJvamFuOi8v') + uuid}@${address}:${port + atob('P3NlY3VyaXR5PXRscyZzbmk9') + sni + atob('JmFscG49aHR0cCUyRjEuMSZmcD1yYW5kb21pemVkJnR5cGU9') + type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
-					return trojanLink;
+				if (协议类型 == atob('VHJvamFu')){
+					const 特洛伊Link = `${atob('dHJvamFuOi8v') + uuid}@${address}:${port + atob('P3NlY3VyaXR5PXRscyZzbmk9') + sni}&alpn=${encodeURIComponent(alpn)}&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					return 特洛伊Link;
 				} else {
-					const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT10bHMmc25pPQ==') + sni + atob('JmFscG49aHR0cCUyRjEuMSZmcD1yYW5kb20mdHlwZT0=') + type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT10bHMmc25pPQ==') + sni}&alpn=${encodeURIComponent(alpn)}&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return 维列斯Link;
 				}
 
@@ -870,10 +870,10 @@ export default {
 				console.log("notlsresponseBody: " + notlsresponseBody);
 			}
 			
-			if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')) {
-				const TrojanLinks = combinedContent.split('\n');
-				const TrojanLinksJ8 = generateFakeInfo(TrojanLinks.join('|'), uuid, host);
-				subconverterUrl =  `https://${subconverter}/sub?target=surge&ver=4&url=${encodeURIComponent(TrojanLinksJ8)}&insert=false&config=${encodeURIComponent(subconfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
+			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')) {
+				const 特洛伊Links = combinedContent.split('\n');
+				const 特洛伊LinksJ8 = generateFakeInfo(特洛伊Links.join('|'), uuid, host);
+				subConverterUrl =  `https://${subConverter}/sub?target=surge&ver=4&url=${encodeURIComponent(特洛伊LinksJ8)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
 			} else {
 
 				let base64Response;
@@ -918,19 +918,19 @@ export default {
 		}
 
 		try {
-			const subconverterResponse = await fetch(subconverterUrl);
+			const subConverterResponse = await fetch(subConverterUrl);
 			
-			if (!subconverterResponse.ok) {
-				throw new Error(`Error fetching subconverterUrl: ${subconverterResponse.status} ${subconverterResponse.statusText}`);
+			if (!subConverterResponse.ok) {
+				throw new Error(`Error fetching subConverterUrl: ${subConverterResponse.status} ${subConverterResponse.statusText}`);
 			}
 				
-			let subconverterContent = await subconverterResponse.text();
+			let subConverterContent = await subConverterResponse.text();
 
-			if (协议类型 == 'Trojan' && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
-				subconverterContent = surge(subconverterContent, host);
+			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+				subConverterContent = surge(subConverterContent, host, path);
 			}
-			subconverterContent = revertFakeInfo(subconverterContent, uuid, host);
-			return new Response(subconverterContent, {
+			subConverterContent = revertFakeInfo(subConverterContent, uuid, host);
+			return new Response(subConverterContent, {
 				headers: { 
 					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 					"content-type": "text/plain; charset=utf-8",
