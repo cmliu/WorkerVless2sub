@@ -1,5 +1,5 @@
 # 优选订阅生成器 WorkerVless2sub
-
+![sub](./sub.png)
 ### 这个是一个通过 Cloudflare Workers 搭建，自动生成优选线路 VLESS / Trojan 节点订阅内容生成器 [[实现原理]](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=70s)
 
 Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networks](https://alice.ws/aff.php?aff=15)提供的云服务器维持[CM订阅转换服务](https://sub.fxxk.dedyn.io/)！**
