@@ -1181,7 +1181,7 @@ async function subHtml(request) {
 					
 					try {
 						const uuid = link.split("//")[1].split("@")[0];
-						const search = link.split("?")[1];
+						const search = link.split("?")[1].split("#")[0];
 						const domain = window.location.hostname;
 						
 						const subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
