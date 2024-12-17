@@ -530,8 +530,8 @@ export default {
 			} else {
 				协议类型 = atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`);
 				if (env.KEY) {
-					有效时间 = env.TIME || 有效时间;
-					更新时间 = env.UPTIME || 更新时间;
+					有效时间 = Number(env.TIME) || 有效时间;
+					更新时间 = Number(env.UPTIME) || 更新时间;
 					const userIDs = await 生成动态UUID(env.KEY);
 					uuid = userIDs[0];
 				} else {
