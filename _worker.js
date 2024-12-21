@@ -42,6 +42,8 @@ let proxyIPPool = [];
 let socks5Data;
 let alpn = 'http/1.1';
 let 网络备案 = `提供维护: <a href='https://t.me/CMLiussss'>CMLiussss</a>`;//写你自己的维护者广告
+let 额外ID = '0';
+let 加密方式 = 'auto';
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -456,6 +458,10 @@ async function getLink(重新汇总所有链接) {
 	return 节点LINK;
 }
 
+function utf8ToBase64(str) {
+	return btoa(unescape(encodeURIComponent(str)));
+}
+
 export default {
 	async fetch (request, env) {
 		if (env.TOKEN) 快速订阅访问入口 = await 整理(env.TOKEN);
@@ -564,7 +570,11 @@ export default {
 			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get(atob('ZXBlaXVz')) || 隧道版本作者;
 			获取代理IP = url.searchParams.get('proxyip') || 获取代理IP;
 
-			if (url.searchParams.has(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.has('uuid')){
+			if (url.searchParams.has('alterid')){
+				协议类型 = 'VMess';
+				额外ID = url.searchParams.get('alterid') || 额外ID;
+				加密方式 = url.searchParams.get('security') || 加密方式;
+			} else if (url.searchParams.has(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.has('uuid')){
 				协议类型 = atob('VkxFU1M=');
 			} else if (url.searchParams.has(atob('ZXBlaXVz')) || url.searchParams.has('password') || url.searchParams.has('pw')){
 				协议类型 = atob('VHJvamFu');
@@ -675,7 +685,7 @@ export default {
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
-			if (noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)){
+			if ((noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)) || 协议类型 == 'VMess') {
 				const newAddressesnotlsapi = await 整理优选列表(addressesnotlsapi);
 				const newAddressesnotlscsv = await 整理测速结果('FALSE');
 				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
@@ -757,9 +767,13 @@ export default {
 						}
 					}
 
-					const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT0mdHlwZT0=') + type}&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
-			
-					return 维列斯Link;
+					if (协议类型 == 'VMess'){
+						const vmessLink = `vmess://${utf8ToBase64(`{"v":"2","ps":"${addressid + EndPS}","add":"${address}","port":"${port}","id":"${uuid}","aid":"${额外ID}","scy":"${加密方式}","net":"ws","type":"${type}","host":"${host}","path":"${path}","tls":"","sni":"","alpn":"${encodeURIComponent(alpn)}","fp":""}`)}`;
+						return vmessLink;
+					} else {
+						const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT0mdHlwZT0=') + type}&host=${host}&path=${encodeURIComponent(path)}#${encodeURIComponent(addressid + EndPS)}`;
+						return 维列斯Link;
+					}
 
 				}).join('\n');
 			}
@@ -852,7 +866,10 @@ export default {
 					sni = 伪装域名;
 				}
 
-				if (协议类型 == atob('VHJvamFu')){
+				if (协议类型 == 'VMess'){
+					const vmessLink = `vmess://${utf8ToBase64(`{"v":"2","ps":"${addressid + 节点备注}","add":"${address}","port":"${port}","id":"${uuid}","aid":"${额外ID}","scy":"${加密方式}","net":"ws","type":"${type}","host":"${伪装域名}","path":"${最终路径}","tls":"tls","sni":"${sni}","alpn":"${encodeURIComponent(alpn)}","fp":""}`)}`;
+					return vmessLink;
+				} else if (协议类型 == atob('VHJvamFu')){
 					const 特洛伊Link = `${atob('dHJvamFuOi8v') + uuid}@${address}:${port + atob('P3NlY3VyaXR5PXRscyZzbmk9') + sni}&alpn=${encodeURIComponent(alpn)}&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return 特洛伊Link;
 				} else {
@@ -1125,7 +1142,7 @@ async function subHtml(request) {
 				<h1>${FileName}</h1>
 				<div class="input-group">
 					<label for="link">节点链接</label>
-					<input type="text" id="link" placeholder="${decodeURIComponent(atob('JUU4JUFGJUI3JUU4JUJFJTkzJUU1JTg1JUE1JTIwVkxFU1MlMkZUcm9qYW4lMjAlRTklOTMlQkUlRTYlOEUlQTU='))}">
+					<input type="text" id="link" placeholder="${decodeURIComponent(atob('JUU4JUFGJUI3JUU4JUJFJTkzJUU1JTg1JUE1JTIwVk1lc3MlMjAlMkYlMjBWTEVTUyUyMCUyRiUyMFRyb2phbiUyMCVFOSU5MyVCRSVFNiU4RSVBNQ=='))}">
 				</div>
 				
 				<button onclick="generateLink()">生成优选订阅</button>
@@ -1180,13 +1197,34 @@ async function subHtml(request) {
 					if (isTrojan) uuidType = 'password';
 					
 					try {
-						const uuid = link.split("//")[1].split("@")[0];
-						const search = link.split("?")[1].split("#")[0];
-						const domain = window.location.hostname;
-						
-						const subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
-						
-						document.getElementById('result').value = subLink;
+						const isVMess = link.startsWith('vmess://');
+						if (isVMess){
+							const vmessLink = link.split('vmess://')[1];
+							const vmessJson = JSON.parse(atob(vmessLink));
+							
+							const host = vmessJson.host;
+							const uuid = vmessJson.id;
+							const path = vmessJson.path || '/';
+							const sni = vmessJson.sni || host;
+							const type = vmessJson.type || 'none';
+							const alpn = vmessJson.alpn || '';
+							const alterId = vmessJson.aid || 0;
+							const security = vmessJson.scy || 'auto';
+							const domain = window.location.hostname;
+							
+							const subLink = \`https://\${domain}/sub?host=\${host}&uuid=\${uuid}&path=\${encodeURIComponent(path)}&sni=\${sni}&type=\${type}&alpn=\${encodeURIComponent(alpn)}&alterid=\${alterId}&security=\${security}\`;
+							
+							document.getElementById('result').value = subLink;
+						} else {
+							const uuid = link.split("//")[1].split("@")[0];
+							const search = link.split("?")[1].split("#")[0];
+							const domain = window.location.hostname;
+							
+							const subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
+							
+							document.getElementById('result').value = subLink;
+						}
+
 					} catch (error) {
 						alert('链接格式错误，请检查输入');
 					}
