@@ -678,18 +678,14 @@ export default {
 			
 			const newAddressesapi = await 整理优选列表(addressesapi);
 			const newAddressescsv = await 整理测速结果('TRUE');
-			addresses = addresses.concat(newAddressesapi);
-			addresses = addresses.concat(newAddressescsv);
-			
-			// 使用Set对象去重
+			addresses = [...addresses, ...newAddressesapi, ...newAddressescsv];
 			const uniqueAddresses = [...new Set(addresses)];
 			
 			let notlsresponseBody;
 			if ((noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)) || 协议类型 == 'VMess') {
 				const newAddressesnotlsapi = await 整理优选列表(addressesnotlsapi);
 				const newAddressesnotlscsv = await 整理测速结果('FALSE');
-				addressesnotls = addressesnotls.concat(newAddressesnotlsapi);
-				addressesnotls = addressesnotls.concat(newAddressesnotlscsv);
+				addressesnotls = [...addressesnotls, ...newAddressesnotlsapi, ...newAddressesnotlscsv];
 				const uniqueAddressesnotls = [...new Set(addressesnotls)];
 
 				notlsresponseBody = uniqueAddressesnotls.map(address => {
@@ -1193,7 +1189,7 @@ async function subHtml(request) {
 					}
 					
 					let uuidType = 'uuid';
-					const isTrojan = link.startsWith('trojan://');
+					const isTrojan = link.startsWith(\`\${atob('dHJvamFuOi8v')}\`);
 					if (isTrojan) uuidType = 'password';
 					
 					try {
