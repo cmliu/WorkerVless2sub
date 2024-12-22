@@ -15,7 +15,7 @@ let subConfig = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NtbGl1L0FDTD
 let noTLS = 'false';
 let link;
 let 隧道版本作者 = atob('ZWQ=');
-let 获取代理IP = 'false';
+let 获取代理IP;
 let proxyIPs = [
 	atob('cHJveHlpcC5meHhrLmRlZHluLmlv'),
 ];
@@ -40,7 +40,7 @@ let 更新时间 = 3;
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
 let proxyIPPool = [];
 let socks5Data;
-let alpn = 'http/1.1';
+let alpn = 'h3';
 let 网络备案 = `提供维护: <a href='https://t.me/CMLiussss'>CMLiussss</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
@@ -549,7 +549,7 @@ export default {
 			sni = env.SNI || host;
 			type = env.TYPE || type;
 			隧道版本作者 = env.ED || 隧道版本作者;
-			获取代理IP = env.RPROXYIP || 获取代理IP;
+			获取代理IP = env.RPROXYIP || 'false';
 
 			if (host == "null" || uuid == "null" ){
 				let 空字段;
@@ -568,7 +568,7 @@ export default {
 			type = url.searchParams.get('type') || type;
 			alpn = url.searchParams.get('alpn') || alpn;
 			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get(atob('ZXBlaXVz')) || 隧道版本作者;
-			获取代理IP = url.searchParams.get('proxyip') || 获取代理IP;
+			获取代理IP = url.searchParams.get('proxyip') || 'false';
 
 			if (url.searchParams.has('alterid')){
 				协议类型 = 'VMess';
@@ -631,7 +631,7 @@ export default {
 		if (host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare')) noTLS = 'true';
 		noTLS = env.NOTLS || noTLS;
 		let subConverterUrl = generateFakeInfo(url.href, uuid, host);
-
+		if (userAgent.includes('subconverter')) alpn = '';
 		if (!userAgent.includes('subconverter') && MamaJustKilledAMan.some(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead => userAgent.includes(PutAGunAgainstHisHeadPulledMyTriggerNowHesDead)) && MamaJustKilledAMan.length > 0) {
 			const envKey = env.URL302 ? 'URL302' : (env.URL ? 'URL' : null);
 			if (envKey) {
