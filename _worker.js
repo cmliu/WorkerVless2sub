@@ -40,7 +40,7 @@ let 更新时间 = 3;
 let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
 let proxyIPPool = [];
 let socks5Data;
-let alpn = 'http/1.1';
+let alpn = 'h3';
 let 网络备案 = `提供维护: <a href='https://t.me/CMLiussss'>CMLiussss</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
