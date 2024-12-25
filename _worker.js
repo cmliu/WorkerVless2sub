@@ -1242,7 +1242,7 @@ async function subHtml(request) {
 								text: subLink,
 								width: 220, // 调整宽度
 								height: 220, // 调整高度
-								colorDark: "#000000", // 二维码颜色
+								colorDark: "#4a60ea", // 二维码颜色
 								colorLight: "#ffffff", // 背景颜色
 								correctLevel: QRCode.CorrectLevel.L, // 设置纠错级别
 								scale: 1 // 调整像素颗粒度
