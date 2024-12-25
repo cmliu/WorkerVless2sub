@@ -1,5 +1,5 @@
 
-let 快速订阅访问入口= ['auto'];
+let 快速订阅访问入口 = ['auto'];
 let addresses = [];
 let addressesapi = [];
 
@@ -21,23 +21,23 @@ let proxyIPs = [
 ];
 let 匹配PROXYIP = []
 let socks5DataURL = '';
-let BotToken ='';
-let ChatID =''; 
+let BotToken = '';
+let ChatID = '';
 let 临时中转域名 = [];
 let 临时中转域名接口 = '';
 let EndPS = '';
 let 协议类型 = atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`);
 let FileName = '优选订阅生成器';
-let SUBUpdateTime = 6; 
+let SUBUpdateTime = 6;
 let total = 99;
 let timestamp = 4102329600000;
 const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
-let fakeUserID ;
-let fakeHostName ;
-let httpsPorts = ["2053","2083","2087","2096","8443"];
+let fakeUserID;
+let fakeHostName;
+let httpsPorts = ["2053", "2083", "2087", "2096", "8443"];
 let 有效时间 = 7;
 let 更新时间 = 3;
-let MamaJustKilledAMan = ['telegram','twitter','miaoko'];
+let MamaJustKilledAMan = ['telegram', 'twitter', 'miaoko'];
 let proxyIPPool = [];
 let socks5Data;
 let alpn = 'h3';
@@ -60,7 +60,7 @@ async function 整理优选列表(api) {
 		// 使用Promise.allSettled等待所有API请求完成，无论成功或失败
 		// 对api数组进行遍历，对每个API地址发起fetch请求
 		const responses = await Promise.allSettled(api.map(apiUrl => fetch(apiUrl, {
-			method: 'get', 
+			method: 'get',
 			headers: {
 				'Accept': 'text/html,application/xhtml+xml,application/xml;',
 				'User-Agent': FileName + atob('IGNtbGl1L1dvcmtlclZsZXNzMnN1Yg==')
@@ -79,16 +79,16 @@ async function 整理优选列表(api) {
 				let 节点备注 = '';
 				let 测速端口 = '443';
 
-				if (lines[0].split(',').length > 3){
+				if (lines[0].split(',').length > 3) {
 					const idMatch = api[index].match(/id=([^&]*)/);
 					if (idMatch) 节点备注 = idMatch[1];
 
 					const portMatch = api[index].match(/port=([^&]*)/);
 					if (portMatch) 测速端口 = portMatch[1];
-					
+
 					for (let i = 1; i < lines.length; i++) {
 						const columns = lines[i].split(',')[0];
-						if (columns){
+						if (columns) {
 							newapi += `${columns}:${测速端口}${节点备注 ? `#${节点备注}` : ''}\n`;
 							if (api[index].includes('proxyip=true')) proxyIPPool.push(`${columns}:${测速端口}`);
 						}
@@ -155,22 +155,22 @@ async function 整理测速结果(tls) {
 	const csvPromises = addressescsv.map(async (csvUrl) => {
 		try {
 			const response = await fetch(csvUrl);
-			
+
 			if (!response.ok) {
 				throw new Error(`HTTP错误 ${response.status}: ${response.statusText}`);
 			}
-			
+
 			const text = await response.text();
 			const rows = parseCSV(text);
-			
+
 			// 解构和验证CSV头部
 			const [header, ...dataRows] = rows;
 			const tlsIndex = header.findIndex(col => col.toUpperCase() === 'TLS');
-			
+
 			if (tlsIndex === -1) {
 				throw new Error('CSV文件缺少必需的字段');
 			}
-			
+
 			return dataRows
 				.filter(row => {
 					const tlsValue = row[tlsIndex].toUpperCase();
@@ -182,14 +182,14 @@ async function 整理测速结果(tls) {
 					const port = row[1];
 					const dataCenter = row[tlsIndex + remarkIndex];
 					const formattedAddress = `${ipAddress}:${port}#${dataCenter}`;
-					
+
 					// 处理代理IP池
-					if (csvUrl.includes('proxyip=true') && 
-						row[tlsIndex].toUpperCase() === 'TRUE' && 
+					if (csvUrl.includes('proxyip=true') &&
+						row[tlsIndex].toUpperCase() === 'TRUE' &&
 						!httpsPorts.includes(port)) {
 						proxyIPPool.push(`${ipAddress}:${port}`);
 					}
-					
+
 					return formattedAddress;
 				});
 		} catch (error) {
@@ -197,7 +197,7 @@ async function 整理测速结果(tls) {
 			return [];
 		}
 	});
-	
+
 	// 使用Promise.all并行处理并展平结果
 	const results = await Promise.all(csvPromises);
 	return results.flat();
@@ -207,14 +207,14 @@ async function 整理(内容) {
 	// 将制表符、双引号、单引号和换行符都替换为逗号
 	// 然后将连续的多个逗号替换为单个逗号
 	var 替换后的内容 = 内容.replace(/[	|"'\r\n]+/g, ',').replace(/,+/g, ',');
-	
+
 	// 删除开头和结尾的逗号（如果有的话）
 	if (替换后的内容.charAt(0) == ',') 替换后的内容 = 替换后的内容.slice(1);
 	if (替换后的内容.charAt(替换后的内容.length - 1) == ',') 替换后的内容 = 替换后的内容.slice(0, 替换后的内容.length - 1);
-	
+
 	// 使用逗号分割字符串，得到地址数组
 	const 地址数组 = 替换后的内容.split(',');
-	
+
 	return 地址数组;
 }
 
@@ -273,12 +273,12 @@ async function nginx() {
 	</body>
 	</html>
 	`
-	return text ;
+	return text;
 }
 
 function surge(content, url, path) {
 	let 每行内容;
-	if (content.includes('\r\n')){
+	if (content.includes('\r\n')) {
 		每行内容 = content.split('\r\n');
 	} else {
 		每行内容 = content.split('\n');
@@ -303,20 +303,20 @@ function surge(content, url, path) {
 function getRandomProxyByMatch(CC, socks5Data) {
 	// 将匹配字符串转换为小写
 	const lowerCaseMatch = CC.toLowerCase();
-	
+
 	// 过滤出所有以指定匹配字符串结尾的代理字符串
 	let filteredProxies = socks5Data.filter(proxy => proxy.toLowerCase().endsWith(`#${lowerCaseMatch}`));
-	
+
 	// 如果没有匹配的代理，尝试匹配 "US"
 	if (filteredProxies.length === 0) {
 		filteredProxies = socks5Data.filter(proxy => proxy.toLowerCase().endsWith(`#us`));
 	}
-	
+
 	// 如果还是没有匹配的代理，从整个代理列表中随机选择一个
 	if (filteredProxies.length === 0) {
 		return socks5Data[Math.floor(Math.random() * socks5Data.length)];
 	}
-	
+
 	// 从匹配的代理中随机选择一个并返回
 	const randomProxy = filteredProxies[Math.floor(Math.random() * filteredProxies.length)];
 	return randomProxy;
@@ -324,7 +324,7 @@ function getRandomProxyByMatch(CC, socks5Data) {
 
 async function MD5MD5(text) {
 	const encoder = new TextEncoder();
-  
+
 	const firstPass = await crypto.subtle.digest('MD5', encoder.encode(text));
 	const firstPassArray = Array.from(new Uint8Array(firstPass));
 	const firstHex = firstPassArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -332,7 +332,7 @@ async function MD5MD5(text) {
 	const secondPass = await crypto.subtle.digest('MD5', encoder.encode(firstHex.slice(7, 27)));
 	const secondPassArray = Array.from(new Uint8Array(secondPass));
 	const secondHex = secondPassArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  
+
 	return secondHex.toLowerCase();
 }
 
@@ -397,29 +397,29 @@ async function getLink(重新汇总所有链接) {
 		}
 	}
 
-	if ( 订阅链接 && 订阅链接.length !== 0 ) {
+	if (订阅链接 && 订阅链接.length !== 0) {
 		function base64Decode(str) {
 			const bytes = new Uint8Array(atob(str).split('').map(c => c.charCodeAt(0)));
 			const decoder = new TextDecoder('utf-8');
 			return decoder.decode(bytes);
 		}
 		const controller = new AbortController(); // 创建一个AbortController实例，用于取消请求
-	
+
 		const timeout = setTimeout(() => {
 			controller.abort(); // 2秒后取消所有请求
 		}, 2000);
-		
+
 		try {
 			// 使用Promise.allSettled等待所有API请求完成，无论成功或失败
 			const responses = await Promise.allSettled(订阅链接.map(apiUrl => fetch(apiUrl, {
-				method: 'get', 
+				method: 'get',
 				headers: {
 					'Accept': 'text/html,application/xhtml+xml,application/xml;',
 					'User-Agent': `\u0076\u0032\u0072\u0061\u0079\u004e\u002f${FileName + atob('IGNtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}`
 				},
 				signal: controller.signal // 将AbortController的信号量添加到fetch请求中
 			}).then(response => response.ok ? response.text() : Promise.reject())));
-		
+
 			// 遍历所有响应
 			const modifiedResponses = responses.map((response, index) => {
 				// 检查是否请求成功
@@ -429,9 +429,9 @@ async function getLink(重新汇总所有链接) {
 					apiUrl: 订阅链接[index] // 将原始的apiUrl添加到返回对象中
 				};
 			});
-		
+
 			console.log(modifiedResponses); // 输出修改后的响应数组
-		
+
 			for (const response of modifiedResponses) {
 				// 检查响应状态是否为'fulfilled'
 				if (response.status === 'fulfilled') {
@@ -463,10 +463,10 @@ function utf8ToBase64(str) {
 }
 
 export default {
-	async fetch (request, env) {
+	async fetch(request, env) {
 		if (env.TOKEN) 快速订阅访问入口 = await 整理(env.TOKEN);
 		BotToken = env.TGTOKEN || BotToken;
-		ChatID = env.TGID || ChatID; 
+		ChatID = env.TGID || ChatID;
 		subConverter = env.SUBAPI || subConverter;
 		subConfig = env.SUBCONFIG || subConfig;
 		FileName = env.SUBNAME || FileName;
@@ -485,7 +485,7 @@ export default {
 		let sni = "";
 		let type = "ws";
 		alpn = env.ALPN || alpn;
-		let UD = Math.floor(((timestamp - Date.now())/timestamp * 99 * 1099511627776 * 1024)/2);
+		let UD = Math.floor(((timestamp - Date.now()) / timestamp * 99 * 1099511627776 * 1024) / 2);
 		if (env.UA) MamaJustKilledAMan = MamaJustKilledAMan.concat(await 整理(env.UA));
 
 		const currentDate = new Date();
@@ -494,10 +494,10 @@ export default {
 		fakeHostName = fakeUserIDMD5.slice(6, 9) + "." + fakeUserIDMD5.slice(13, 19) + ".xyz";
 
 		total = total * 1099511627776 * 1024;
-		let expire= Math.floor(timestamp / 1000) ;
+		let expire = Math.floor(timestamp / 1000);
 
 		link = env.LINK || link;
-		
+
 		if (env.ADD) addresses = await 整理(env.ADD);
 		if (env.ADDAPI) addressesapi = await 整理(env.ADDAPI);
 		if (env.ADDNOTLS) addressesnotls = await 整理(env.ADDNOTLS);
@@ -505,21 +505,21 @@ export default {
 		if (env.ADDCSV) addressescsv = await 整理(env.ADDCSV);
 		DLS = Number(env.DLS) || DLS;
 		remarkIndex = Number(env.CSVREMARK) || remarkIndex;
-		
+
 		if (socks5DataURL) {
 			try {
 				const response = await fetch(socks5DataURL);
 				const socks5DataText = await response.text();
-				if (socks5DataText.includes('\r\n')){
+				if (socks5DataText.includes('\r\n')) {
 					socks5Data = socks5DataText.split('\r\n').filter(line => line.trim() !== '');
 				} else {
 					socks5Data = socks5DataText.split('\n').filter(line => line.trim() !== '');
 				}
 			} catch {
-				socks5Data = null ;
+				socks5Data = null;
 			}
 		}
-		
+
 		if (env.PROXYIP) proxyIPs = await 整理(env.PROXYIP);
 		//console.log(proxyIPs);
 
@@ -529,8 +529,8 @@ export default {
 				const hosts = await 整理(env.HOST);
 				host = hosts[Math.floor(Math.random() * hosts.length)];
 			}
-			
-			if (env.PASSWORD){
+
+			if (env.PASSWORD) {
 				协议类型 = atob('VHJvamFu');
 				uuid = env.PASSWORD
 			} else {
@@ -544,14 +544,14 @@ export default {
 					uuid = env.UUID || "null";
 				}
 			}
-			
+
 			path = env.PATH || "/?ed=2560";
 			sni = env.SNI || host;
 			type = env.TYPE || type;
 			隧道版本作者 = env.ED || 隧道版本作者;
 			获取代理IP = env.RPROXYIP || 'false';
 
-			if (host == "null" || uuid == "null" ){
+			if (host == "null" || uuid == "null") {
 				let 空字段;
 				if (host == "null" && uuid == "null") 空字段 = "HOST/UUID";
 				else if (host == "null") 空字段 = "HOST";
@@ -559,7 +559,7 @@ export default {
 				EndPS += ` 订阅器内置节点 ${空字段} 未设置！！！`;
 			}
 
-		await sendMessage(`#获取订阅 ${FileName}`, request.headers.get('CF-Connecting-IP'), `UA: ${userAgentHeader}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
+			await sendMessage(`#获取订阅 ${FileName}`, request.headers.get('CF-Connecting-IP'), `UA: ${userAgentHeader}</tg-spoiler>\n域名: ${url.hostname}\n<tg-spoiler>入口: ${url.pathname + url.search}</tg-spoiler>`);
 		} else {
 			host = url.searchParams.get('host');
 			uuid = url.searchParams.get('uuid') || url.searchParams.get('password') || url.searchParams.get('pw');
@@ -570,13 +570,13 @@ export default {
 			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get(atob('ZXBlaXVz')) || 隧道版本作者;
 			获取代理IP = url.searchParams.get('proxyip') || 'false';
 
-			if (url.searchParams.has('alterid')){
+			if (url.searchParams.has('alterid')) {
 				协议类型 = 'VMess';
 				额外ID = url.searchParams.get('alterid') || 额外ID;
 				加密方式 = url.searchParams.get('security') || 加密方式;
-			} else if (url.searchParams.has(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.has('uuid')){
+			} else if (url.searchParams.has(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.has('uuid')) {
 				协议类型 = atob('VkxFU1M=');
-			} else if (url.searchParams.has(atob('ZXBlaXVz')) || url.searchParams.has('password') || url.searchParams.has('pw')){
+			} else if (url.searchParams.has(atob('ZXBlaXVz')) || url.searchParams.has('password') || url.searchParams.has('pw')) {
 				协议类型 = atob('VHJvamFu');
 			}
 
@@ -596,7 +596,7 @@ export default {
 				}
 				return await subHtml(request);
 			}
-			
+
 			if (!host || !uuid) {
 				const responseText = `
 			缺少必填参数：host 和 uuid
@@ -613,13 +613,13 @@ export default {
 				
 				${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L3dvcmtlclZsZXNzMnN1Yg==')}
 				`;
-			
+
 				return new Response(responseText, {
-				status: 202,
-				headers: { 'content-type': 'text/plain; charset=utf-8' },
+					status: 202,
+					headers: { 'content-type': 'text/plain; charset=utf-8' },
 				});
 			}
-			
+
 			if (!path || path.trim() === '') {
 				path = '/?ed=2560';
 			} else {
@@ -627,7 +627,7 @@ export default {
 				path = (path[0] === '/') ? path : '/' + path;
 			}
 		}
-		
+
 		if (host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare')) noTLS = 'true';
 		noTLS = env.NOTLS || noTLS;
 		let subConverterUrl = generateFakeInfo(url.href, uuid, host);
@@ -647,26 +647,34 @@ export default {
 				return envKey === 'URL302' ? Response.redirect(URL, 302) : fetch(new Request(URL, request));
 			}
 			return await subHtml(request);
-		} else if ( (userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter')) ) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
+		} else if ((userAgent.includes('clash') || (format === 'clash' && !userAgent.includes('subconverter'))) && !userAgent.includes('nekobox') && !userAgent.includes('cf-workers-sub')) {
 			subConverterUrl = `https://${subConverter}/sub?target=clash&url=${encodeURIComponent(subConverterUrl)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
-		} else if ( (userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+		} else if ((userAgent.includes('sing-box') || userAgent.includes('singbox') || (format === 'singbox' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
+			if (协议类型 == 'VMess' && url.href.includes('path=')) {
+				const 路径参数前部分 = url.href.split('path=')[0];
+				const 路径参数后部分 = url.href.split('path=')[1].split('&')[1] || '';
+				const 待处理路径参数 = url.href.split('path=')[1].split('&')[0] || '';
+				if (待处理路径参数.includes('%3F')) {
+					subConverterUrl = generateFakeInfo(路径参数前部分 + 'path=' + 待处理路径参数.split('%3F')[0] + '&' + 路径参数后部分, uuid, host);
+				}
+			}
 			subConverterUrl = `https://${subConverter}/sub?target=singbox&url=${encodeURIComponent(subConverterUrl)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		} else {
 			if (host.includes('workers.dev')) {
 				if (临时中转域名接口) {
 					try {
-						const response = await fetch(临时中转域名接口); 
-					
+						const response = await fetch(临时中转域名接口);
+
 						if (!response.ok) {
 							console.error('获取地址时出错:', response.status, response.statusText);
 							return; // 如果有错误，直接返回
 						}
-					
+
 						const text = await response.text();
 						const lines = text.split('\n');
 						// 过滤掉空行或只包含空白字符的行
 						const nonEmptyLines = lines.filter(line => line.trim() !== '');
-					
+
 						临时中转域名 = 临时中转域名.concat(nonEmptyLines);
 					} catch (error) {
 						console.error('获取地址时出错:', error);
@@ -675,12 +683,12 @@ export default {
 				// 使用Set对象去重
 				临时中转域名 = [...new Set(临时中转域名)];
 			}
-			
+
 			const newAddressesapi = await 整理优选列表(addressesapi);
 			const newAddressescsv = await 整理测速结果('TRUE');
 			addresses = [...addresses, ...newAddressesapi, ...newAddressescsv];
 			const uniqueAddresses = [...new Set(addresses)];
-			
+
 			let notlsresponseBody;
 			if ((noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)) || 协议类型 == 'VMess') {
 				const newAddressesnotlsapi = await 整理优选列表(addressesnotlsapi);
@@ -691,7 +699,7 @@ export default {
 				notlsresponseBody = uniqueAddressesnotls.map(address => {
 					let port = "-1";
 					let addressid = address;
-				
+
 					const match = addressid.match(regex);
 					if (!match) {
 						if (address.includes(':') && address.includes('#')) {
@@ -709,7 +717,7 @@ export default {
 							address = parts[0];
 							addressid = parts[1];
 						}
-					
+
 						if (addressid.includes(':')) {
 							addressid = addressid.split(':')[0];
 						}
@@ -719,7 +727,7 @@ export default {
 						addressid = match[3] || address;
 					}
 
-					const httpPorts = ["8080","8880","2052","2082","2086","2095"];
+					const httpPorts = ["8080", "8880", "2052", "2082", "2086", "2095"];
 					if (!isValidIPv4(address) && port == "-1") {
 						for (let httpPort of httpPorts) {
 							if (address.includes(httpPort)) {
@@ -736,22 +744,22 @@ export default {
 						let lowerAddressid = addressid.toLowerCase();
 						// 初始化找到的proxyIP为null
 						let foundProxyIP = null;
-					
+
 						if (socks5Data) {
 							const socks5 = getRandomProxyByMatch(lowerAddressid, socks5Data);
 							path = `/${socks5}`;
 						} else {
 							// 遍历匹配PROXYIP数组查找匹配项
 							for (let item of 匹配PROXYIP) {
-								if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
+								if (item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
 									foundProxyIP = item.split('#')[0];
 									break; // 找到匹配项，跳出循环
-								} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+								} else if (item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 									foundProxyIP = item.split(':')[0];
 									break; // 找到匹配项，跳出循环
 								}
 							}
-						
+
 							if (foundProxyIP) {
 								// 如果找到匹配的proxyIP，赋值给path
 								path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + foundProxyIP;
@@ -763,7 +771,7 @@ export default {
 						}
 					}
 
-					if (协议类型 == 'VMess'){
+					if (协议类型 == 'VMess') {
 						const vmessLink = `vmess://${utf8ToBase64(`{"v":"2","ps":"${addressid + EndPS}","add":"${address}","port":"${port}","id":"${uuid}","aid":"${额外ID}","scy":"${加密方式}","net":"ws","type":"${type}","host":"${host}","path":"${path}","tls":"","sni":"","alpn":"${encodeURIComponent(alpn)}","fp":""}`)}`;
 						return vmessLink;
 					} else {
@@ -777,7 +785,7 @@ export default {
 			const responseBody = uniqueAddresses.map(address => {
 				let port = "-1";
 				let addressid = address;
-			
+
 				const match = addressid.match(regex);
 				if (!match) {
 					if (address.includes(':') && address.includes('#')) {
@@ -795,7 +803,7 @@ export default {
 						address = parts[0];
 						addressid = parts[1];
 					}
-				
+
 					if (addressid.includes(':')) {
 						addressid = addressid.split(':')[0];
 					}
@@ -814,30 +822,30 @@ export default {
 					}
 				}
 				if (port == "-1") port = "443";
-				
+
 				//console.log(address, port, addressid);
-		
+
 				if (隧道版本作者.trim() === atob('Y21saXU=') && 获取代理IP.trim() === 'true') {
 					// 将addressid转换为小写
 					let lowerAddressid = addressid.toLowerCase();
 					// 初始化找到的proxyIP为null
 					let foundProxyIP = null;
-				
+
 					if (socks5Data) {
 						const socks5 = getRandomProxyByMatch(lowerAddressid, socks5Data);
 						path = `/${socks5}`;
 					} else {
 						// 遍历匹配PROXYIP数组查找匹配项
 						for (let item of 匹配PROXYIP) {
-							if ( item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
+							if (item.includes('#') && item.split('#')[1] && lowerAddressid.includes(item.split('#')[1].toLowerCase())) {
 								foundProxyIP = item.split('#')[0];
 								break; // 找到匹配项，跳出循环
-							} else if ( item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
+							} else if (item.includes(':') && item.split(':')[1] && lowerAddressid.includes(item.split(':')[1].toLowerCase())) {
 								foundProxyIP = item.split(':')[0];
 								break; // 找到匹配项，跳出循环
 							}
 						}
-						
+
 						const matchingProxyIP = proxyIPPool.find(proxyIP => proxyIP.includes(address));
 						if (matchingProxyIP) {
 							path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + matchingProxyIP;
@@ -851,10 +859,10 @@ export default {
 						}
 					}
 				}
-				
-				let 伪装域名 = host ;
-				let 最终路径 = path ;
-				let 节点备注 = EndPS ;
+
+				let 伪装域名 = host;
+				let 最终路径 = path;
+				let 节点备注 = EndPS;
 				if (临时中转域名.length > 0 && (host.includes('.workers.dev'))) {
 					最终路径 = `/${host}${path}`;
 					伪装域名 = 临时中转域名[Math.floor(Math.random() * 临时中转域名.length)];
@@ -862,10 +870,10 @@ export default {
 					sni = 伪装域名;
 				}
 
-				if (协议类型 == 'VMess'){
+				if (协议类型 == 'VMess') {
 					const vmessLink = `vmess://${utf8ToBase64(`{"v":"2","ps":"${addressid + 节点备注}","add":"${address}","port":"${port}","id":"${uuid}","aid":"${额外ID}","scy":"${加密方式}","net":"ws","type":"${type}","host":"${伪装域名}","path":"${最终路径}","tls":"tls","sni":"${sni}","alpn":"${encodeURIComponent(alpn)}","fp":""}`)}`;
 					return vmessLink;
-				} else if (协议类型 == atob('VHJvamFu')){
+				} else if (协议类型 == atob('VHJvamFu')) {
 					const 特洛伊Link = `${atob('dHJvamFuOi8v') + uuid}@${address}:${port + atob('P3NlY3VyaXR5PXRscyZzbmk9') + sni}&alpn=${encodeURIComponent(alpn)}&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return 特洛伊Link;
 				} else {
@@ -874,25 +882,25 @@ export default {
 				}
 
 			}).join('\n');
-			
+
 			let combinedContent = responseBody; // 合并内容
-			
+
 			if (link) {
 				const links = await 整理(link);
 				const 整理节点LINK = (await getLink(links)).join('\n');
 				combinedContent += '\n' + 整理节点LINK;
 				console.log("link: " + 整理节点LINK)
 			}
-			
+
 			if (notlsresponseBody && noTLS == 'true') {
 				combinedContent += '\n' + notlsresponseBody;
 				console.log("notlsresponseBody: " + notlsresponseBody);
 			}
-			
-			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')) {
+
+			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
 				const 特洛伊Links = combinedContent.split('\n');
 				const 特洛伊LinksJ8 = generateFakeInfo(特洛伊Links.join('|'), uuid, host);
-				subConverterUrl =  `https://${subConverter}/sub?target=surge&ver=4&url=${encodeURIComponent(特洛伊LinksJ8)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
+				subConverterUrl = `https://${subConverter}/sub?target=surge&ver=4&url=${encodeURIComponent(特洛伊LinksJ8)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
 			} else {
 
 				let base64Response;
@@ -903,34 +911,34 @@ export default {
 						const binary = new TextEncoder().encode(data);
 						let base64 = '';
 						const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-					
+
 						for (let i = 0; i < binary.length; i += 3) {
 							const byte1 = binary[i];
 							const byte2 = binary[i + 1] || 0;
 							const byte3 = binary[i + 2] || 0;
-					
+
 							base64 += chars[byte1 >> 2];
 							base64 += chars[((byte1 & 3) << 4) | (byte2 >> 4)];
 							base64 += chars[((byte2 & 15) << 2) | (byte3 >> 6)];
 							base64 += chars[byte3 & 63];
 						}
-					
+
 						const padding = 3 - (binary.length % 3 || 3);
 						return base64.slice(0, base64.length - padding) + '=='.slice(0, padding);
 					}
-					
+
 					base64Response = encodeBase64(combinedContent);
 				}
 
 				const response = new Response(base64Response, {
-					headers: { 
+					headers: {
 						//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 						"content-type": "text/plain; charset=utf-8",
 						"Profile-Update-Interval": `${SUBUpdateTime}`,
 						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
 					},
 				});
-	
+
 				return response;
 			}
 
@@ -938,19 +946,19 @@ export default {
 
 		try {
 			const subConverterResponse = await fetch(subConverterUrl);
-			
+
 			if (!subConverterResponse.ok) {
 				throw new Error(`Error fetching subConverterUrl: ${subConverterResponse.status} ${subConverterResponse.statusText}`);
 			}
-				
+
 			let subConverterContent = await subConverterResponse.text();
 
-			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter')) ) && !userAgent.includes('cf-workers-sub')){
+			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
 				subConverterContent = surge(subConverterContent, host, path);
 			}
 			subConverterContent = revertFakeInfo(subConverterContent, uuid, host);
 			return new Response(subConverterContent, {
-				headers: { 
+				headers: {
 					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 					"content-type": "text/plain; charset=utf-8",
 					"Profile-Update-Interval": `${SUBUpdateTime}`,
@@ -969,267 +977,285 @@ export default {
 async function subHtml(request) {
 	const url = new URL(request.url);
 	const HTML = `
-		<!DOCTYPE html>
-		<html>
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>${FileName}</title>
-			<style>
-				:root {
-					--primary-color: #4361ee;
-					--hover-color: #3b4fd3;
-					--bg-color: #f5f6fa;
-					--card-bg: #ffffff;
-				}
-				
-				* {
-					box-sizing: border-box;
-					margin: 0;
-					padding: 0;
-				}
-				
-				body {
-					background-color: var(--bg-color);
-					font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-					line-height: 1.6;
-					color: #333;
-					min-height: 100vh;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-				}
-				
-				.container {
-					background: var(--card-bg);
-					max-width: 600px;
-					width: 90%;
-					padding: 2rem;
-					border-radius: 20px;
-					box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-					transition: transform 0.3s ease;
-				}
-				
-				.container:hover {
-					transform: translateY(-5px);
-				}
-				
-				h1 {
-					text-align: center;
-					color: var(--primary-color);
-					margin-bottom: 2rem;
-					font-size: 1.8rem;
-				}
-				
-				.input-group {
-					margin-bottom: 1.5rem;
-				}
-				
-				label {
-					display: block;
-					margin-bottom: 0.5rem;
-					color: #555;
-					font-weight: 500;
-				}
-				
-				input {
-					width: 100%;
-					padding: 12px;
-					border: 2px solid #eee;
-					border-radius: 10px;
-					font-size: 1rem;
-					transition: all 0.3s ease;
-				}
-				
-				input:focus {
-					outline: none;
-					border-color: var(--primary-color);
-					box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-				}
-				
-				button {
-					width: 100%;
-					padding: 12px;
-					background-color: var(--primary-color);
-					color: white;
-					border: none;
-					border-radius: 10px;
-					font-size: 1rem;
-					font-weight: 600;
-					cursor: pointer;
-					transition: all 0.3s ease;
-					margin-bottom: 1.5rem;
-				}
-				
-				button:hover {
-					background-color: var(--hover-color);
-					transform: translateY(-2px);
-				}
-				
-				button:active {
-					transform: translateY(0);
-				}
-				
-				#result {
-					background-color: #f8f9fa;
-					font-family: monospace;
-					word-break: break-all;
-				}
-
-				.github-corner svg {
-					fill: var(--primary-color);
-					color: var(--card-bg);
-					position: absolute;
-					top: 0;
-					right: 0;
-					border: 0;
-					width: 80px;
-					height: 80px;
-				}
-
-				.github-corner:hover .octo-arm {
-					animation: octocat-wave 560ms ease-in-out;
-				}
-
-				@keyframes octocat-wave {
-					0%, 100% { transform: rotate(0) }
-					20%, 60% { transform: rotate(-25deg) }
-					40%, 80% { transform: rotate(10deg) }
-				}
-
-				@media (max-width: 480px) {
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>${FileName}</title>
+				<style>
+					:root {
+						--primary-color: #4361ee;
+						--hover-color: #3b4fd3;
+						--bg-color: #f5f6fa;
+						--card-bg: #ffffff;
+					}
+					
+					* {
+						box-sizing: border-box;
+						margin: 0;
+						padding: 0;
+					}
+					
+					body {
+						background-color: var(--bg-color);
+						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+						line-height: 1.6;
+						color: #333;
+						min-height: 100vh;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					}
+					
 					.container {
-						padding: 1.5rem;
+						background: var(--card-bg);
+						max-width: 600px;
+						width: 90%;
+						padding: 2rem;
+						border-radius: 20px;
+						box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+						transition: transform 0.3s ease;
+					}
+					
+					.container:hover {
+						transform: translateY(-5px);
 					}
 					
 					h1 {
-						font-size: 1.5rem;
+						text-align: center;
+						color: var(--primary-color);
+						margin-bottom: 2rem;
+						font-size: 1.8rem;
 					}
-
+					
+					.input-group {
+						margin-bottom: 1.5rem;
+					}
+					
+					label {
+						display: block;
+						margin-bottom: 0.5rem;
+						color: #555;
+						font-weight: 500;
+					}
+					
+					input {
+						width: 100%;
+						padding: 12px;
+						border: 2px solid #eee;
+						border-radius: 10px;
+						font-size: 1rem;
+						transition: all 0.3s ease;
+					}
+					
+					input:focus {
+						outline: none;
+						border-color: var(--primary-color);
+						box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+					}
+					
+					button {
+						width: 100%;
+						padding: 12px;
+						background-color: var(--primary-color);
+						color: white;
+						border: none;
+						border-radius: 10px;
+						font-size: 1rem;
+						font-weight: 600;
+						cursor: pointer;
+						transition: all 0.3s ease;
+						margin-bottom: 1.5rem;
+					}
+					
+					button:hover {
+						background-color: var(--hover-color);
+						transform: translateY(-2px);
+					}
+					
+					button:active {
+						transform: translateY(0);
+					}
+					
+					#result {
+						background-color: #f8f9fa;
+						font-family: monospace;
+						word-break: break-all;
+					}
+	
+					.github-corner svg {
+						fill: var(--primary-color);
+						color: var(--card-bg);
+						position: absolute;
+						top: 0;
+						right: 0;
+						border: 0;
+						width: 80px;
+						height: 80px;
+					}
+	
 					.github-corner:hover .octo-arm {
-						animation: none;
-					}
-					.github-corner .octo-arm {
 						animation: octocat-wave 560ms ease-in-out;
 					}
-				}
-
-				.beian-info a {
-					color: var(--primary-color);
-					text-decoration: none;
-					border-bottom: 1px dashed var(--primary-color);
-					padding-bottom: 2px;
-				}
-
-				.beian-info a:hover {
-					border-bottom-style: solid;
-				}
-			</style>
-		</head>
-		<body>
-			<a href="${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}" target="_blank" class="github-corner" aria-label="View source on Github">
-				<svg viewBox="0 0 250 250" aria-hidden="true">
-					<path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
-					<path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
-					<path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
-				</svg>
-			</a>
-			<div class="container">
-				<h1>${FileName}</h1>
-				<div class="input-group">
-					<label for="link">节点链接</label>
-					<input type="text" id="link" placeholder="${decodeURIComponent(atob('JUU4JUFGJUI3JUU4JUJFJTkzJUU1JTg1JUE1JTIwVk1lc3MlMjAlMkYlMjBWTEVTUyUyMCUyRiUyMFRyb2phbiUyMCVFOSU5MyVCRSVFNiU4RSVBNQ=='))}">
-				</div>
-				
-				<button onclick="generateLink()">生成优选订阅</button>
-				
-				<div class="input-group">
-					<label for="result">优选订阅</label>
-					<input type="text" id="result" readonly onclick="copyToClipboard()">
-				</div>
-				<div class="beian-info" style="text-align: center; font-size: 13px;">${网络备案}</div>
-			</div>
-
-			<script>
-				function copyToClipboard() {
-					const resultInput = document.getElementById('result');
-					if (!resultInput.value) {
-						return;
-					}
-					
-					resultInput.select();
-					navigator.clipboard.writeText(resultInput.value).then(() => {
-						const tooltip = document.createElement('div');
-						tooltip.style.position = 'fixed';
-						tooltip.style.left = '50%';
-						tooltip.style.top = '20px';
-						tooltip.style.transform = 'translateX(-50%)';
-						tooltip.style.padding = '8px 16px';
-						tooltip.style.background = '#4361ee';
-						tooltip.style.color = 'white';
-						tooltip.style.borderRadius = '4px';
-						tooltip.style.zIndex = '1000';
-						tooltip.textContent = '已复制到剪贴板';
-						
-						document.body.appendChild(tooltip);
-						
-						setTimeout(() => {
-							document.body.removeChild(tooltip);
-						}, 2000);
-					}).catch(err => {
-						alert('复制失败，请手动复制');
-					});
-				}
-
-				function generateLink() {
-					const link = document.getElementById('link').value;
-					if (!link) {
-						alert('请输入节点链接');
-						return;
-					}
-					
-					let uuidType = 'uuid';
-					const isTrojan = link.startsWith(\`\${atob('dHJvamFuOi8v')}\`);
-					if (isTrojan) uuidType = 'password';
-					
-					try {
-						const isVMess = link.startsWith('vmess://');
-						if (isVMess){
-							const vmessLink = link.split('vmess://')[1];
-							const vmessJson = JSON.parse(atob(vmessLink));
-							
-							const host = vmessJson.host;
-							const uuid = vmessJson.id;
-							const path = vmessJson.path || '/';
-							const sni = vmessJson.sni || host;
-							const type = vmessJson.type || 'none';
-							const alpn = vmessJson.alpn || '';
-							const alterId = vmessJson.aid || 0;
-							const security = vmessJson.scy || 'auto';
-							const domain = window.location.hostname;
-							
-							const subLink = \`https://\${domain}/sub?host=\${host}&uuid=\${uuid}&path=\${encodeURIComponent(path)}&sni=\${sni}&type=\${type}&alpn=\${encodeURIComponent(alpn)}&alterid=\${alterId}&security=\${security}\`;
-							
-							document.getElementById('result').value = subLink;
-						} else {
-							const uuid = link.split("//")[1].split("@")[0];
-							const search = link.split("?")[1].split("#")[0];
-							const domain = window.location.hostname;
-							
-							const subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
-							
-							document.getElementById('result').value = subLink;
-						}
-
-					} catch (error) {
-						alert('链接格式错误，请检查输入');
-					}
-				}
-			</script>
-		</body>
-		</html>
-		`;
 	
+					@keyframes octocat-wave {
+						0%, 100% { transform: rotate(0) }
+						20%, 60% { transform: rotate(-25deg) }
+						40%, 80% { transform: rotate(10deg) }
+					}
+	
+					@media (max-width: 480px) {
+						.container {
+							padding: 1.5rem;
+						}
+						
+						h1 {
+							font-size: 1.5rem;
+						}
+	
+						.github-corner:hover .octo-arm {
+							animation: none;
+						}
+						.github-corner .octo-arm {
+							animation: octocat-wave 560ms ease-in-out;
+						}
+					}
+	
+					.beian-info a {
+						color: var(--primary-color);
+						text-decoration: none;
+						border-bottom: 1px dashed var(--primary-color);
+						padding-bottom: 2px;
+					}
+	
+					.beian-info a:hover {
+						border-bottom-style: solid;
+					}
+	
+					#qrcode {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						margin-top: 20px;
+					}
+				</style>
+				<script src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
+			</head>
+			<body>
+				<a href="${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}" target="_blank" class="github-corner" aria-label="View source on Github">
+					<svg viewBox="0 0 250 250" aria-hidden="true">
+						<path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+						<path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+						<path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
+					</svg>
+				</a>
+				<div class="container">
+					<h1>${FileName}</h1>
+					<div class="input-group">
+						<label for="link">节点链接</label>
+						<input type="text" id="link" placeholder="${decodeURIComponent(atob('JUU4JUFGJUI3JUU4JUJFJTkzJUU1JTg1JUE1JTIwVk1lc3MlMjAlMkYlMjBWTEVTUyUyMCUyRiUyMFRyb2phbiUyMCVFOSU5MyVCRSVFNiU4RSVBNQ=='))}">
+					</div>
+					
+					<button onclick="generateLink()">生成优选订阅</button>
+					
+					<div class="input-group">
+						<label for="result">优选订阅</label>
+						<input type="text" id="result" readonly onclick="copyToClipboard()">
+					</div>
+					<div id="qrcode"></div>
+					<div class="beian-info" style="text-align: center; font-size: 13px; margin-top: 20px;">${网络备案}</div>
+				</div>
+	
+				<script>
+					function copyToClipboard() {
+						const resultInput = document.getElementById('result');
+						if (!resultInput.value) {
+							return;
+						}
+						
+						resultInput.select();
+						navigator.clipboard.writeText(resultInput.value).then(() => {
+							const tooltip = document.createElement('div');
+							tooltip.style.position = 'fixed';
+							tooltip.style.left = '50%';
+							tooltip.style.top = '20px';
+							tooltip.style.transform = 'translateX(-50%)';
+							tooltip.style.padding = '8px 16px';
+							tooltip.style.background = '#4361ee';
+							tooltip.style.color = 'white';
+							tooltip.style.borderRadius = '4px';
+							tooltip.style.zIndex = '1000';
+							tooltip.textContent = '已复制到剪贴板';
+							
+							document.body.appendChild(tooltip);
+							
+							setTimeout(() => {
+								document.body.removeChild(tooltip);
+							}, 2000);
+						}).catch(err => {
+							alert('复制失败，请手动复制');
+						});
+					}
+	
+					function generateLink() {
+						const link = document.getElementById('link').value;
+						if (!link) {
+							alert('请输入节点链接');
+							return;
+						}
+						
+						let uuidType = 'uuid';
+						const isTrojan = link.startsWith(\`\${atob('dHJvamFuOi8v')}\`);
+						if (isTrojan) uuidType = 'password';
+						let subLink = '';
+						try {
+							const isVMess = link.startsWith('vmess://');
+							if (isVMess){
+								const vmessLink = link.split('vmess://')[1];
+								const vmessJson = JSON.parse(atob(vmessLink));
+								
+								const host = vmessJson.host;
+								const uuid = vmessJson.id;
+								const path = vmessJson.path || '/';
+								const sni = vmessJson.sni || host;
+								const type = vmessJson.type || 'none';
+								const alpn = vmessJson.alpn || '';
+								const alterId = vmessJson.aid || 0;
+								const security = vmessJson.scy || 'auto';
+								const domain = window.location.hostname;
+								
+								subLink = \`https://\${domain}/sub?host=\${host}&uuid=\${uuid}&path=\${encodeURIComponent(path)}&sni=\${sni}&type=\${type}&alpn=\${encodeURIComponent(alpn)}&alterid=\${alterId}&security=\${security}\`;
+							} else {
+								const uuid = link.split("//")[1].split("@")[0];
+								const search = link.split("?")[1].split("#")[0];
+								const domain = window.location.hostname;
+								
+								subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
+							}
+							document.getElementById('result').value = subLink;
+	
+							// 更新二维码
+							const qrcodeDiv = document.getElementById('qrcode');
+							qrcodeDiv.innerHTML = '';
+							new QRCode(qrcodeDiv, {
+								text: subLink,
+								width: 220, // 调整宽度
+								height: 220, // 调整高度
+								colorDark: "#000000", // 二维码颜色
+								colorLight: "#ffffff", // 背景颜色
+								correctLevel: QRCode.CorrectLevel.L, // 设置纠错级别
+								scale: 1 // 调整像素颗粒度
+							});
+						} catch (error) {
+							alert('链接格式错误，请检查输入');
+						}
+					}
+				</script>
+			</body>
+			</html>
+			`;
+
 	return new Response(HTML, {
 		headers: {
 			"content-type": "text/html;charset=UTF-8",
