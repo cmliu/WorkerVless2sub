@@ -1155,7 +1155,8 @@ async function subHtml(request) {
 					<label for="result">优选订阅</label>
 					<input type="text" id="result" readonly onclick="copyToClipboard()">
 				</div>
-				<div class="beian-info" style="text-align: center; font-size: 13px;">${网络备案}</div>
+				<div id="qrcode" style="text-align: center; margin-top: 20px;"></div>
+				<div class="beian-info" style="text-align: center; font-size: 13px; margin-top: 20px;">${网络备案}</div>
 			</div>
 
 			<script>
@@ -1199,7 +1200,7 @@ async function subHtml(request) {
 					let uuidType = 'uuid';
 					const isTrojan = link.startsWith(\`\${atob('dHJvamFuOi8v')}\`);
 					if (isTrojan) uuidType = 'password';
-					
+					let subLink = '';
 					try {
 						const isVMess = link.startsWith('vmess://');
 						if (isVMess){
@@ -1216,18 +1217,19 @@ async function subHtml(request) {
 							const security = vmessJson.scy || 'auto';
 							const domain = window.location.hostname;
 							
-							const subLink = \`https://\${domain}/sub?host=\${host}&uuid=\${uuid}&path=\${encodeURIComponent(path)}&sni=\${sni}&type=\${type}&alpn=\${encodeURIComponent(alpn)}&alterid=\${alterId}&security=\${security}\`;
-							
-							document.getElementById('result').value = subLink;
+							subLink = \`https://\${domain}/sub?host=\${host}&uuid=\${uuid}&path=\${encodeURIComponent(path)}&sni=\${sni}&type=\${type}&alpn=\${encodeURIComponent(alpn)}&alterid=\${alterId}&security=\${security}\`;
 						} else {
 							const uuid = link.split("//")[1].split("@")[0];
 							const search = link.split("?")[1].split("#")[0];
 							const domain = window.location.hostname;
 							
-							const subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
-							
-							document.getElementById('result').value = subLink;
+							subLink = \`https://\${domain}/sub?\${uuidType}=\${uuid}&\${search}\`;
 						}
+						document.getElementById('result').value = subLink;
+
+						// 更新二维码
+						const qrcodeDiv = document.getElementById('qrcode');
+						qrcodeDiv.innerHTML = \`<img src="https://api.qrserver.com/v1/create-qr-code/?data=\${encodeURIComponent(subLink)}&size=200x200" alt="QR Code">\`;
 
 					} catch (error) {
 						alert('链接格式错误，请检查输入');
