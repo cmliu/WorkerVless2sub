@@ -41,9 +41,10 @@ let MamaJustKilledAMan = ['telegram', 'twitter', 'miaoko'];
 let proxyIPPool = [];
 let socks5Data;
 let alpn = 'h3';
-let 网络备案 = `提供维护: <a href='https://t.me/CMLiussss'>CMLiussss</a>`;//写你自己的维护者广告
+let 网络备案 = `<a href='https://t.me/CMLiussss'>萌ICP备-20240707号</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
+let 网站图标 = 'https://assets.shazam.com/website/images/favicons/favicon-32x32';
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -474,7 +475,8 @@ export default {
 		if (env.CMPROXYIPS) 匹配PROXYIP = await 整理(env.CMPROXYIPS);;
 		if (env.CFPORTS) httpsPorts = await 整理(env.CFPORTS);
 		EndPS = env.PS || EndPS;
-		网络备案 = env.BY || 网络备案;
+		网站图标 = env.ICO || 网站图标;
+		网络备案 = env.BEIAN || env.BY || 网络备案;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
@@ -983,6 +985,7 @@ async function subHtml(request) {
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>${FileName}</title>
+				<link rel="icon" type="image/png" sizes="32x32" href="${网站图标}">
 				<style>
 					:root {
 						--primary-color: #4361ee;
@@ -1162,9 +1165,9 @@ async function subHtml(request) {
 					<div class="input-group">
 						<label for="result">优选订阅</label>
 						<input type="text" id="result" readonly onclick="copyToClipboard()">
+						<label id="qrcode" style="margin: 15px 10px -15px 10px;"></label>
 					</div>
-					<div id="qrcode"></div>
-					<div class="beian-info" style="text-align: center; font-size: 13px; margin-top: 20px;">${网络备案}</div>
+					<div class="beian-info" style="text-align: center; font-size: 13px;">${网络备案}</div>
 				</div>
 	
 				<script>
