@@ -44,7 +44,7 @@ let alpn = 'h3';
 let 网络备案 = `<a href='https://t.me/CMLiussss'>萌ICP备-20240707号</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
-let 网站图标 = '';//'https://assets.shazam.com/website/images/favicons/favicon-32x32'
+let 网站图标, 网站头像, 网站背景;
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -475,7 +475,12 @@ export default {
 		if (env.CMPROXYIPS) 匹配PROXYIP = await 整理(env.CMPROXYIPS);;
 		if (env.CFPORTS) httpsPorts = await 整理(env.CFPORTS);
 		EndPS = env.PS || EndPS;
-		网站图标 = env.ICO || 网站图标;
+		网站图标 = env.ICO ? `<link rel="icon" sizes="32x32" href="${env.ICO}">` : '';
+		网站头像 = env.PNG ? `<div class="logo-wrapper"><div class="logo-border"></div><img src="${env.PNG}" alt="Logo"></div>` : '';
+		if (env.IMG) {
+			const imgs = await 整理(env.IMG);
+			网站背景 = `background-image: url('${imgs[Math.floor(Math.random() * imgs.length)]}');`;
+		} else 网站背景 = '';
 		网络备案 = env.BEIAN || env.BY || 网络备案;
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
@@ -487,7 +492,7 @@ export default {
 		let sni = "";
 		let type = "ws";
 		alpn = env.ALPN || alpn;
-		let UD = Math.floor(((timestamp - Date.now()) / timestamp * 99 * 1099511627776 * 1024) / 2);
+		let UD = Math.floor(((timestamp - Date.now()) / timestamp * 99 * 1099511627776) / 2);
 		if (env.UA) MamaJustKilledAMan = MamaJustKilledAMan.concat(await 整理(env.UA));
 
 		const currentDate = new Date();
@@ -495,7 +500,7 @@ export default {
 		fakeUserID = fakeUserIDMD5.slice(0, 8) + "-" + fakeUserIDMD5.slice(8, 12) + "-" + fakeUserIDMD5.slice(12, 16) + "-" + fakeUserIDMD5.slice(16, 20) + "-" + fakeUserIDMD5.slice(20);
 		fakeHostName = fakeUserIDMD5.slice(6, 9) + "." + fakeUserIDMD5.slice(13, 19) + ".xyz";
 
-		total = total * 1099511627776 * 1024;
+		total = total * 1099511627776;
 		let expire = Math.floor(timestamp / 1000);
 
 		link = env.LINK || link;
@@ -985,7 +990,7 @@ async function subHtml(request) {
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>${FileName}</title>
-				<link rel="icon" type="image/png" sizes="32x32" href="${网站图标}">
+				${网站图标}
 				<style>
 					:root {
 						--primary-color: #4361ee;
@@ -1001,6 +1006,7 @@ async function subHtml(request) {
 					}
 					
 					body {
+						${网站背景}
 						background-color: var(--bg-color);
 						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 						line-height: 1.6;
@@ -1012,17 +1018,27 @@ async function subHtml(request) {
 					}
 					
 					.container {
-						background: var(--card-bg);
+						position: relative;
+						/* 使用rgba设置半透明背景 */
+						background: rgba(255, 255, 255, 0.7);
+						/* 添加磨砂玻璃效果 */
+						backdrop-filter: blur(10px);
+						-webkit-backdrop-filter: blur(10px); /* Safari兼容 */
 						max-width: 600px;
 						width: 90%;
 						padding: 2rem;
 						border-radius: 20px;
-						box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+						/* 调整阴影效果增加通透感 */
+						box-shadow: 0 10px 20px rgba(0,0,0,0.05),
+									inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 						transition: transform 0.3s ease;
 					}
-					
+
+					/* 调整hover效果 */
 					.container:hover {
 						transform: translateY(-5px);
+						box-shadow: 0 15px 30px rgba(0,0,0,0.1),
+									inset 0 0 0 1px rgba(255, 255, 255, 0.2);
 					}
 					
 					h1 {
@@ -1046,16 +1062,21 @@ async function subHtml(request) {
 					input {
 						width: 100%;
 						padding: 12px;
-						border: 2px solid #eee;
+						/* 修改边框颜色从 #eee 到更深的颜色 */
+						border: 2px solid rgba(0, 0, 0, 0.15);  /* 使用rgba实现更自然的深度 */
 						border-radius: 10px;
 						font-size: 1rem;
 						transition: all 0.3s ease;
+						/* 添加轻微的内阴影增强边框效果 */
+						box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
 					}
-					
+
 					input:focus {
 						outline: none;
 						border-color: var(--primary-color);
-						box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+						/* 增强focus状态下的阴影效果 */
+						box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15),
+									inset 0 2px 4px rgba(0, 0, 0, 0.03);
 					}
 					
 					button {
@@ -1086,7 +1107,7 @@ async function subHtml(request) {
 						font-family: monospace;
 						word-break: break-all;
 					}
-	
+
 					.github-corner svg {
 						fill: var(--primary-color);
 						color: var(--card-bg);
@@ -1097,17 +1118,87 @@ async function subHtml(request) {
 						width: 80px;
 						height: 80px;
 					}
-	
+
 					.github-corner:hover .octo-arm {
 						animation: octocat-wave 560ms ease-in-out;
 					}
-	
+
 					@keyframes octocat-wave {
 						0%, 100% { transform: rotate(0) }
 						20%, 60% { transform: rotate(-25deg) }
 						40%, 80% { transform: rotate(10deg) }
 					}
-	
+
+					@keyframes rotate {
+						from { transform: rotate(0deg); }
+						to { transform: rotate(360deg); }
+					}
+
+					.logo-title {
+						position: relative;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						margin-bottom: 2rem;
+					}
+
+					.logo-wrapper {
+						position: absolute;
+						left: 0;
+						width: 50px;
+						height: 50px;
+					}
+
+					.logo-title img {
+						width: 100%;
+						height: 100%;
+						border-radius: 50%;
+						position: relative;
+						z-index: 1;
+						background: var(--card-bg);
+						box-shadow: 0 0 15px rgba(67, 97, 238, 0.1);
+					}
+
+					.logo-border {
+						position: absolute;
+						/* 扩大边框范围以确保完全覆盖 */
+						top: -3px;
+						left: -3px;
+						right: -3px;
+						bottom: -3px;
+						border-radius: 50%;
+						animation: rotate 3s linear infinite;
+						background: conic-gradient(
+							from 0deg,
+							transparent 0%,
+							var(--primary-color) 20%,
+							rgba(67, 97, 238, 0.8) 40%,
+							transparent 60%,
+							transparent 100%
+						);
+						box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+						filter: blur(0.5px);
+					}
+
+					.logo-border::after {
+						content: '';
+						position: absolute;
+						/* 调整内圆遮罩的大小 */
+						inset: 3px;
+						border-radius: 50%;
+						background: var(--card-bg);
+					}
+
+					@keyframes rotate {
+						from { transform: rotate(0deg); }
+						to { transform: rotate(360deg); }
+					}
+
+					.logo-title h1 {
+						margin-bottom: 0;
+						text-align: center;
+					}
+
 					@media (max-width: 480px) {
 						.container {
 							padding: 1.5rem;
@@ -1116,26 +1207,36 @@ async function subHtml(request) {
 						h1 {
 							font-size: 1.5rem;
 						}
-	
+
 						.github-corner:hover .octo-arm {
 							animation: none;
 						}
 						.github-corner .octo-arm {
 							animation: octocat-wave 560ms ease-in-out;
 						}
+
+						.logo-wrapper {
+							width: 40px;
+							height: 40px;
+						}
 					}
-	
+
+					.beian-info {
+						text-align: center;
+						font-size: 13px;
+					}
+
 					.beian-info a {
 						color: var(--primary-color);
 						text-decoration: none;
 						border-bottom: 1px dashed var(--primary-color);
 						padding-bottom: 2px;
 					}
-	
+
 					.beian-info a:hover {
 						border-bottom-style: solid;
 					}
-	
+
 					#qrcode {
 						display: flex;
 						justify-content: center;
@@ -1154,7 +1255,10 @@ async function subHtml(request) {
 					</svg>
 				</a>
 				<div class="container">
-					<h1>${FileName}</h1>
+						<div class="logo-title">
+							${网站头像}
+							<h1>${FileName}</h1>
+						</div>
 					<div class="input-group">
 						<label for="link">节点链接</label>
 						<input type="text" id="link" placeholder="${decodeURIComponent(atob('JUU4JUFGJUI3JUU4JUJFJTkzJUU1JTg1JUE1JTIwVk1lc3MlMjAlMkYlMjBWTEVTUyUyMCUyRiUyMFRyb2phbiUyMCVFOSU5MyVCRSVFNiU4RSVBNQ=='))}">
