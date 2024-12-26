@@ -1318,7 +1318,6 @@ async function subHtml(request) {
 								<span class="info-icon" onclick="toggleTooltip(event)">!</span>
 								<div class="info-tooltip" id="infoTooltip">
 									<strong>安全提示</strong>：使用优选订阅生成器时，需要您提交 <strong>节点配置信息</strong> 用于生成优选订阅链接。这意味着订阅器的维护者可能会获取到该节点信息。<strong>请自行斟酌使用风险。</strong><br>
-									<strong>关于流量</strong>：如订阅时显示的剩余流量信息，该信息仅为 <strong>自慰效果，并无实际功能。</strong><br>
 									<br>
 									订阅转换后端：<strong>${subConverter}</strong><br>
 									订阅转换配置文件：<strong>${subConfig}</strong>
