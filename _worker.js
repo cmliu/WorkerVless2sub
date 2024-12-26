@@ -1007,7 +1007,6 @@ async function subHtml(request) {
 					
 					body {
 						${网站背景}
-						background-image: url('${img}');
 						background-size: cover;
 						background-position: center;
 						background-attachment: fixed;
