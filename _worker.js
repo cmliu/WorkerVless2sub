@@ -1007,6 +1007,10 @@ async function subHtml(request) {
 					
 					body {
 						${网站背景}
+						background-image: url('${img}');
+						background-size: cover;
+						background-position: center;
+						background-attachment: fixed;
 						background-color: var(--bg-color);
 						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 						line-height: 1.6;
