@@ -44,7 +44,7 @@ let alpn = 'h3';
 let 网络备案 = `<a href='https://t.me/CMLiussss'>萌ICP备-20240707号</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
-let 网站图标 = 'https://assets.shazam.com/website/images/favicons/favicon-32x32';
+let 网站图标 = '';//'https://assets.shazam.com/website/images/favicons/favicon-32x32'
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
