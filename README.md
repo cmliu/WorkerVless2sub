@@ -210,7 +210,7 @@ Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢[Alice Networ
 | SUBCONFIG | [https://raw.github.../ACL4SSR_Online_Full_MultiMode.ini](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full_MultiMode.ini) | clash、singbox等 订阅转换配置文件 | 
 | SUBNAME | `优选订阅生成器` | 订阅生成器名称 | 
 | ICO | `https://raw.cmliussss.com/favicon.ico` | 网站图标 |
-| PNG | `https://raw.cmliussss.com/IMG_0038.png` | 网站LOGO | 
+| PNG | `https://raw.cmliussss.com/img/CM512.png` | 网站LOGO | 
 | IMG | `https://raw.cmliussss.com/keqing1080p.jpg` | 背景图片，多张图片将随机展示 (多元素`换行`作间隔) | 
 | BEIAN | `提供维护: <a href='https://t.me/CMLiussss'>CMLiussss</a>` | 主页维护信息 | 
 | SOCKS5DATA | [https://raw.github.../socks5Data](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/socks5Data) | Socks5代理池 | 

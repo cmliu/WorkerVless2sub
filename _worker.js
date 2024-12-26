@@ -29,7 +29,7 @@ let EndPS = '';
 let 协议类型 = atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`);
 let FileName = '优选订阅生成器';
 let SUBUpdateTime = 6;
-let total = 99;
+let total = 24;
 let timestamp = 4102329600000;
 const regex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[.*\]):?(\d+)?#?(.*)?$/;
 let fakeUserID;
@@ -942,7 +942,7 @@ export default {
 						//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 						"content-type": "text/plain; charset=utf-8",
 						"Profile-Update-Interval": `${SUBUpdateTime}`,
-						"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+						//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
 					},
 				});
 
@@ -969,7 +969,7 @@ export default {
 					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
 					"content-type": "text/plain; charset=utf-8",
 					"Profile-Update-Interval": `${SUBUpdateTime}`,
-					"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+					//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
 				},
 			});
 		} catch (error) {
@@ -1318,7 +1318,6 @@ async function subHtml(request) {
 								<span class="info-icon" onclick="toggleTooltip(event)">!</span>
 								<div class="info-tooltip" id="infoTooltip">
 									<strong>安全提示</strong>：使用优选订阅生成器时，需要您提交 <strong>节点配置信息</strong> 用于生成优选订阅链接。这意味着订阅器的维护者可能会获取到该节点信息。<strong>请自行斟酌使用风险。</strong><br>
-									<strong>关于流量</strong>：如订阅时显示的剩余流量信息，该信息仅为 <strong>自慰效果，并无实际功能。</strong><br>
 									<br>
 									订阅转换后端：<strong>${subConverter}</strong><br>
 									订阅转换配置文件：<strong>${subConfig}</strong>
