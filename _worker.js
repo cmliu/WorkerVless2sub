@@ -692,15 +692,13 @@ export default {
 
 			const newAddressesapi = await 整理优选列表(addressesapi);
 			const newAddressescsv = await 整理测速结果('TRUE');
-			addresses = [...addresses, ...newAddressesapi, ...newAddressescsv];
-			const uniqueAddresses = [...new Set(addresses)];
+			const uniqueAddresses = Array.from(new Set(addresses.concat(newAddressesapi, newAddressescsv)));
 
 			let notlsresponseBody;
 			if ((noTLS == 'true' && 协议类型 == atob(`\u0056\u006b\u0078\u0046\u0055\u0031\u004d\u003d`)) || 协议类型 == 'VMess') {
 				const newAddressesnotlsapi = await 整理优选列表(addressesnotlsapi);
 				const newAddressesnotlscsv = await 整理测速结果('FALSE');
-				addressesnotls = [...addressesnotls, ...newAddressesnotlsapi, ...newAddressesnotlscsv];
-				const uniqueAddressesnotls = [...new Set(addressesnotls)];
+				const uniqueAddressesnotls = Array.from(new Set(addressesnotls.concat(newAddressesnotlsapi, newAddressesnotlscsv)));
 
 				notlsresponseBody = uniqueAddressesnotls.map(address => {
 					let port = "-1";
