@@ -1,0 +1,44 @@
+name: Daily_Task
+
+on:
+  schedule:
+    - cron: "0 20 * * *"  # 每天 UTC 时间 20:00 执行（北京时间 04:00）
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y curl wget vim git nano  
+          python -m pip install --upgrade pip
+          pip install jq
+      - name: Fetch JSON data
+        run: |
+          wget -O cf_ip https://api.vvhan.com/tool/cf_ip
+      - name: Process JSON data
+        run: |
+          # 使用 jq 处理 JSON 数据
+          jq -r '.data.v4.CM[] | "\(.ip):8443#\(.name)"' cf_ip > addressesapi.txt
+      - name: Show processed file content
+        run: cat addressesapi.txt
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add addressesapi.txt
+          git commit -m "Update addressesapi.txt"
+          git push
