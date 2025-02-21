@@ -26,10 +26,13 @@ jobs:
       - name: Fetch JSON data
         run: |
           wget -O cf_ip https://api.vvhan.com/tool/cf_ip
+          wget -O addressesapi.txt https://ipdb.api.030101.xyz/?type=bestcf&country=true
       - name: Process JSON data
         run: |
           # 使用 jq 处理 JSON 数据
-          jq -r '.data.v4.CM[] | "\(.ip):8443#\(.name)"' cf_ip > addressesapi.txt
+          jq -r '.data.v4.CM[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
+          jq -r '.data.v4.CU[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
+          jq -r '.data.v4.CT[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
       - name: Show processed file content
         run: cat addressesapi.txt
 
