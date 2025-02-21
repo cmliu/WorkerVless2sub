@@ -33,6 +33,55 @@ jobs:
           jq -r '.data.v4.CM[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
           jq -r '.data.v4.CU[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
           jq -r '.data.v4.CT[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
+
+          echo "time.cloudflare.com"  >> addressesapi.txt
+          echo "shopify.com"  >> addressesapi.txt
+          echo "time.is"  >> addressesapi.txt
+          echo "icook.hk"  >> addressesapi.txt
+          echo "icook.tw"  >> addressesapi.txt
+          echo "ip.sb"  >> addressesapi.txt
+          echo "japan.com"  >> addressesapi.txt
+          echo "malaysia.com"  >> addressesapi.txt
+          echo "russia.com"  >> addressesapi.txt
+          echo "singapore.com"  >> addressesapi.txt
+          echo "skk.moe"  >> addressesapi.txt
+          echo "www.visa.com"  >> addressesapi.txt
+          echo "www.visa.com.sg"  >> addressesapi.txt
+          echo "www.visa.com.hk"  >> addressesapi.txt
+          echo "www.visa.com.tw"  >> addressesapi.txt
+          echo "www.visa.co.jp"  >> addressesapi.txt
+          echo "www.visakorea.com"  >> addressesapi.txt
+          echo "www.gco.gov.qa"  >> addressesapi.txt
+          echo "www.gov.se"  >> addressesapi.txt
+          echo "www.gov.ua"  >> addressesapi.txt
+          echo "www.digitalocean.com"  >> addressesapi.txt
+          echo "www.csgo.com"  >> addressesapi.txt
+          echo "www.shopify.com"  >> addressesapi.txt
+          echo "www.whoer.net"  >> addressesapi.txt
+          echo "www.whatismyip.com"  >> addressesapi.txt
+          echo "www.ipget.net"  >> addressesapi.txt
+          echo "www.hugedomains.com"  >> addressesapi.txt
+          echo "www.udacity.com"  >> addressesapi.txt
+          echo "www.4chan.org"  >> addressesapi.txt
+          echo "www.okcupid.com"  >> addressesapi.txt
+          echo "www.glassdoor.com"  >> addressesapi.txt
+          echo "www.udemy.com"  >> addressesapi.txt
+          echo "www.baipiao.eu.org"  >> addressesapi.txt
+          echo "cdn.anycast.eu.org"  >> addressesapi.txt
+          echo "cdn-all.xn--b6gac.eu.org"  >> addressesapi.txt
+          echo "cdn-b100.xn--b6gac.eu.org"  >> addressesapi.txt
+          echo "xn--b6gac.eu.org"  >> addressesapi.txt
+          echo "edgetunnel.anycast.eu.org"  >> addressesapi.txt
+          echo "alejandracaiccedo.com"  >> addressesapi.txt
+          echo "nc.gocada.co"  >> addressesapi.txt
+          echo "log.bpminecraft.com"  >> addressesapi.txt
+          echo "www.boba88slot.com"  >> addressesapi.txt
+          echo "gur.gov.ua"  >> addressesapi.txt
+          echo "www.zsu.gov.ua"  >> addressesapi.txt
+          echo "www.iakeys.com"  >> addressesapi.txt
+          echo "edtunnel-dgp.pages.dev"  >> addressesapi.txt
+          echo "www.d-555.com"  >> addressesapi.txt
+          echo "fbi.gov"  >> addressesapi.txt
       - name: process file  
         run: |
           # 定义端口列表
