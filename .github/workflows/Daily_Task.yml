@@ -33,6 +33,19 @@ jobs:
           jq -r '.data.v4.CM[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
           jq -r '.data.v4.CU[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
           jq -r '.data.v4.CT[] | "\(.ip)#\(.name)"' cf_ip >> addressesapi.txt
+      - name: process file  
+        run: |
+          # 定义端口列表
+          ports=(80,443,2052,2053,2082,2083,2086,2087,2095,2096,8080,8443,8880)
+          # 读取 IP 地址和名称
+          while IFS='#' read -r ip name; do
+              for port in "${ports[@]}"; do
+                  echo "$ip:$port#$name"
+              done
+          done < addressesapi.txt > addressesapi_new.txt
+          
+          # 将新内容覆盖到原文件
+          mv addressesapi_new.txt addressesapi.txt
       - name: Show processed file content
         run: cat addressesapi.txt
 
