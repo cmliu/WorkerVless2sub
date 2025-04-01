@@ -766,11 +766,11 @@ export default {
 
 							if (foundProxyIP) {
 								// 如果找到匹配的proxyIP，赋值给path
-								path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + foundProxyIP;
+								path = atob('Lz9wcm94eWlwPQ==') + foundProxyIP;
 							} else {
 								// 如果没有找到匹配项，随机选择一个proxyIP
 								const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-								path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + randomProxyIP;
+								path = atob('Lz9wcm94eWlwPQ==') + randomProxyIP;
 							}
 						}
 					}
@@ -852,14 +852,14 @@ export default {
 
 						const matchingProxyIP = proxyIPPool.find(proxyIP => proxyIP.includes(address));
 						if (matchingProxyIP) {
-							path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + matchingProxyIP;
+							path = atob('Lz9wcm94eWlwPQ==') + matchingProxyIP;
 						} else if (foundProxyIP) {
 							// 如果找到匹配的proxyIP，赋值给path
-							path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + foundProxyIP;
+							path = atob('Lz9wcm94eWlwPQ==') + foundProxyIP;
 						} else {
 							// 如果没有找到匹配项，随机选择一个proxyIP
 							const randomProxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
-							path = atob('Lz9lZD0yNTYwJnByb3h5aXA9') + randomProxyIP;
+							path = atob('Lz9wcm94eWlwPQ==') + randomProxyIP;
 						}
 					}
 				}
