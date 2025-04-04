@@ -44,7 +44,7 @@ let alpn = 'h3';
 let 网络备案 = `<a href='https://t.me/CMLiussss'>萌ICP备-20240707号</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
-let 网站图标, 网站头像, 网站背景;
+let 网站图标, 网站头像, 网站背景, xhttp;
 async function 整理优选列表(api) {
 	if (!api || api.length === 0) return [];
 
@@ -573,7 +573,10 @@ export default {
 			path = url.searchParams.get('path');
 			sni = url.searchParams.get('sni') || host;
 			type = url.searchParams.get('type') || type;
-			alpn = url.searchParams.get('alpn') || alpn;
+			const mode = url.searchParams.get('mode') || null;
+			const extra = url.searchParams.get('extra') || null;
+			xhttp = (mode ? `&mode=${mode}` : "") + (extra ? `&extra=${encodeURIComponent(extra)}` : "");
+			alpn = url.searchParams.get('alpn') || (xhttp ? "h3%2Ch2" : alpn);
 			隧道版本作者 = url.searchParams.get(atob('ZWRnZXR1bm5lbA==')) || url.searchParams.get(atob('ZXBlaXVz')) || 隧道版本作者;
 			获取代理IP = url.searchParams.get('proxyip') || 'false';
 
@@ -881,7 +884,7 @@ export default {
 					const 特洛伊Link = `${atob('dHJvamFuOi8v') + uuid}@${address}:${port + atob('P3NlY3VyaXR5PXRscyZzbmk9') + sni}&alpn=${encodeURIComponent(alpn)}&fp=randomized&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
 					return 特洛伊Link;
 				} else {
-					const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT10bHMmc25pPQ==') + sni}&alpn=${encodeURIComponent(alpn)}&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径)}#${encodeURIComponent(addressid + 节点备注)}`;
+					const 维列斯Link = `${atob('dmxlc3M6Ly8=') + uuid}@${address}:${port + atob('P2VuY3J5cHRpb249bm9uZSZzZWN1cml0eT10bHMmc25pPQ==') + sni}&alpn=${encodeURIComponent(alpn)}&fp=random&type=${type}&host=${伪装域名}&path=${encodeURIComponent(最终路径) + xhttp}#${encodeURIComponent(addressid + 节点备注)}`;
 					return 维列斯Link;
 				}
 
