@@ -224,6 +224,8 @@
 | PROXYIP | `proxyip.cmliussss.net` | 默认分配的ProxyIP, 多ProxyIP将随机分配（支持多元素, 元素之间使用`,`或`换行`作间隔） | 
 | CMPROXYIPS | `proxyip.aliyun.cmliussss.net#HK` | 识别HK后分配对应的ProxyIP（支持多元素, 元素之间使用`,`或`换行`作间隔） | 
 | CFPORTS | `2053`,`2096`,`8443` | CF账户标准端口列表 |
+| URL302 | `https://t.me/CMLiussss` | 主页302跳转(支持多url, url之间使用`,`或`换行`作间隔, 小白别用) |
+| URL | `https://blog.cmliussss.com` | 主页反代伪装(支持多url, url之间使用`,`或`换行`作间隔, 乱设容易触发反诈) |
 | LINK | `vless://b7a39...`,`vmess://ew0K...`,`https://sub...` | 补充的**公益节点链接**（不要填入私用节点）, 可同时放入多个节点链接与多个订阅链接（支持多元素, 元素之间使用`,`或`换行`作间隔） |
 
 ----
