@@ -5,7 +5,7 @@
 > [!WARNING]
 > 注意！这是一个**公益服务项目**，请不要将私人节点放入`LINK`变量，这会让所有人都能获得此节点！！！
 
-> Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)，**感谢 [Alice Networks](https://alice.ws/aff.php?aff=15) 提供的云服务器维持 [CM订阅转换服务](https://sub.cmliussss.net/) ！**
+> Telegram交流群：[@CMLiussss](https://t.me/CMLiussss)
 ## 🔧 部署方法
 ### 🛠 Pages Github 部署 [视频教程](https://www.youtube.com/watch?v=p-KhFJAC4WQ&t=509s)
 <details>
@@ -233,7 +233,14 @@
 ## ⭐ Star 星星走起
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
 
-# 🙏 致谢
-[Alice Networks LTD](https://alice.ws/aff.php?aff=15)，[SAKURA-YUMI](https://github.com/SAKURA-YUMI)，[EzSync](https://github.com/EzSync)、[ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)、[3Kmfi6HP](https://github.com/6Kmfi6HP/EDtunnel/blob/main/.github/workflows/obfuscator.yml)
+# 🙏 特别鸣谢
+### 💖 赞助支持 - 提供云服务器维持[订阅转换服务](https://sub.cmliussss.net/)
+- [Alice Networks LTD](https://url.cmliussss.com/alice)
+
+### 🛠 开源代码引用
+- [SAKURA-YUMI](https://github.com/SAKURA-YUMI)
+- [EzSync](https://github.com/EzSync)
+- [ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)
+- [3Kmfi6HP](https://github.com/6Kmfi6HP/EDtunnel/blob/main/.github/workflows/obfuscator.yml)
 
 
