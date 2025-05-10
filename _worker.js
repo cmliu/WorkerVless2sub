@@ -19,7 +19,7 @@ let 获取代理IP;
 let proxyIPs = [
 	atob('cHJveHlpcC5meHhrLmRlZHluLmlv'),
 ];
-let 匹配PROXYIP = []
+let 匹配PROXYIP = [];
 let socks5DataURL = '';
 let BotToken = '';
 let ChatID = '';
@@ -527,7 +527,24 @@ export default {
 			}
 		}
 
-		if (env.PROXYIP) proxyIPs = await 整理(env.PROXYIP);
+		let 临时proxyIPs = [];
+		if (env.PROXYIP) 临时proxyIPs = await 整理(env.PROXYIP);
+		if (env.PROXYIPAPI) {
+			const proxyIPsapi = await 整理(env.PROXYIPAPI);
+			if (proxyIPsapi.length > 0) {
+				const response = await fetch(proxyIPsapi[0]);
+				if (response.ok) {
+					const 响应内容 = await response.text();
+					const 整理成数组 = await 整理(响应内容);
+					if (整理成数组.length > 0) {
+						临时proxyIPs = 临时proxyIPs.concat(整理成数组);	//追加到proxyIPs数组中
+					}
+				}
+			}
+		}
+		//去重去除空元素
+		临时proxyIPs = [...new Set(临时proxyIPs.filter(item => item && item.trim() !== ''))];
+		if (临时proxyIPs.length > 0) proxyIPs = 临时proxyIPs;
 		//console.log(proxyIPs);
 
 		if (快速订阅访问入口.length > 0 && 快速订阅访问入口.some(token => url.pathname.includes(token))) {
