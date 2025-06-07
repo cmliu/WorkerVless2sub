@@ -235,8 +235,6 @@
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
 
 # 🙏 特别鸣谢
-### 💖 赞助支持 - 提供云服务器维持[订阅转换服务](https://sub.cmliussss.net/)
-- [Alice Networks LTD](https://url.cmliussss.com/alice)
 
 ### 🛠 开源代码引用
 - [SAKURA-YUMI](https://github.com/SAKURA-YUMI)
