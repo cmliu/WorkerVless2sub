@@ -509,6 +509,18 @@ export default {
 		if (env.ADDAPI) addressesapi = await 整理(env.ADDAPI);
 		if (env.ADDNOTLS) addressesnotls = await 整理(env.ADDNOTLS);
 		if (env.ADDNOTLSAPI) addressesnotlsapi = await 整理(env.ADDNOTLSAPI);
+		function moveHttpUrls(sourceArray, targetArray) {
+			if (!Array.isArray(sourceArray) || sourceArray.length === 0) return sourceArray || [];
+			const httpRegex = /^https?:\/\//i;
+			const httpUrls = sourceArray.filter(item => httpRegex.test(item));
+			if (httpUrls.length > 0) {
+				targetArray.push(...httpUrls);
+				return sourceArray.filter(item => !httpRegex.test(item));
+			}
+			return sourceArray;
+		}
+		addresses = moveHttpUrls(addresses, addressesapi);
+		addressesnotls = moveHttpUrls(addressesnotls, addressesnotlsapi);
 		if (env.ADDCSV) addressescsv = await 整理(env.ADDCSV);
 		DLS = Number(env.DLS) || DLS;
 		remarkIndex = Number(env.CSVREMARK) || remarkIndex;
