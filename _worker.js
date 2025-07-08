@@ -933,12 +933,19 @@ export default {
 				console.log("notlsresponseBody: " + notlsresponseBody);
 			}
 
+			// 构建响应头对象
+			const responseHeaders = {
+				"content-type": "text/plain; charset=utf-8",
+				"Profile-Update-Interval": `${SUBUpdateTime}`,
+				"Profile-web-page-url": url.origin,
+				//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+			};
+
 			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
 				const 特洛伊Links = combinedContent.split('\n');
 				const 特洛伊LinksJ8 = generateFakeInfo(特洛伊Links.join('|'), uuid, host);
 				subConverterUrl = `https://${subConverter}/sub?target=surge&ver=4&url=${encodeURIComponent(特洛伊LinksJ8)}&insert=false&config=${encodeURIComponent(subConfig)}&emoji=true&list=false&xudp=false&udp=false&tfo=false&expand=true&scv=true&fdn=false`;
 			} else {
-
 				let base64Response;
 				try {
 					base64Response = btoa(combinedContent); // 重新进行 Base64 编码
@@ -962,23 +969,11 @@ export default {
 						const padding = 3 - (binary.length % 3 || 3);
 						return base64.slice(0, base64.length - padding) + '=='.slice(0, padding);
 					}
-
 					base64Response = encodeBase64(combinedContent);
 				}
-
-				const response = new Response(base64Response, {
-					headers: {
-						//"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-						"content-type": "text/plain; charset=utf-8",
-						"Profile-Update-Interval": `${SUBUpdateTime}`,
-						"Profile-web-page-url": url.origin,
-						//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-					},
-				});
-
+				const response = new Response(base64Response, { headers: responseHeaders });
 				return response;
 			}
-
 		}
 
 		try {
@@ -994,15 +989,8 @@ export default {
 				subConverterContent = surge(subConverterContent, host, path);
 			}
 			subConverterContent = revertFakeInfo(subConverterContent, uuid, host);
-			return new Response(subConverterContent, {
-				headers: {
-					"Content-Disposition": `attachment; filename*=utf-8''${encodeURIComponent(FileName)}; filename=${FileName}`,
-					"content-type": "text/plain; charset=utf-8",
-					"Profile-Update-Interval": `${SUBUpdateTime}`,
-					"Profile-web-page-url": url.origin,
-					//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-				},
-			});
+			if (!userAgent.includes('mozilla')) responseHeaders["Content-Disposition"] = `attachment; filename*=utf-8''${encodeURIComponent(FileName)}`;
+			return new Response(subConverterContent, { headers: responseHeaders });
 		} catch (error) {
 			return new Response(`Error: ${error.message}`, {
 				status: 500,
