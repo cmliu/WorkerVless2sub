@@ -235,7 +235,7 @@
 [![Stargazers over time](https://starchart.cc/cmliu/WorkerVless2sub.svg?variant=adaptive)](https://starchart.cc/cmliu/WorkerVless2sub)
 
 # 🙏 特别鸣谢
-
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 ### 🛠 开源代码引用
 - [SAKURA-YUMI](https://github.com/SAKURA-YUMI)
 - [EzSync](https://github.com/EzSync)
