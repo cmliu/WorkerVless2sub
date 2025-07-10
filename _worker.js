@@ -674,6 +674,14 @@ export default {
 			}
 		}
 
+		// 构建订阅响应头对象
+		const responseHeaders = {
+			"content-type": "text/plain; charset=utf-8",
+			"Profile-Update-Interval": `${SUBUpdateTime}`,
+			"Profile-web-page-url": url.origin,
+			//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
+		};
+
 		if (host.toLowerCase().includes('notls') || host.toLowerCase().includes('worker') || host.toLowerCase().includes('trycloudflare')) noTLS = 'true';
 		noTLS = env.NOTLS || noTLS;
 		let subConverterUrl = generateFakeInfo(url.href, uuid, host);
@@ -939,14 +947,6 @@ export default {
 				combinedContent += '\n' + notlsresponseBody;
 				console.log("notlsresponseBody: " + notlsresponseBody);
 			}
-
-			// 构建响应头对象
-			const responseHeaders = {
-				"content-type": "text/plain; charset=utf-8",
-				"Profile-Update-Interval": `${SUBUpdateTime}`,
-				"Profile-web-page-url": url.origin,
-				//"Subscription-Userinfo": `upload=${UD}; download=${UD}; total=${total}; expire=${expire}`,
-			};
 
 			if (协议类型 == atob('VHJvamFu') && (userAgent.includes('surge') || (format === 'surge' && !userAgent.includes('subconverter'))) && !userAgent.includes('cf-workers-sub')) {
 				const 特洛伊Links = combinedContent.split('\n');
