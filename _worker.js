@@ -1348,8 +1348,8 @@ async function subHtml(request) {
 								<div class="info-tooltip" id="infoTooltip">
 									<strong>安全提示</strong>：使用优选订阅生成器时，需要您提交 <strong>节点配置信息</strong> 用于生成优选订阅链接。这意味着订阅器的维护者可能会获取到该节点信息。<strong>请自行斟酌使用风险。</strong><br>
 									<br>
-									订阅转换后端：<strong><a href='${subProtocol}://${subConverter}/version'>${subProtocol}://${subConverter}</a></strong><br>
-									订阅转换配置文件：<strong><a href='${subConfig}'>${subConfig}</a></strong>
+									订阅转换后端：<strong><a href='${subProtocol}://${subConverter}/version' target="_blank" rel="noopener noreferrer">${subProtocol}://${subConverter}</a></strong><br>
+									订阅转换配置文件：<strong><a href='${subConfig}' target="_blank" rel="noopener noreferrer">${subConfig}</a></strong>
 								</div>
 							</div>
 						</div>
