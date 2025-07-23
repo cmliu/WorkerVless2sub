@@ -566,7 +566,7 @@ export default {
 		if (临时proxyIPs.length > 0) proxyIPs = 临时proxyIPs;
 		//console.log(proxyIPs);
 
-		if (快速订阅访问入口.length > 0 && 快速订阅访问入口.some(token => url.pathname.includes(token))) {
+		if (快速订阅访问入口.length > 0 && 快速订阅访问入口.some(token => url.pathname === `/${token}`)) {
 			host = "null";
 			if (env.HOST) {
 				const hosts = await 整理(env.HOST);
