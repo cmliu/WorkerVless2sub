@@ -237,6 +237,10 @@
 # 🙏 特别鸣谢
 ### 🚀 Sponsored by SharonNetworks
 
+<a href="https://sharon.io/">
+  <img src="https://framerusercontent.com/assets/3bMljdaUFNDFvMzdG9S0NjYmhSY.png" width="30%" alt="sharon.io">
+</a>
+
 本项目的[订阅转换](https://sub.cmliussss.com/)后端由 SharonNetworks 提供支持 —— 专注亚太顶级回国优化线路，高带宽、低延迟直连中国大陆，内置强大高防 DDoS 清洗能力。
 
 SharonNetworks 为您的业务起飞保驾护航！
@@ -250,7 +254,7 @@ SharonNetworks 为您的业务起飞保驾护航！
 
 想体验同款构建环境？欢迎 [访问 Sharon 官网](https://sharon.io) 或 [加入 Telegram 群组](https://t.me/SharonNetwork) 了解更多并申请赞助。
 
-### 🛠 开源代码引用
+## 🛠 开源代码引用
 - [SAKURA-YUMI](https://github.com/SAKURA-YUMI)
 - [EzSync](https://github.com/EzSync)
 - [ACL4SSR](https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config)
