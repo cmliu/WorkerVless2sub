@@ -1,4 +1,5 @@
-name = "vless2sub-worker"
+name = "dingyueqi"
 main = "_worker.js"
 compatibility_date = "2025-07-23"
+
 keep_vars = true
