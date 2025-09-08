@@ -1,4 +1,7 @@
-name = "vless2sub-worker"
+name = "sub"
 main = "_worker.js"
 compatibility_date = "2025-09-07"
 keep_vars = true
+
+[observability.logs]
+enabled = true
