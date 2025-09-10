@@ -10,7 +10,7 @@ let addressescsv = [];
 let DLS = 7;
 let remarkIndex = 1;//CSV备注所在列偏移量
 
-let subConverter = 'SUBAPI.cmliussss.net';
+let subConverter = 'api.sub.zaoy.cn';
 let subConfig = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2NtbGl1L0FDTDRTU1IvbWFpbi9DbGFzaC9jb25maWcvQUNMNFNTUl9PbmxpbmVfRnVsbF9NdWx0aU1vZGUuaW5p');
 let subProtocol = 'https';
 let noTLS = 'false';
@@ -42,7 +42,7 @@ let MamaJustKilledAMan = ['telegram', 'twitter', 'miaoko'];
 let proxyIPPool = [];
 let socks5Data;
 let alpn = 'h3';
-let 网络备案 = `<a href='https://t.me/CMLiussss'>萌ICP备-20240707号</a>`;//写你自己的维护者广告
+let 网络备案 = `官方维护: <a href='https://t.me/zyssadmin'>天诚技术交流群</a>Telegram资源神器: <a href='https://t.me/zyssorg'>福利资源全能搜索群</a>`;//写你自己的维护者广告
 let 额外ID = '0';
 let 加密方式 = 'auto';
 let 网站图标, 网站头像, 网站背景, xhttp = '';
@@ -1460,3 +1460,4 @@ export default {
 		}
 	}
 };
+
