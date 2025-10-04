@@ -203,6 +203,7 @@
 | SNI | `www.10068.cn` | 快速订阅内置节点的SNI信息（留空则默认同`host`） | 
 | TYPE | `splithttp` | 快速订阅内置节点的传输协议信息（留空则默认为`ws`） | 
 | ALPN | `h3` | Alpn（留空则默认为`http/1.1`） | 
+| SCV | `true` | 是否跳过证书验证（留空则默认`false`） | 
 | ADD | `icook.tw:2053#官方优选域名` | 对应`addresses`字段 （支持多元素, 元素之间使用`,`或`换行`作间隔） | 
 | ADDAPI | [https://raw.github.../addressesapi.txt](https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt) | 对应`addressesapi`字段 （支持多元素, 元素之间使用`,`或`换行`作间隔） | 
 | ADDNOTLS | `icook.hk:8080#官方优选域名` | 对应`addressesnotls`字段 （支持多元素, 元素之间使用`,`或`换行`作间隔） | 
