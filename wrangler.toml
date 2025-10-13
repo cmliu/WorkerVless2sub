@@ -1,5 +1,5 @@
 name = "vless2sub"
-main = "functions\[[path]].js"
+main = "functions/[[path]].js"
 compatibility_date = "2024-09-25"
 keep_vars = true
 
