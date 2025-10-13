@@ -1,0 +1,53 @@
+# EdgeOne Pages 项目
+node_modules/
+.env
+.env.local
+.env.production
+.env.development
+ADAPTATION_REPORT.md
+test/
+DEV_GUIDE.md
+package-lock.json
+DEPLOY_GUIDE.md
+index.html
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 覆盖率目录
+coverage/
+.nyc_output
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 临时文件
+*.tmp
+*.temp
+
+# 构建输出
+dist/
+build/
+
+# EdgeOne Pages 特定
+*.log
+.wrangler/

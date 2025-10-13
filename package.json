@@ -1,0 +1,25 @@
+{
+  "name": "vless2sub",
+  "version": "1.0.0",
+  "description": "优选订阅生成器",
+  "main": "functions/[[path]].js",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "start": "wrangler pages dev .",
+    "preview": "wrangler pages dev . --port 8788",
+    "deploy": "npm run build && wrangler pages publish ."
+  },
+  "keywords": [
+    "edgeone",
+    "pages",
+    "proxy",
+    "subscription"
+  ],
+  "author": "cmliu",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.78.0",
+    "miniflare": "^3.20240925.0"
+  },
+  "dependencies": {}
+}

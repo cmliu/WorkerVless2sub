@@ -1,0 +1,12 @@
+name = "vless2sub"
+main = "functions\[[path]].js"
+compatibility_date = "2024-09-25"
+keep_vars = true
+
+# 环境变量示例 - 用于本地开发测试
+# 实际使用时请在 .env 文件中配置
+[vars]
+# HOST = "your-host.com"
+# UUID = "your-uuid-here" 
+# TOKEN = "your-token"
+# PATH = "/?ed=2560"
