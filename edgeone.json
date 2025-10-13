@@ -1,0 +1,24 @@
+{
+  "name": "vless2sub",
+  "version": "1.0.0",
+  "description": "优选订阅生成器",
+  "functions": {
+    "directory": "functions"
+  },
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "/functions/[[path]].js"
+    }
+  ],
+  "env": {
+    "NODE_VERSION": "18"
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/sub",
+      "statusCode": 301
+    }
+  ]
+}
